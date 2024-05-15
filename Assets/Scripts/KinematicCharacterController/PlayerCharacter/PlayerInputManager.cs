@@ -1,7 +1,10 @@
+using System;
+using InputCore;
 using UnityEngine;
 
 namespace KinematicCharacterController.PlayerCharacter {
     public class PlayerInputManager : MonoBehaviour {
+        public InputReaderSo InputReaderSo;
         public CharacterMovementController Character;
         public CharacterCamera CharacterCamera;
 

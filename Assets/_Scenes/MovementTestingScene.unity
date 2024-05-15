@@ -2758,6 +2758,12 @@ PrefabInstance:
       objectReference: {fileID: 1160771494}
     - target: {fileID: 3541941397302104758, guid: 20299a72213254978b10ec44659f77b0,
         type: 3}
+      propertyPath: InputReaderSo
+      value: 
+      objectReference: {fileID: 11400000, guid: fb20446b4c19dbb4592cef5846cdbf10,
+        type: 2}
+    - target: {fileID: 3541941397302104758, guid: 20299a72213254978b10ec44659f77b0,
+        type: 3}
       propertyPath: CharacterCamera
       value: 
       objectReference: {fileID: 325914815}
