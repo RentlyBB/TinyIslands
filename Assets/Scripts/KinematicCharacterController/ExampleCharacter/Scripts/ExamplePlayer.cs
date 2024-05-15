@@ -4,8 +4,10 @@ using UnityEngine;
 using KinematicCharacterController;
 using KinematicCharacterController.Examples;
 
-namespace KinematicCharacterController.Examples {
-    public class ExamplePlayer : MonoBehaviour {
+namespace KinematicCharacterController.Examples
+{
+    public class ExamplePlayer : MonoBehaviour
+    {
         public ExampleCharacterController Character;
         public ExampleCharacterCamera CharacterCamera;
 
@@ -15,7 +17,8 @@ namespace KinematicCharacterController.Examples {
         private const string HorizontalInput = "Horizontal";
         private const string VerticalInput = "Vertical";
 
-        private void Start() {
+        private void Start()
+        {
             Cursor.lockState = CursorLockMode.Locked;
 
             // Tell camera to follow transform
@@ -26,35 +29,38 @@ namespace KinematicCharacterController.Examples {
             CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
         }
 
-        private void Update() {
-            if (Input.GetMouseButtonDown(0)) {
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
                 Cursor.lockState = CursorLockMode.Locked;
             }
 
             HandleCharacterInput();
         }
 
-         private void LateUpdate()
-         {
-             // Handle rotating the camera along with physics movers
-             if (CharacterCamera.RotateWithPhysicsMover && Character.Motor.AttachedRigidbody != null)
-             {
-                 CharacterCamera.PlanarDirection = Character.Motor.AttachedRigidbody.GetComponent<PhysicsMover>().RotationDeltaFromInterpolation * CharacterCamera.PlanarDirection;
-                 CharacterCamera.PlanarDirection = Vector3.ProjectOnPlane(CharacterCamera.PlanarDirection, Character.Motor.CharacterUp).normalized;
-             }
-             
-             //TODO: Camera Handling Should Be Done Here 
-             // HandleCameraInput();
-         }
+        private void LateUpdate()
+        {
+            // Handle rotating the camera along with physics movers
+            if (CharacterCamera.RotateWithPhysicsMover && Character.Motor.AttachedRigidbody != null)
+            {
+                CharacterCamera.PlanarDirection = Character.Motor.AttachedRigidbody.GetComponent<PhysicsMover>().RotationDeltaFromInterpolation * CharacterCamera.PlanarDirection;
+                CharacterCamera.PlanarDirection = Vector3.ProjectOnPlane(CharacterCamera.PlanarDirection, Character.Motor.CharacterUp).normalized;
+            }
 
-        private void HandleCameraInput() {
+            HandleCameraInput();
+        }
+
+        private void HandleCameraInput()
+        {
             // Create the look input vector for the camera
             float mouseLookAxisUp = Input.GetAxisRaw(MouseYInput);
             float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput);
             Vector3 lookInputVector = new Vector3(mouseLookAxisRight, mouseLookAxisUp, 0f);
 
             // Prevent moving the camera while the cursor isn't locked
-            if (Cursor.lockState != CursorLockMode.Locked) {
+            if (Cursor.lockState != CursorLockMode.Locked)
+            {
                 lookInputVector = Vector3.zero;
             }
 
@@ -68,13 +74,14 @@ namespace KinematicCharacterController.Examples {
             CharacterCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
 
             // Handle toggling zoom level
-            if (Input.GetMouseButtonDown(1)) {
-                CharacterCamera.TargetDistance =
-                    (CharacterCamera.TargetDistance == 0f) ? CharacterCamera.DefaultDistance : 0f;
+            if (Input.GetMouseButtonDown(1))
+            {
+                CharacterCamera.TargetDistance = (CharacterCamera.TargetDistance == 0f) ? CharacterCamera.DefaultDistance : 0f;
             }
         }
 
-        private void HandleCharacterInput() {
+        private void HandleCharacterInput()
+        {
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
             // Build the CharacterInputs struct

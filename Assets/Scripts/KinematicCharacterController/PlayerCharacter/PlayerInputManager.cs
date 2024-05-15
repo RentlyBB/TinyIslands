@@ -1,30 +1,35 @@
 using System;
 using InputCore;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace KinematicCharacterController.PlayerCharacter {
     public class PlayerInputManager : MonoBehaviour {
-        public InputReaderSo InputReaderSo;
-        public CharacterMovementController Character;
-        public CharacterCamera CharacterCamera;
+        public InputReaderSo inputReader;
+        public CharacterMovementController character;
+        public CharacterCamera characterCamera;
 
         [SerializeField] private bool hideCursor = false;
 
-        //Movement Inputs
-        private const string HorizontalInput = "Horizontal";
-        private const string VerticalInput = "Vertical";
+        private PlayerCharacterInputs _characterInputs = new PlayerCharacterInputs();
+
+        private void OnEnable() {
+            inputReader.Movement += Move;
+        }
+
+        private void OnDisable() {
+            inputReader.Movement -= Move;
+        }
+
 
         void Start() {
             if (hideCursor) {
                 Cursor.lockState = CursorLockMode.Locked;
             }
 
-            // Tell camera to follow transform
-            CharacterCamera.SetFollowTransform(Character.CameraFollowPoint);
-
             // Ignore the character's collider(s) for camera obstruction checks
-            CharacterCamera.IgnoredColliders.Clear();
-            CharacterCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
+            characterCamera.IgnoredColliders.Clear();
+            characterCamera.IgnoredColliders.AddRange(character.GetComponentsInChildren<Collider>());
         }
 
         void Update() {
@@ -37,15 +42,14 @@ namespace KinematicCharacterController.PlayerCharacter {
 
         private void LateUpdate() {
             // Handle rotating the camera along with physics movers
-            if (CharacterCamera.RotateWithPhysicsMover && Character.Motor.AttachedRigidbody != null) {
+            if (characterCamera.RotateWithPhysicsMover && character.Motor.AttachedRigidbody != null) {
+                character.Motor.AttachedRigidbody.TryGetComponent<PhysicsMover>(out PhysicsMover physicsMover);
 
-                Character.Motor.AttachedRigidbody.TryGetComponent<PhysicsMover>(out PhysicsMover physicsMover);
-                
-                CharacterCamera.PlanarDirection =
+                characterCamera.PlanarDirection =
                     physicsMover.RotationDeltaFromInterpolation *
-                    CharacterCamera.PlanarDirection;
-                CharacterCamera.PlanarDirection = Vector3
-                    .ProjectOnPlane(CharacterCamera.PlanarDirection, Character.Motor.CharacterUp).normalized;
+                    characterCamera.PlanarDirection;
+                characterCamera.PlanarDirection = Vector3
+                    .ProjectOnPlane(characterCamera.PlanarDirection, character.Motor.CharacterUp).normalized;
             }
 
             //TODO: Camera Handling Should Be Done Here 
@@ -53,18 +57,22 @@ namespace KinematicCharacterController.PlayerCharacter {
         }
 
         private void HandleCharacterInput() {
-            PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
             // Build the CharacterInputs struct
-            characterInputs.MoveAxisForward = Input.GetAxisRaw(VerticalInput);
-            characterInputs.MoveAxisRight = Input.GetAxisRaw(HorizontalInput);
-            characterInputs.CameraRotation = CharacterCamera.Transform.rotation;
+            _characterInputs.CameraRotation = characterCamera.Transform.rotation;
+            
             // characterInputs.JumpDown = Input.GetKeyDown(KeyCode.Space);
             // characterInputs.CrouchDown = Input.GetKeyDown(KeyCode.C);
             // characterInputs.CrouchUp = Input.GetKeyUp(KeyCode.C);
 
             // Apply inputs to character
-            Character.SetInputs(ref characterInputs);
+            character.SetInputs(ref _characterInputs);
+        }
+
+        /*INPUT LISTENERS*/
+        void Move(Vector2 movementDirection) {
+            _characterInputs.MoveAxisRight = movementDirection.x;
+            _characterInputs.MoveAxisForward = movementDirection.y;
         }
     }
 }

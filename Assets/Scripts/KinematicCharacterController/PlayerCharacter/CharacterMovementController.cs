@@ -44,19 +44,12 @@ public class CharacterMovementController : MonoBehaviour, ICharacterController {
     public float AirAccelerationSpeed = 15f;
     public float Drag = 0.1f;
 
-    [Header("Jumping")] public bool AllowJumpingWhenSliding = false;
-    public float JumpUpSpeed = 10f;
-    public float JumpScalableForwardSpeed = 10f;
-    public float JumpPreGroundingGraceTime = 0f;
-    public float JumpPostGroundingGraceTime = 0f;
-
     [Header("Misc")] public List<Collider> IgnoredColliders = new List<Collider>();
     public BonusOrientationMethod BonusOrientationMethod = BonusOrientationMethod.None;
     public float BonusOrientationSharpness = 10f;
     public Vector3 Gravity = new Vector3(0, -30f, 0);
     public Transform MeshRoot;
     public Transform CameraFollowPoint;
-    public float CrouchedCapsuleHeight = 1f;
 
     public CharacterState CurrentCharacterState { get; private set; }
 
@@ -64,14 +57,8 @@ public class CharacterMovementController : MonoBehaviour, ICharacterController {
     private RaycastHit[] _probedHits = new RaycastHit[8];
     private Vector3 _moveInputVector;
     private Vector3 _lookInputVector;
-    private bool _jumpRequested = false;
-    private bool _jumpConsumed = false;
-    private bool _jumpedThisFrame = false;
-    private float _timeSinceJumpRequested = Mathf.Infinity;
-    private float _timeSinceLastAbleToJump = 0f;
+   
     private Vector3 _internalVelocityAdd = Vector3.zero;
-    private bool _shouldBeCrouching = false;
-    private bool _isCrouching = false;
 
     private Vector3 lastInnerNormal = Vector3.zero;
     private Vector3 lastOuterNormal = Vector3.zero;
@@ -147,27 +134,6 @@ public class CharacterMovementController : MonoBehaviour, ICharacterController {
                         _lookInputVector = _moveInputVector.normalized;
                         break;
                 }
-
-                // Jumping input
-                if (inputs.JumpDown) {
-                    _timeSinceJumpRequested = 0f;
-                    _jumpRequested = true;
-                }
-
-                // Crouching input
-                if (inputs.CrouchDown) {
-                    _shouldBeCrouching = true;
-
-                    if (!_isCrouching) {
-                        _isCrouching = true;
-                        Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                        MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
-                    }
-                }
-                else if (inputs.CrouchUp) {
-                    _shouldBeCrouching = false;
-                }
-
                 break;
             }
         }
@@ -316,36 +282,6 @@ public class CharacterMovementController : MonoBehaviour, ICharacterController {
                     currentVelocity *= (1f / (1f + (Drag * deltaTime)));
                 }
 
-                // Handle jumping
-                _jumpedThisFrame = false;
-                _timeSinceJumpRequested += deltaTime;
-                if (_jumpRequested) {
-                    // See if we actually are allowed to jump
-                    if (!_jumpConsumed &&
-                        ((AllowJumpingWhenSliding
-                             ? Motor.GroundingStatus.FoundAnyGround
-                             : Motor.GroundingStatus.IsStableOnGround) ||
-                         _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime)) {
-                        // Calculate jump direction before ungrounding
-                        Vector3 jumpDirection = Motor.CharacterUp;
-                        if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround) {
-                            jumpDirection = Motor.GroundingStatus.GroundNormal;
-                        }
-
-                        // Makes the character skip ground probing/snapping on its next update. 
-                        // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
-                        Motor.ForceUnground();
-
-                        // Add to the return velocity and reset jump state
-                        currentVelocity += (jumpDirection * JumpUpSpeed) -
-                                           Vector3.Project(currentVelocity, Motor.CharacterUp);
-                        currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
-                        _jumpRequested = false;
-                        _jumpConsumed = true;
-                        _jumpedThisFrame = true;
-                    }
-                }
-
                 // Take into account additive velocity
                 if (_internalVelocityAdd.sqrMagnitude > 0f) {
                     currentVelocity += _internalVelocityAdd;
@@ -364,49 +300,6 @@ public class CharacterMovementController : MonoBehaviour, ICharacterController {
     public void AfterCharacterUpdate(float deltaTime) {
         switch (CurrentCharacterState) {
             case CharacterState.Default: {
-                // Handle jump-related values
-                {
-                    // Handle jumping pre-ground grace period
-                    if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime) {
-                        _jumpRequested = false;
-                    }
-
-                    if (AllowJumpingWhenSliding
-                            ? Motor.GroundingStatus.FoundAnyGround
-                            : Motor.GroundingStatus.IsStableOnGround) {
-                        // If we're on a ground surface, reset jumping values
-                        if (!_jumpedThisFrame) {
-                            _jumpConsumed = false;
-                        }
-
-                        _timeSinceLastAbleToJump = 0f;
-                    }
-                    else {
-                        // Keep track of time since we were last able to jump (for grace period)
-                        _timeSinceLastAbleToJump += deltaTime;
-                    }
-                }
-
-                // Handle uncrouching
-                if (_isCrouching && !_shouldBeCrouching) {
-                    // Do an overlap test with the character's standing height to see if there are any obstructions
-                    Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
-                    if (Motor.CharacterOverlap(
-                            Motor.TransientPosition,
-                            Motor.TransientRotation,
-                            _probedColliders,
-                            Motor.CollidableLayers,
-                            QueryTriggerInteraction.Ignore) > 0) {
-                        // If obstructions, just stick to crouching dimensions
-                        Motor.SetCapsuleDimensions(0.5f, CrouchedCapsuleHeight, CrouchedCapsuleHeight * 0.5f);
-                    }
-                    else {
-                        // If no obstructions, uncrouch
-                        MeshRoot.localScale = new Vector3(1f, 1f, 1f);
-                        _isCrouching = false;
-                    }
-                }
-
                 break;
             }
         }
