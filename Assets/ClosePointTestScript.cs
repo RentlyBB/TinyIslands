@@ -8,13 +8,12 @@ using UnityEngine.Serialization;
 public class ClosePointTestScript : MonoBehaviour {
     public Transform fallWallPoints;
     public Transform fallWalls;
-    
+
     public LayerMask layerMask = 1 << 8;
 
     private List<Transform> _wallPoints = new List<Transform>();
     private List<Transform> _fallWalls = new List<Transform>();
     private RaycastHit _hit;
-
 
 
     private KinematicCharacterMotor _motor;
@@ -30,46 +29,60 @@ public class ClosePointTestScript : MonoBehaviour {
         foreach (Transform fallWall in fallWalls) {
             _fallWalls.Add(fallWall);
         }
-        
+
         Debug.Log(_wallPoints);
     }
 
     private void Update() {
+        // WallPositioning();
+        SetWallPosition();
     }
 
-    private void WallPositioning(bool offEdge) {
+    // private void WallPositioning() {
+    //     fallWallPoints.position = transform.position;
+    //
+    //     if (!_motor.GroundingStatus.GroundCollider) return;
+    //
+    //     //Last working version
+    //     for (int i = 0; i < _wallPoints.Count; i++) {
+    //         Vector3 closestPoint = _motor.GroundingStatus.GroundCollider.ClosestPoint(_wallPoints[i].position);
+    //         Vector3 targetWallPos = new Vector3(closestPoint.x, transform.position.y + 1, closestPoint.z);
+    //
+    //         _fallWalls[i].position = targetWallPos;
+    //         _fallWalls[i].rotation = _wallPoints[i].rotation;
+    //     }
+    // }
 
+    //TODO: FIXED -> need to be tested
+    private void SetWallPosition() {
         fallWallPoints.position = transform.position;
 
         if (!_motor.GroundingStatus.GroundCollider) return;
 
-            for (int i = 0; i < _wallPoints.Count; i++) {
-                Vector3 targetWallPos;
+        for (int i = 0; i < _wallPoints.Count; i++) {
+            Vector3 closestPoint = _motor.GroundingStatus.GroundCollider.ClosestPoint(_wallPoints[i].position);
+            Vector3 targetWallPos = new Vector3(closestPoint.x, transform.position.y + 1, closestPoint.z);
 
-                if (offEdge) {
-                    Vector3 closestPoint = _motor.GroundingStatus.GroundCollider.ClosestPoint(_wallPoints[i].position);
-                    targetWallPos = new Vector3(closestPoint.x, transform.position.y + 1, closestPoint.z);
-                } else {
-                    targetWallPos = _wallPoints[i].position;
-                }
-
+            if (!Physics.Raycast(_wallPoints[i].position, _wallPoints[i].TransformDirection(Vector3.down), out _hit,
+                    1.5f, layerMask)) {
+                    Debug.DrawRay(_wallPoints[i].position, _wallPoints[i].TransformDirection(Vector3.down) * 1.5f, Color.yellow);
                 _fallWalls[i].position = targetWallPos;
-                _fallWalls[i].rotation = _wallPoints[i].rotation;
+            } else {
+
+                fallWalls.position = transform.position;
             }
+
+            _fallWalls[i].rotation = _wallPoints[i].rotation;
+        }
     }
 
     private void FixedUpdate() {
-
-        foreach (Transform wallPoint in _wallPoints) {
-            if (Physics.Raycast(wallPoint.position, wallPoint.TransformDirection(Vector3.down), out _hit, 1.5f, layerMask)) {
-                Debug.DrawRay(wallPoint.position, wallPoint.TransformDirection(Vector3.down) * 1.5f, Color.yellow);
-                WallPositioning(false);
-            } else {
-                Debug.DrawRay(wallPoint.position, wallPoint.TransformDirection(Vector3.down) * 1.5f, Color.red);
-                WallPositioning(true);
-            }
-        }
-        
+        // foreach (Transform wallPoint in _wallPoints) {
+        //     if (Physics.Raycast(wallPoint.position, wallPoint.TransformDirection(Vector3.down), out _hit, 1.5f, layerMask)) {
+        //         Debug.DrawRay(wallPoint.position, wallPoint.TransformDirection(Vector3.down) * 1.5f, Color.yellow);
+        //     } else {
+        //         Debug.DrawRay(wallPoint.position, wallPoint.TransformDirection(Vector3.down) * 1.5f, Color.red);
+        //     }
+        // }
     }
-
 }
