@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 342caee4c695e4d5fbe9db049a82a41c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Character: {fileID: 0}
-  CharacterCamera: {fileID: 0}
+  inputReader: {fileID: 11400000, guid: fb20446b4c19dbb4592cef5846cdbf10, type: 2}
+  character: {fileID: 0}
+  characterCamera: {fileID: 0}
   hideCursor: 0
