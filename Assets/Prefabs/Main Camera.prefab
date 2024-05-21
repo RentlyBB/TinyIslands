@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6795094205129918543}
   - component: {fileID: 8458123524006792598}
   - component: {fileID: 326187221839609507}
-  - component: {fileID: 3409043644458177315}
+  - component: {fileID: 7314357613622776560}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -29,13 +29,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7612781244138764013}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.11072963, y: 0.87427616, z: -0.23661554, w: -0.40913728}
+  m_LocalRotation: {x: 0.11073155, y: -0.8742741, z: 0.23661765, w: 0.4091399}
   m_LocalPosition: {x: 70.32772, y: 55.646973, z: 58.57774}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30.288, y: -129.843, z: 0}
 --- !u!20 &6672712257701735377
 Camera:
   m_ObjectHideFlags: 0
@@ -173,7 +173,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   ObstructionSharpness: 10000
   IgnoredColliders: []
---- !u!114 &3409043644458177315
+--- !u!114 &7314357613622776560
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,12 +182,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 7612781244138764013}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5031d0372d3e01a459917bc1ff084028, type: 3}
+  m_Script: {fileID: 11500000, guid: cdbf9ef4f002941e3a051d307843150a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  rotationSpeed: 1
-  zoomSpeed: 10
-  minZoomSize: 2
-  maxZoomSize: 50
-  zoomSmoothing: 5
+  Camera: {fileID: 0}
+  FollowPointFraming: {x: 0, y: 0}
+  FollowingSharpness: 10000
+  DefaultDistance: 6
+  MinDistance: 0
+  MaxDistance: 10
+  DistanceMovementSpeed: 5
+  DistanceMovementSharpness: 10
+  InvertX: 0
+  InvertY: 0
+  DefaultVerticalAngle: 20
+  MinVerticalAngle: -90
+  MaxVerticalAngle: 90
+  RotationSpeed: 1
+  RotationSharpness: 10000
+  RotateWithPhysicsMover: 0
+  ObstructionCheckRadius: 0.2
+  ObstructionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  ObstructionSharpness: 10000
+  IgnoredColliders: []
