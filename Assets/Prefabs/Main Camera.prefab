@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8458123524006792598}
   - component: {fileID: 326187221839609507}
   - component: {fileID: 7314357613622776560}
+  - component: {fileID: 7838895317023585886}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -185,7 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdbf9ef4f002941e3a051d307843150a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 0}
+  Camera: {fileID: 6672712257701735377}
   FollowPointFraming: {x: 0, y: 0}
   FollowingSharpness: 10000
   DefaultDistance: 6
@@ -207,3 +208,20 @@ MonoBehaviour:
     m_Bits: 4294967295
   ObstructionSharpness: 10000
   IgnoredColliders: []
+--- !u!114 &7838895317023585886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7612781244138764013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5031d0372d3e01a459917bc1ff084028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  zoomSpeed: 25
+  minZoomSize: 1
+  maxZoomSize: 50
+  zoomSmoothing: 5
