@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using KinematicCharacterController.PlayerCharacter;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
@@ -15,6 +14,7 @@ public class CameraController : MonoBehaviour {
     public float minZoomSize = 1.0f; // Minimum orthographic size (zoom out limit)
     public float maxZoomSize = 50.0f; // Maximum orthographic size (zoom in limit)
     public float zoomSmoothing = 5.0f; // Smoothing factor for zooming
+    public float startZoom = 10f;
 
     [Space]
     [Header("Camera Movement Settings")]
@@ -27,6 +27,9 @@ public class CameraController : MonoBehaviour {
 
     private void Start() {
         _camera = GetComponent<CharacterCamera>().Camera;
+        _targetZoomSize = startZoom;
+        _camera.orthographicSize = _targetZoomSize;
+
     }
 
     private void LateUpdate() {

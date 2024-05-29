@@ -16,6 +16,7 @@ namespace KinematicCharacterController.PlayerCharacter {
         private void OnEnable() {
             inputReader.Movement += Move;
         }
+        
 
         private void OnDisable() {
             inputReader.Movement -= Move;
@@ -42,15 +43,6 @@ namespace KinematicCharacterController.PlayerCharacter {
 
         private void LateUpdate() {
             // Handle rotating the camera along with physics movers
-            if (characterCamera.RotateWithPhysicsMover && character.Motor.AttachedRigidbody != null) {
-                character.Motor.AttachedRigidbody.TryGetComponent<PhysicsMover>(out PhysicsMover physicsMover);
-
-                characterCamera.PlanarDirection =
-                    physicsMover.RotationDeltaFromInterpolation *
-                    characterCamera.PlanarDirection;
-                characterCamera.PlanarDirection = Vector3
-                    .ProjectOnPlane(characterCamera.PlanarDirection, character.Motor.CharacterUp).normalized;
-            }
 
             //TODO: Camera Handling Should Be Done Here 
             // HandleCameraInput();
@@ -60,10 +52,6 @@ namespace KinematicCharacterController.PlayerCharacter {
 
             // Build the CharacterInputs struct
             _characterInputs.CameraRotation = characterCamera.Transform.rotation;
-            
-            // characterInputs.JumpDown = Input.GetKeyDown(KeyCode.Space);
-            // characterInputs.CrouchDown = Input.GetKeyDown(KeyCode.C);
-            // characterInputs.CrouchUp = Input.GetKeyUp(KeyCode.C);
 
             // Apply inputs to character
             character.SetInputs(ref _characterInputs);
@@ -74,5 +62,7 @@ namespace KinematicCharacterController.PlayerCharacter {
             _characterInputs.MoveAxisRight = movementDirection.x;
             _characterInputs.MoveAxisForward = movementDirection.y;
         }
+        
+        
     }
 }
