@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace KinematicCharacterController.Examples
-{
-    public class StressTestManager : MonoBehaviour
-    {
+namespace KinematicCharacterController.Examples {
+    public class StressTestManager : MonoBehaviour {
         public Camera Camera;
         public LayerMask UIMask;
 
@@ -19,8 +17,7 @@ namespace KinematicCharacterController.Examples
         public int SpawnCount = 100;
         public float SpawnDistance = 2f;
 
-        private void Start()
-        {
+        private void Start() {
             KinematicCharacterSystem.EnsureCreation();
             CountField.text = SpawnCount.ToString();
             UpdateOnImages();
@@ -29,56 +26,64 @@ namespace KinematicCharacterController.Examples
             KinematicCharacterSystem.Settings.Interpolate = false;
         }
 
-        private void Update()
-        {
+        private void Update() {
 
             KinematicCharacterSystem.Simulate(Time.deltaTime, KinematicCharacterSystem.CharacterMotors, KinematicCharacterSystem.PhysicsMovers);
         }
 
-        private void UpdateOnImages()
-        {
+        private void UpdateOnImages() {
             RenderOn.enabled = Camera.cullingMask == -1;
-            SimOn.enabled = Physics.autoSimulation;
+
+            // SimOn.enabled = Physics.autoSimulation;
+            
+            SimOn.enabled = IsSimulationOn();
             InterpOn.enabled = KinematicCharacterSystem.Settings.Interpolate;
         }
 
-        public void SetSpawnCount(string count)
-        {
-            if (int.TryParse(count, out int result))
-            {
+        private bool IsSimulationOn() {
+
+            bool isSimOn = Physics.simulationMode == SimulationMode.FixedUpdate;
+
+            return isSimOn;
+
+        }
+
+        public void SetSpawnCount(string count) {
+            if (int.TryParse(count, out int result)) {
                 SpawnCount = result;
             }
         }
 
-        public void ToggleRendering()
-        {
-            if(Camera.cullingMask == -1)
-            {
+        public void ToggleRendering() {
+            if (Camera.cullingMask == -1) {
                 Camera.cullingMask = UIMask;
-            }
-            else
-            {
+            } else {
                 Camera.cullingMask = -1;
             }
             UpdateOnImages();
         }
 
-        public void TogglePhysicsSim()
-        {
-            Physics.autoSimulation = !Physics.autoSimulation;
+        public void TogglePhysicsSim() {
+            //Physics.autoSimulation = !Physics.autoSimulation;
+
+            if (Physics.simulationMode == SimulationMode.FixedUpdate) {
+                // Switch to manual simulation mode
+                Physics.simulationMode = SimulationMode.Script;
+            } else {
+                // Switch back to automatic fixed update simulation mode
+                Physics.simulationMode = SimulationMode.FixedUpdate;
+            }
+
             UpdateOnImages();
         }
 
-        public void ToggleInterpolation()
-        {
+        public void ToggleInterpolation() {
             KinematicCharacterSystem.Settings.Interpolate = !KinematicCharacterSystem.Settings.Interpolate;
             UpdateOnImages();
         }
 
-        public void Spawn()
-        {
-            for (int i = 0; i < AIController.Characters.Count; i++)
-            {
+        public void Spawn() {
+            for (int i = 0; i < AIController.Characters.Count; i++) {
                 Destroy(AIController.Characters[i].gameObject);
             }
             AIController.Characters.Clear();
@@ -87,8 +92,7 @@ namespace KinematicCharacterController.Examples
             Vector3 firstPos = ((charsPerRow * SpawnDistance) * 0.5f) * -Vector3.one;
             firstPos.y = 0f;
 
-            for (int i = 0; i < SpawnCount; i++)
-            {
+            for (int i = 0; i < SpawnCount; i++) {
                 int row = i / charsPerRow;
                 int col = i % charsPerRow;
                 Vector3 pos = firstPos + (Vector3.right * row * SpawnDistance) + (Vector3.forward * col * SpawnDistance);

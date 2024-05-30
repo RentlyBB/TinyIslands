@@ -105,6 +105,17 @@
                     "isOR": false
                 }
             ]
+        },
+        {
+            "name": "PS5_Controller",
+            "bindingGroup": "PS5_Controller",
+            "devices": [
+                {
+                    "devicePath": "<DualSenseGamepadHID>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
         }
     ]
 }

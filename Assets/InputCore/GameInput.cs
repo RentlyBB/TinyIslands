@@ -127,6 +127,17 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""isOR"": false
                 }
             ]
+        },
+        {
+            ""name"": ""PS5_Controller"",
+            ""bindingGroup"": ""PS5_Controller"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<DualSenseGamepadHID>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
         }
     ]
 }");
@@ -252,6 +263,15 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         {
             if (m_KeyboardSchemeIndex == -1) m_KeyboardSchemeIndex = asset.FindControlSchemeIndex("Keyboard");
             return asset.controlSchemes[m_KeyboardSchemeIndex];
+        }
+    }
+    private int m_PS5_ControllerSchemeIndex = -1;
+    public InputControlScheme PS5_ControllerScheme
+    {
+        get
+        {
+            if (m_PS5_ControllerSchemeIndex == -1) m_PS5_ControllerSchemeIndex = asset.FindControlSchemeIndex("PS5_Controller");
+            return asset.controlSchemes[m_PS5_ControllerSchemeIndex];
         }
     }
     public interface IGameplayActions
