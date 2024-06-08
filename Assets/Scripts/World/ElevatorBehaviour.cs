@@ -8,9 +8,12 @@ namespace World {
 
         public PhysicsMover mover;
         public Vector3 offset;
+        
+        [Range(0.1f, 1)]
         public float speed = 0.1f;
         public bool stayAtLastPosition = false;
 
+        
         private Vector3 _originalPosition;
         private Quaternion _originalRotation;
         private Vector3 _nextPosition;
@@ -33,12 +36,19 @@ namespace World {
 
 
         }
+        
+        void OnDrawGizmosSelected()
+        {
+            // Draw a yellow cube at the transform position
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(transform.position + offset, new Vector3(4f, 0.2f, 4f));
+        }
 
         private void Update() {
             _nextPosition = _originalPosition + offset;
             
             if (_fraction < 1) {
-                _fraction += Time.deltaTime * speed;
+                _fraction += Time.deltaTime * (speed / 10);
                 _currentPosition = Vector3.Lerp(_currentPosition, _elevatorEndPosition, _fraction);
             }
 
@@ -55,12 +65,16 @@ namespace World {
             goalRotation = _originalRotation;
         }
 
+
+        //TODO: Create a public method which moves the platform because i want to move it by other ingames buttons or pressure plates.
+        
         private void ElevateTo(Vector3 elevateTarget) {
             _fraction = 0;
             _elevatorEndPosition = elevateTarget;
         }
 
-        private void OnCollisionEnter(Collision other) {
+        
+        private void OnTriggerEnter(Collider other) {
             if (other.transform.CompareTag("Player")) {
                 Vector3 elevateTo = _nextPosition;
 
@@ -74,7 +88,7 @@ namespace World {
             }
         }
 
-        private void OnCollisionExit(Collision other) {
+        private void OnTriggerExit(Collider other) {
             if (other.transform.CompareTag("Player")) {
                 if (!stayAtLastPosition) {
                     ElevateTo(_originalPosition);
