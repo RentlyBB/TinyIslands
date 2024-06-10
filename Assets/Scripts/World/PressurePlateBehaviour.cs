@@ -9,19 +9,11 @@ using UnityEngine.Serialization;
 namespace World {
     public class PressurePlateBehaviour : MonoBehaviour {
 
-        public UnityEvent onActivated;
-        
-        private bool _activated = false;
+        public UnityEvent<Interactable> onActivated;
         
         public void ActivatePressurePlate() {
-            if (!_activated) {
                 Debug.Log("Jsem na pressure platu!!");
-                _activated = true;
-                onActivated?.Invoke();
-            }
+                onActivated?.Invoke(GetComponent<Interactable>());
         }
-
-        
-
     }
 }

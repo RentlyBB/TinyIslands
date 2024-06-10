@@ -5,86 +5,93 @@ using UnityEngine.Serialization;
 
 namespace World {
     public class ElevatorBehaviour : MonoBehaviour, IMoverController {
-
         public PhysicsMover mover;
-        public Vector3 offset;
-        
-        [Range(0.1f, 1)]
-        public float speed = 0.1f;
+        public Vector3 nextPositon;
+
+        [Range(0.1f, 1)] public float speed = 0.1f;
         public bool stayAtLastPosition = false;
 
-        
+
         private Vector3 _originalPosition;
         private Quaternion _originalRotation;
-        private Vector3 _nextPosition;
+        
+        private Vector3 _currentGoalPosition;
+        private Vector3 _nextGoalPosition;
+        
+        private bool _toOriginalPosition;
 
-        private Vector3 _currentPosition;
-        private Vector3 _elevatorEndPosition;
-        private bool _onOriginalPosition;
 
         private float _fraction;
 
         private void Start() {
             _originalPosition = mover.Rigidbody.position;
             _originalRotation = mover.Rigidbody.rotation;
-            _nextPosition = _originalPosition + offset;
-            _currentPosition = _originalPosition;
-            _elevatorEndPosition = _originalPosition;
-            _onOriginalPosition = true;
+            
+            _currentGoalPosition = _originalPosition;
+            _nextGoalPosition = _originalPosition;
 
+            _toOriginalPosition = true;
+            
             mover.MoverController = this;
-
-
         }
-        
-        void OnDrawGizmosSelected()
-        {
+
+        void OnDrawGizmosSelected() {
             // Draw a yellow cube at the transform position
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(transform.position + offset, new Vector3(4f, 0.2f, 4f));
+            Gizmos.DrawWireCube(transform.position + nextPositon, new Vector3(4f, 0.2f, 4f));
         }
 
         private void Update() {
-            _nextPosition = _originalPosition + offset;
-            
+
             if (_fraction < 1) {
                 _fraction += Time.deltaTime * (speed / 10);
-                _currentPosition = Vector3.Lerp(_currentPosition, _elevatorEndPosition, _fraction);
+                _currentGoalPosition = Vector3.Lerp(_currentGoalPosition, _nextGoalPosition, _fraction);
             }
-
-            if (_currentPosition == _originalPosition) {
-                _onOriginalPosition = true;
-            } else if (_currentPosition == _originalPosition + offset) {
-                _onOriginalPosition = false;
-            }
-
         }
 
         public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
-            goalPosition = _currentPosition;
+            goalPosition = _currentGoalPosition;
             goalRotation = _originalRotation;
         }
 
+        public void ElevateOnEvent(Interactable interactable) {
+            if (!stayAtLastPosition) {
+                Debug.LogWarning("To move the Elevator please set 'stayAtLastPosition' to true");
+                return;
+            }
 
-        //TODO: Create a public method which moves the platform because i want to move it by other ingames buttons or pressure plates.
+            SelectNextPosition();
+            
+            //TODO: this has to be invoke when the action is done, not when the action is triggered
+            interactable.ReadyToInteract();
+        }
+
+
+        private void SelectNextPosition() {
+            
+            Vector3 elevateTo = _originalPosition;
+
+            if (stayAtLastPosition) {
+                if (_toOriginalPosition) {
+                    elevateTo = _originalPosition + nextPositon;
+                    _toOriginalPosition = false;
+                } else {
+                    elevateTo = _originalPosition;
+                    _toOriginalPosition = true;
+                }
+            }
+
+            ElevateTo(elevateTo);
+        }
         
         private void ElevateTo(Vector3 elevateTarget) {
             _fraction = 0;
-            _elevatorEndPosition = elevateTarget;
+            _nextGoalPosition = elevateTarget;
         }
 
-        
         private void OnTriggerEnter(Collider other) {
             if (other.transform.CompareTag("Player")) {
-                Vector3 elevateTo = _nextPosition;
-
-                if (stayAtLastPosition) {
-                    if (!_onOriginalPosition) {
-                        elevateTo = _originalPosition;
-                    } 
-                }
-
-                ElevateTo(elevateTo);
+              SelectNextPosition();
             }
         }
 
@@ -92,7 +99,7 @@ namespace World {
             if (other.transform.CompareTag("Player")) {
                 if (!stayAtLastPosition) {
                     ElevateTo(_originalPosition);
-                } 
+                }
             }
         }
     }

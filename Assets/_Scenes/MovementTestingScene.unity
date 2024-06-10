@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -717,12 +717,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &916530586 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5459119589072493651, guid: 6d3e79754c07b4ec0a67b1869a475230,
-    type: 3}
-  m_PrefabInstance: {fileID: 1160771488}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1160771488
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -799,11 +793,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5459119589072493651, guid: 6d3e79754c07b4ec0a67b1869a475230,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1160771500}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d3e79754c07b4ec0a67b1869a475230, type: 3}
 --- !u!114 &1160771494 stripped
 MonoBehaviour:
@@ -811,26 +801,12 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1160771488}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 916530586}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4acc600afb2fe4789bd692eabf74e204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1160771500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 916530586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c7434969ea342b9b688c6dbab87bda6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputReader: {fileID: 11400000, guid: fb20446b4c19dbb4592cef5846cdbf10, type: 2}
-  sphereRadius: 1.5
 --- !u!1 &1369300204
 GameObject:
   m_ObjectHideFlags: 0
@@ -3593,6 +3569,11 @@ PrefabInstance:
       propertyPath: onActivated.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1462628831}
+    - target: {fileID: 4359510861882042354, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
+        type: 3}
+      propertyPath: onActivated.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OpenDoor
+      objectReference: {fileID: 0}
     - target: {fileID: 7823992322509801330, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
         type: 3}
       propertyPath: m_LocalPosition.x
