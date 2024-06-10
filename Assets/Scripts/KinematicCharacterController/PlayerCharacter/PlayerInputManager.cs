@@ -42,10 +42,13 @@ namespace KinematicCharacterController.PlayerCharacter {
         }
 
         private void LateUpdate() {
-            // Handle rotating the camera along with physics movers
 
             //TODO: Camera Handling Should Be Done Here 
-            // HandleCameraInput();
+            HandleCameraInput();
+        }
+
+        private void HandleCameraInput() {
+            //TODO: Zoom out on button press to get view on whole planet/city
         }
 
         private void HandleCharacterInput() {

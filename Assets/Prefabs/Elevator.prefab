@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 3787164585659506434}
   - component: {fileID: 5544973765395995688}
   - component: {fileID: 1600835431536854556}
+  - component: {fileID: 1518297169423350927}
   m_Layer: 0
   m_Name: Elevator
   m_TagString: Untagged
@@ -165,9 +166,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mover: {fileID: 5544973765395995688}
-  offset: {x: -4.21, y: 4.41, z: 0}
+  nextPositon: {x: -4.24, y: 4.47, z: 0}
   speed: 0.2
-  stayAtLastPosition: 1
+--- !u!114 &1518297169423350927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6264493258744413673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3bb12b2ada3a7c469e4c14e17db2d9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionType: 1
+  onInteractAction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1600835431536854556}
+        m_TargetAssemblyTypeName: World.ElevatorBehaviour, Assembly-CSharp
+        m_MethodName: ElevateOnEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6511347973012395363
 GameObject:
   m_ObjectHideFlags: 0

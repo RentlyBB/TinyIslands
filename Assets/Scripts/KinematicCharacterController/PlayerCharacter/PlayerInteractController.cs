@@ -3,14 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using InputCore;
 using UnityEngine;
+using World;
 
 namespace KinematicCharacterController.PlayerCharacter {
     public class PlayerInteractController : MonoBehaviour {
-
         public InputReaderSo inputReader;
 
         public float sphereRadius = 2f;
-
 
         private void OnEnable() {
             inputReader.Interact += OnInteract;
@@ -19,7 +18,6 @@ namespace KinematicCharacterController.PlayerCharacter {
         private void OnDisable() {
             inputReader.Interact -= OnInteract;
         }
-
 
         private void OnInteract() {
             int maxColliders = 10;
@@ -30,7 +28,6 @@ namespace KinematicCharacterController.PlayerCharacter {
             List<Interactable> interactableObjects = new List<Interactable>();
 
             for (int i = 0; i < numColliders; i++) {
-
                 if (hitColliders[i] != null &&
                     hitColliders[i].TryGetComponent<Interactable>(out Interactable interactable)) {
                     interactableObjects.Add(interactable);
@@ -52,13 +49,10 @@ namespace KinematicCharacterController.PlayerCharacter {
             closestInteractable?.InteractableAction();
         }
 
-
         void OnDrawGizmosSelected() {
             // Draw a yellow sphere at the transform's position
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, sphereRadius);
         }
-
-
     }
 }

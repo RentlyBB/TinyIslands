@@ -1,23 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
+namespace World {
+    public enum InteractionType {
+        PressButton,
+        OnEnter,
+        OnExit,
+        OnEnterExit
+    }
+
     public class Interactable : MonoBehaviour {
         
-        [SerializeField] private UnityEvent onInteractAction;
+        public InteractionType interactionType;
 
-        private bool _readyToInteract = true;
+        [Space]
+        public UnityEvent onInteractAction;
 
         public void InteractableAction() {
-            if(!_readyToInteract) return;
-            
-            _readyToInteract = false;
-            onInteractAction?.Invoke();
+            if (interactionType == InteractionType.PressButton) {
+                onInteractAction?.Invoke();
+            }
         }
 
-        public void ReadyToInteract() {
-            _readyToInteract = true;
+        private void OnTriggerEnter(Collider other) {
+            if (!other.CompareTag("Player")) return;
+            if (interactionType == InteractionType.OnEnter || interactionType == InteractionType.OnEnterExit) {
+                onInteractAction?.Invoke();
+            }
         }
 
+        private void OnTriggerExit(Collider other) {
+            if (!other.CompareTag("Player")) return;
+            if (interactionType == InteractionType.OnExit || interactionType == InteractionType.OnEnterExit) {
+                onInteractAction?.Invoke();
+            }
+        }
     }
+}
