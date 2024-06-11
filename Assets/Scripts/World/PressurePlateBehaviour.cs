@@ -9,10 +9,12 @@ using UnityEngine.Serialization;
 namespace World {
     public class PressurePlateBehaviour : MonoBehaviour {
 
+        [Header("On Pressure Plate Activated")]
+        [Space]
+        [Tooltip("Invoke methods which should be triggered if pressure plate is activated.")]
         public UnityEvent onActivated;
         
         public void ActivatePressurePlate() {
-                Debug.Log("Jsem na pressure platu!!");
                 onActivated?.Invoke();
         }
     }

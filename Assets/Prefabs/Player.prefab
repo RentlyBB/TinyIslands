@@ -366,4 +366,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputReader: {fileID: 11400000, guid: fb20446b4c19dbb4592cef5846cdbf10, type: 2}
-  sphereRadius: 1.5
+  sphereRadius: 0.8

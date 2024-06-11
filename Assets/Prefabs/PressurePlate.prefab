@@ -370,7 +370,7 @@ GameObject:
   - component: {fileID: 7823992322509801330}
   - component: {fileID: 4954230194319083788}
   - component: {fileID: 4359510861882042354}
-  - component: {fileID: 4601797446630789051}
+  - component: {fileID: 7084658068376168626}
   m_Layer: 0
   m_Name: PressurePlate
   m_TagString: Untagged
@@ -413,8 +413,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 1, z: 2}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Size: {x: 1.4376487, y: 1, z: 1.322092}
+  m_Center: {x: 0.009070218, y: 0.5, z: 0.001177907}
 --- !u!114 &4359510861882042354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,8 +431,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TestDoorDisable, Assembly-CSharp
-        m_MethodName: 
+        m_TargetAssemblyTypeName: World.ElevatorBehaviour, Assembly-CSharp
+        m_MethodName: ElevateOnEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -442,7 +442,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4601797446630789051
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: World.ElevatorBehaviour, Assembly-CSharp
+        m_MethodName: ElevateOnEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &7084658068376168626
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -454,6 +466,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3bb12b2ada3a7c469e4c14e17db2d9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactionType: 0
+  oneTimeActivation: 0
   onInteractAction:
     m_PersistentCalls:
       m_Calls:
