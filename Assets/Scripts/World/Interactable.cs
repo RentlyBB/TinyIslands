@@ -11,7 +11,8 @@ namespace World {
         PressButton,
         OnEnter,
         OnExit,
-        OnEnterExit
+        OnEnterExit,
+        None
     }
 
     public class Interactable : MonoBehaviour {

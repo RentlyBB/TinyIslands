@@ -13,9 +13,13 @@ namespace World {
         [Space]
         [Tooltip("Invoke methods which should be triggered if pressure plate is activated.")]
         public UnityEvent onActivated;
-        
+
+        private bool _canBeActivated = true;
+
         public void ActivatePressurePlate() {
+            if (_canBeActivated) {
                 onActivated?.Invoke();
+            }
         }
     }
 }

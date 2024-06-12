@@ -1,16 +1,23 @@
 ﻿using System;
+using EditorScripts;
 using KinematicCharacterController;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace World {
-    public class ElevatorBehaviour : MonoBehaviour, IMoverController {
+    [RequireComponent(typeof(PhysicsMover))]
+    public class MoveablePlatformBehaviour : MonoBehaviour, IMoverController {
         public PhysicsMover mover;
-        public Vector3 nextPositon;
 
+        public Vector3 nextPositon;
+        
         [Range(0.1f, 1)]
         public float speed = 0.1f;
-
+        
+        public bool loop = false;
+        
+        public Transform wireCubeSize;
+        
         private Vector3 _originalPosition;
         private Quaternion _originalRotation;
 
@@ -35,8 +42,14 @@ namespace World {
 
         void OnDrawGizmosSelected() {
             // Draw a yellow cube at the transform position
+            
+            if (wireCubeSize == null) {
+                wireCubeSize = transform;
+            }
+            
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(transform.position + nextPositon, new Vector3(4f, 0.2f, 4f));
+            Gizmos.DrawWireCube(transform.position + nextPositon, wireCubeSize.localScale);
+            
         }
 
         private void Update() {
@@ -44,6 +57,20 @@ namespace World {
                 _fraction += Time.deltaTime * (speed / 10);
                 _currentGoalPosition = Vector3.Lerp(_currentGoalPosition, _nextGoalPosition, _fraction);
             }
+
+            LoopingMovement();
+
+
+        }
+
+
+        private void LoopingMovement() {
+            if (!loop) return;
+
+            if (transform.position == _nextGoalPosition) {
+                ElevateOnEvent();
+            }
+
         }
 
         public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
@@ -51,6 +78,7 @@ namespace World {
             goalRotation = _originalRotation;
         }
 
+        [InvokeButton]
         public void ElevateOnEvent() {
             SelectNextPosition();
         }
