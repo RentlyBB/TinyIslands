@@ -68,7 +68,7 @@ namespace World {
             if (!loop) return;
 
             if (transform.position == _nextGoalPosition) {
-                ElevateOnEvent();
+                MovePlatform();
             }
 
         }
@@ -79,7 +79,7 @@ namespace World {
         }
 
         [InvokeButton]
-        public void ElevateOnEvent() {
+        public void MovePlatform() {
             SelectNextPosition();
         }
 

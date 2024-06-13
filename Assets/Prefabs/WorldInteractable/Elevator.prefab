@@ -186,7 +186,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1600835431536854556}
         m_TargetAssemblyTypeName: World.ElevatorBehaviour, Assembly-CSharp
-        m_MethodName: ElevateOnEvent
+        m_MethodName: MovePlatform
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

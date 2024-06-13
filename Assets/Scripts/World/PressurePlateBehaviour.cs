@@ -14,6 +14,7 @@ namespace World {
         [Tooltip("Invoke methods which should be triggered if pressure plate is activated.")]
         public UnityEvent onActivated;
 
+        //TODO: cooldown for activation
         private bool _canBeActivated = true;
 
         public void ActivatePressurePlate() {

@@ -5,7 +5,7 @@ using InputCore;
 using UnityEngine;
 using World;
 
-namespace KinematicCharacterController.PlayerCharacter {
+namespace PlayerCharacter {
     public class PlayerInteractController : MonoBehaviour {
         public InputReaderSo inputReader;
 

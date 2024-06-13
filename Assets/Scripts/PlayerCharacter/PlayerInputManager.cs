@@ -16,17 +16,12 @@ namespace PlayerCharacter {
         private void OnEnable() {
             inputReader.Movement += Move;
         }
-        
 
         private void OnDisable() {
             inputReader.Movement -= Move;
         }
 
-
         void Start() {
-
-            
-            
             if (hideCursor) {
                 Cursor.lockState = CursorLockMode.Locked;
             }
@@ -42,7 +37,7 @@ namespace PlayerCharacter {
             }
 
             HandleCharacterInput();
-            
+
         }
 
         private void LateUpdate() {
@@ -69,7 +64,5 @@ namespace PlayerCharacter {
             _characterInputs.MoveAxisRight = movementDirection.x;
             _characterInputs.MoveAxisForward = movementDirection.y;
         }
-        
-        
     }
 }
