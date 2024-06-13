@@ -39,5 +39,12 @@ namespace World {
             _isClosed = !_isClosed;
             _isActivated = true;
         }
+
+        //WIP: TODO: This has to be complicated
+        [InvokeButton]
+        public void ChangeAnimSpeed() {
+            doorAnimator.SetFloat("AnimSpeed",  doorAnimator.GetFloat("AnimSpeed") == 1 ? -1 : 1);
+            
+        }
     }
 }
