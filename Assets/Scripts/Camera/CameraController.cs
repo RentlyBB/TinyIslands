@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using KinematicCharacterController.PlayerCharacter;
+using PlayerCharacter;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {

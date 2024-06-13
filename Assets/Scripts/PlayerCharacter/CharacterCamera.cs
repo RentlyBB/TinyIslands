@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace KinematicCharacterController.PlayerCharacter {
+namespace PlayerCharacter {
     public class CharacterCamera : MonoBehaviour {
     
         [Header("Framing")] public Camera Camera;

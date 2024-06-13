@@ -3,7 +3,7 @@ using InputCore;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace KinematicCharacterController.PlayerCharacter {
+namespace PlayerCharacter {
     public class PlayerInputManager : MonoBehaviour {
         public InputReaderSo inputReader;
         public CharacterMovementController character;
@@ -24,6 +24,9 @@ namespace KinematicCharacterController.PlayerCharacter {
 
 
         void Start() {
+
+            
+            
             if (hideCursor) {
                 Cursor.lockState = CursorLockMode.Locked;
             }
@@ -39,6 +42,7 @@ namespace KinematicCharacterController.PlayerCharacter {
             }
 
             HandleCharacterInput();
+            
         }
 
         private void LateUpdate() {
