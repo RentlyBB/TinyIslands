@@ -1,140 +1,66 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using EditorScripts;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace World {
-    [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    public class DiceBehaviour : MonoBehaviour {
 
-         void Start()
-    {
-        MeshFilter meshFilter = GetComponent<MeshFilter>();
-        Mesh mesh = new Mesh();
-        mesh.name = "CustomCube";
-
-        // Define vertices for each face
-        Vector3[][] faceVertices = new Vector3[][]
-        {
-            new Vector3[] // Front face
-            {
-                new Vector3(-0.5f, -0.5f, 0.5f),
-                new Vector3(0.5f, -0.5f, 0.5f),
-                new Vector3(0.5f, 0.5f, 0.5f),
-                new Vector3(-0.5f, 0.5f, 0.5f)
-            },
-            new Vector3[] // Back face
-            {
-                new Vector3(-0.5f, -0.5f, -0.5f),
-                new Vector3(0.5f, -0.5f, -0.5f),
-                new Vector3(0.5f, 0.5f, -0.5f),
-                new Vector3(-0.5f, 0.5f, -0.5f)
-            },
-            new Vector3[] // Left face
-            {
-                new Vector3(-0.5f, -0.5f, -0.5f),
-                new Vector3(-0.5f, 0.5f, -0.5f),
-                new Vector3(-0.5f, 0.5f, 0.5f),
-                new Vector3(-0.5f, -0.5f, 0.5f)
-            },
-            new Vector3[] // Right face
-            {
-                new Vector3(0.5f, -0.5f, -0.5f),
-                new Vector3(0.5f, -0.5f, 0.5f),
-                new Vector3(0.5f, 0.5f, 0.5f),
-                new Vector3(0.5f, 0.5f, -0.5f)
-            },
-            new Vector3[] // Top face
-            {
-                new Vector3(-0.5f, 0.5f, 0.5f),
-                new Vector3(0.5f, 0.5f, 0.5f),
-                new Vector3(0.5f, 0.5f, -0.5f),
-                new Vector3(-0.5f, 0.5f, -0.5f)
-            },
-            new Vector3[] // Bottom face
-            {
-                new Vector3(-0.5f, -0.5f, 0.5f),
-                new Vector3(0.5f, -0.5f, 0.5f),
-                new Vector3(0.5f, -0.5f, -0.5f),
-                new Vector3(-0.5f, -0.5f, -0.5f)
-            }
-        };
-
-        // Define triangles for each face
-        int[][] faceTriangles = new int[][]
-        {
-            new int[] { 0, 1, 2, 0, 2, 3 },  // Back face
-            new int[] { 0, 2, 1, 0, 3, 2 },  // Front face
-            new int[] { 0, 3, 2, 0, 2, 1 },  // Left face
-            new int[] { 0, 2, 1, 0, 3, 2 },  // Right face
-            new int[] { 0, 1, 2, 0, 2, 3 },  // Bottom face
-            new int[] { 0, 2, 1, 0, 3, 2 }  // Top face
-        };
-
-        // Define normals for each face
-        Vector3[] faceNormals = {
-            Vector3.forward, Vector3.back, Vector3.left, Vector3.right, Vector3.up, Vector3.down
-        };
-
-        // Initialize arrays for vertices, normals, and submeshes
-        Vector3[] vertices = new Vector3[24];
-        Vector3[] normals = new Vector3[24];
-        int[][] submeshTriangles = new int[6][];
-        Vector2[] uv = new Vector2[24];
-
-        for (int i = 0; i < 6; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                vertices[i * 4 + j] = faceVertices[i][j];
-                normals[i * 4 + j] = faceNormals[i];
-                uv[i * 4 + j] = new Vector2(vertices[i * 4 + j].x, vertices[i * 4 + j].y);
-            }
-
-            submeshTriangles[i] = new int[6];
-            for (int k = 0; k < 6; k++)
-            {
-                submeshTriangles[i][k] = faceTriangles[i][k] + i * 4;
-            }
-        }
-
-        mesh.vertices = vertices;
-        mesh.normals = normals;
-        mesh.uv = uv;
-
-        // Assign submeshes
-        mesh.subMeshCount = 6;
-        for (int i = 0; i < 6; i++)
-        {
-            mesh.SetTriangles(submeshTriangles[i], i);
-        }
-
-        meshFilter.mesh = mesh;
-
-        // Assign a material to the mesh renderer
-        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
-        Material[] materials = new Material[6];
-        for (int i = 0; i < 6; i++)
-        {
-            materials[i] = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-        }
-        meshRenderer.materials = materials;
-
-        // Set the color of the faces
-        SetFaceColor(0, Color.red);    // Front
-        SetFaceColor(1, Color.blue);   // Back
-        SetFaceColor(2, Color.green);  // Left
-        SetFaceColor(3, Color.yellow); // Right
-        SetFaceColor(4, Color.cyan);   // Top
-        SetFaceColor(5, Color.magenta);// Bottom
+    public enum DiceFaces {
+        Top,
+        Bottom,
+        Front,
+        Back,
+        Left,
+        Right
     }
 
+    public class DiceBehaviour : MonoBehaviour {
 
-        public void SetFaceColor(int faceIndex, Color color) {
-            MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
-            if (faceIndex >= 0 && faceIndex < meshRenderer.materials.Length) {
-                meshRenderer.materials[faceIndex].color = color;
+        public DiceFaces currentSide;
+
+        private Quaternion [] _faceRotation = new Quaternion [] {
+            Quaternion.Euler (0f, 0f, 0f), //Top
+            Quaternion.Euler(180f, 0f, 0f), // Bottom
+            Quaternion.Euler(-90f, 0f, 0f), // Front
+            Quaternion.Euler(90f, 0f, 0f), // Back
+            Quaternion.Euler(0f, 0f, -90f), // Left
+            Quaternion.Euler(0f, 0f, 90f) // Right
+        };
+
+
+        private void Start() {
+            SelectRotation();
+        }
+
+        [InvokeButton]
+        public void SelectRotation() {
+            switch (currentSide) {
+                case DiceFaces.Top:
+                    RotateToFace(0);
+                    return;
+                case DiceFaces.Bottom:
+                    RotateToFace(1);
+                    return;
+                case DiceFaces.Front:
+                    RotateToFace(2);
+                    return;
+                case DiceFaces.Back:
+                    RotateToFace(3);
+                    return;
+                case DiceFaces.Left:
+                    RotateToFace(4);
+                    return;
+                case DiceFaces.Right:
+                    RotateToFace(5);
+                    return;
             }
         }
 
+
+        private void RotateToFace(int index) {
+            transform.rotation = _faceRotation[index];
+        }
     }
 }
