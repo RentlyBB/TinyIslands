@@ -29,6 +29,11 @@ namespace World {
             Quaternion.Euler(0f, 0f, 90f) // Right
         };
 
+        private Quaternion _targetRotation;
+        private Quaternion _currentRotation;
+        public float rotSpeed = 90f;
+        public float lerpSpeed = 0.5f;
+
 
         private void Start() {
             SelectRotation();
@@ -58,9 +63,21 @@ namespace World {
             }
         }
 
+        private void Update() {
+            // Calculate the rotation towards the target using slerp
+            Quaternion newRotation = Quaternion.Slerp(_currentRotation, _targetRotation, lerpSpeed * Time.deltaTime * rotSpeed);
+
+            // Update the object's rotation
+            transform.rotation = newRotation;
+
+            // Update currentRotation for the next frame
+            _currentRotation = newRotation;
+        }
+
 
         private void RotateToFace(int index) {
-            transform.rotation = _faceRotation[index];
+            
+            _targetRotation = _faceRotation[index];
         }
     }
 }
