@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using EditorScripts;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace World {
-
     public enum DiceFaces {
         Top,
         Bottom,
@@ -17,11 +17,10 @@ namespace World {
     }
 
     public class DiceBehaviour : MonoBehaviour {
-
         public DiceFaces currentSide;
 
-        private Quaternion [] _faceRotation = new Quaternion [] {
-            Quaternion.Euler (0f, 0f, 0f), //Top
+        private Quaternion[] _faceRotation = new Quaternion[] {
+            Quaternion.Euler(0f, 0f, 0f), //Top
             Quaternion.Euler(180f, 0f, 0f), // Bottom
             Quaternion.Euler(-90f, 0f, 0f), // Front
             Quaternion.Euler(90f, 0f, 0f), // Back
@@ -63,6 +62,17 @@ namespace World {
             }
         }
 
+        [InvokeButton]
+        public void RandomRotate() {
+            DiceFaces rndFace;
+            do {
+                rndFace = (DiceFaces)Random.Range(0, 6);
+            } while (rndFace == currentSide);
+
+            currentSide = rndFace;
+            SelectRotation();
+        }
+
         private void Update() {
             // Calculate the rotation towards the target using slerp
             Quaternion newRotation = Quaternion.Slerp(_currentRotation, _targetRotation, lerpSpeed * Time.deltaTime * rotSpeed);
@@ -76,7 +86,6 @@ namespace World {
 
 
         private void RotateToFace(int index) {
-            
             _targetRotation = _faceRotation[index];
         }
     }
