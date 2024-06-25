@@ -41,14 +41,16 @@ namespace PlayerCharacter {
             Collider[] rangeChecks = Physics.OverlapSphere(VacuumPosition, radius, targetMask);
             
             if (rangeChecks.Length != 0) {
-                foreach (Collider colider in rangeChecks) {
-                    Transform target = colider.transform;
+                foreach (Collider coll in rangeChecks) {
+                    Transform target = coll.transform;
             
                     Vector3 directionToTarget = (target.position - VacuumPosition).normalized;
             
                     // If Collider (target) is in the angle – Do something
                     if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2) {
                         // TODO: Vacuuming the objects
+                        
+                        
                     }
                 }
             }
@@ -59,8 +61,8 @@ namespace PlayerCharacter {
             
             if (RayData.Length != 0) {
                 
-                foreach (Collider colider in RayData) {
-                    Transform target = colider.transform;
+                foreach (Collider coll in RayData) {
+                    Transform target = coll.transform;
                     Vector3 directionToTarget = (target.position - VacuumPosition).normalized;
             
                     if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2) {
