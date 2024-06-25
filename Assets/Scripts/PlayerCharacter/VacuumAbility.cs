@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using World;
 
 namespace PlayerCharacter {
     public class VacuumAbility : MonoBehaviour {
@@ -17,8 +18,6 @@ namespace PlayerCharacter {
         
         public Collider[] RayData { get; private set; }
         
-        public Vector3 VacuumPosition { get; private set; }
-
         private void Start() {
             
             //Debug in editor
@@ -26,7 +25,7 @@ namespace PlayerCharacter {
         }
 
         private void Update() {
-            VacuumPosition = transform.position + new Vector3(0f, 1f, 0f);
+            VacuumObjects();
         }
 
         private IEnumerator FOVRoutine() {
@@ -38,32 +37,31 @@ namespace PlayerCharacter {
         }
 
         public void VacuumObjects() {
-            Collider[] rangeChecks = Physics.OverlapSphere(VacuumPosition, radius, targetMask);
+            Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
             
             if (rangeChecks.Length != 0) {
                 foreach (Collider coll in rangeChecks) {
                     Transform target = coll.transform;
             
-                    Vector3 directionToTarget = (target.position - VacuumPosition).normalized;
+                    Vector3 directionToTarget = (target.position - transform.position).normalized;
             
                     // If Collider (target) is in the angle – Do something
                     if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2) {
                         // TODO: Vacuuming the objects
-                        
-                        
+                        target.GetComponent<TrashBehaviour>().TrashActivate();
                     }
                 }
             }
         } 
 
         public void FieldOfViewCheck() {
-            RayData = Physics.OverlapSphere(VacuumPosition, radius, targetMask);
+            RayData = Physics.OverlapSphere(transform.position, radius, targetMask);
             
             if (RayData.Length != 0) {
                 
                 foreach (Collider coll in RayData) {
                     Transform target = coll.transform;
-                    Vector3 directionToTarget = (target.position - VacuumPosition).normalized;
+                    Vector3 directionToTarget = (target.position - transform.position).normalized;
             
                     if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2) {
                         CanSeeVacuumableObject = true;
