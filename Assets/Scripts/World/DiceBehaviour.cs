@@ -2,22 +2,37 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using EditorScripts;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace World {
     public enum DiceFaces {
-        Top,
-        Bottom,
-        Front,
-        Back,
-        Left,
-        Right
+        Yellow,
+        Red,
+        Cyan,
+        Green,
+        Blue,
+        Pink
     }
 
     public class DiceBehaviour : MonoBehaviour {
+
         public DiceFaces currentSide;
+        public float moveSpeed = 10;
+        public float rotSpeed = 10f;
+        public float lerpSpeed = 0.5f;
+
+        public bool rotationCompleted = true;
+
+        private Quaternion _targetRotation;
+        private Quaternion _currentRotation;
+
+        private Vector3 _targetPosition;
+        private Vector3 _currentPosition;
+
+        public bool locked = false;
+
 
         private Quaternion[] _faceRotation = new Quaternion[] {
             Quaternion.Euler(0f, 0f, 0f), //Top
@@ -28,52 +43,77 @@ namespace World {
             Quaternion.Euler(0f, 0f, 90f) // Right
         };
 
-        private Quaternion _targetRotation;
-        private Quaternion _currentRotation;
-        public float rotSpeed = 90f;
-        public float lerpSpeed = 0.5f;
-
-
-        private void Start() {
-            SelectRotation();
+        private void Awake() {
+            _targetPosition = transform.position;
         }
 
-        [InvokeButton]
-        public void SelectRotation() {
-            switch (currentSide) {
-                case DiceFaces.Top:
-                    RotateToFace(0);
-                    return;
-                case DiceFaces.Bottom:
-                    RotateToFace(1);
-                    return;
-                case DiceFaces.Front:
-                    RotateToFace(2);
-                    return;
-                case DiceFaces.Back:
-                    RotateToFace(3);
-                    return;
-                case DiceFaces.Left:
-                    RotateToFace(4);
-                    return;
-                case DiceFaces.Right:
-                    RotateToFace(5);
-                    return;
+        private void Start() {
+            RotationToCurrent();
+        }
+
+        private void Update() {
+
+            if (Quaternion.Angle(transform.rotation, _targetRotation) <= 0.01f) {
+                rotationCompleted = true;
+            } else {
+                rotationCompleted = false;
             }
+
+            Rotating();
+            Moving();
+        }
+        
+
+        [InvokeButton]
+        public void RotationToCurrent() {
+            if(locked) return;
+            RotateByIndex((int)currentSide);
         }
 
         [InvokeButton]
         public void RandomRotate() {
+            if(locked) return;
             DiceFaces rndFace;
             do {
                 rndFace = (DiceFaces)Random.Range(0, 6);
             } while (rndFace == currentSide);
 
             currentSide = rndFace;
-            SelectRotation();
+
+            RotationToCurrent();
         }
 
-        private void Update() {
+        [InvokeButton]
+        public void RotateNext() {
+            if(locked) return;
+            if ((int)currentSide == Enum.GetValues(typeof(DiceFaces)).Length - 1) {
+                currentSide = 0;
+            } else {
+                currentSide += 1;
+            }
+            RotationToCurrent();
+        }
+
+
+        private void RotateByIndex(int index) {
+            if(locked) return;
+            _targetRotation = _faceRotation[index];
+        }
+
+        public void SetTargetPosition(Vector3 targetPosition) {
+            _targetPosition = targetPosition;
+        }
+
+        private void Moving() {
+            Vector3 newPosition = Vector3.Slerp(_currentPosition, _targetPosition, lerpSpeed * Time.deltaTime * moveSpeed);
+
+            transform.position = newPosition;
+            
+            _currentPosition = newPosition;
+        }
+        
+        private void Rotating() {
+
             // Calculate the rotation towards the target using slerp
             Quaternion newRotation = Quaternion.Slerp(_currentRotation, _targetRotation, lerpSpeed * Time.deltaTime * rotSpeed);
 
@@ -82,11 +122,6 @@ namespace World {
 
             // Update currentRotation for the next frame
             _currentRotation = newRotation;
-        }
-
-
-        private void RotateToFace(int index) {
-            _targetRotation = _faceRotation[index];
         }
     }
 }

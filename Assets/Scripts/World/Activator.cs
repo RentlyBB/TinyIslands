@@ -7,7 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 namespace World {
-    public class PressurePlateBehaviour : MonoBehaviour {
+    public class Activator : MonoBehaviour {
 
         [Header("On Pressure Plate Activated")]
         [Space]
@@ -17,7 +17,7 @@ namespace World {
         //TODO: cooldown for activation
         private bool _canBeActivated = true;
 
-        public void ActivatePressurePlate() {
+        public void Activate() {
             if (_canBeActivated) {
                 onActivated?.Invoke();
             }
