@@ -18,15 +18,6 @@ namespace EditorScripts.Debug {
             Handles.color = Color.yellow;
             Handles.DrawLine(fov.transform.position, fov.transform.position + viewAngle01 * fov.radius);
             Handles.DrawLine(fov.transform.position, fov.transform.position + viewAngle02 * fov.radius);
-
-            
-            // Draw a line between objects and player
-            if(fov.CanSeeVacuumableObject) {
-                Handles.color = Color.green;
-                foreach(Collider colider in fov.RayData) {
-                    Handles.DrawLine(fov.transform.position, colider.transform.position);
-                }
-            }
         }
 
         private Vector3 DirectionFromAngle(float eulerY, float angleInDegrees) {

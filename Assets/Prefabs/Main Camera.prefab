@@ -221,11 +221,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5031d0372d3e01a459917bc1ff084028, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  inputReader: {fileID: 11400000, guid: fb20446b4c19dbb4592cef5846cdbf10, type: 2}
   zoomSpeed: 25
   minZoomSize: 1
   maxZoomSize: 50
   zoomSmoothing: 5
+  startZoom: 10
+  zoomOutSize: 50
+  canScrollZooming: 0
+  smoothTime: 0.3
   zOffset: -100
 --- !u!114 &1972233669088203885
 MonoBehaviour:
@@ -239,7 +243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac2fc5a78b7e63945bfa39128a8eefc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showDebugFields: 0
+  _showDebugFields: 1
   _enableGizmoDebugging: 1
   _debugColor: {r: 0, g: 1, b: 1, a: 1}
   _previouslyRegisteredEvent: {fileID: 0}
@@ -249,7 +253,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7838895317023585886}
         m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
-        m_MethodName: GetCameraTargetPosition
+        m_MethodName: SetCameraTargetPosition
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
