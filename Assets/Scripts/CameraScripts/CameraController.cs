@@ -32,7 +32,8 @@ namespace CameraScripts {
         private Vector3 _velocity = Vector3.zero;
         private float _targetZoomSize = 50;
         private Vector3 _targetPosition;
-        private Vector3 _lastTargetPosition;
+        
+        private Vector3 _lastCalculatedTargetPosition; // WARNING! This is a position with calculated offset, do not put this into SetCameraTargetPosition() method
 
         private void OnEnable() {
             inputReader.ZoomOut += ZoomCameraOut;
@@ -71,19 +72,30 @@ namespace CameraScripts {
             // Smoothly interpolate towards the target orthographic size
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _targetZoomSize, zoomSmoothing * Time.deltaTime);
         }
-
+        
         private void ZoomCameraOut() {
             _targetZoomSize = zoomOutSize;
-            SetCameraTargetPosition(Vector3.zero);
+            
+            // Save last target position with calculated camera offset;
+            _lastCalculatedTargetPosition = _targetPosition;
+
+            SetCameraTargetPosition(new Vector3(-4.71f, 1.75f, -4.57f));
         }
 
         private void ZoomCameraIn() {
             _targetZoomSize = zoomInSize;
-            SetCameraTargetPosition(_lastTargetPosition);
+            SetCalculatedCameraTargetPosition(_lastCalculatedTargetPosition);
         }
 
+
+        // Set position with already calculated offset
+        public void SetCalculatedCameraTargetPosition(Vector3 targetPos) {
+            _targetPosition = targetPos;
+        }
+
+
+        // Set position and add a offset to the camera
         public void SetCameraTargetPosition(Vector3 targetPos) {
-            _lastTargetPosition = _targetPosition;
             _targetPosition = targetPos + transform.TransformDirection(new Vector3(0, 0, zOffset));
         }
     }

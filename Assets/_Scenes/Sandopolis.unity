@@ -2342,6 +2342,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e73f2fa35df44f54a00292ae291797d, type: 3}
+--- !u!114 &805846195 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 959775276348024447, guid: 5565b2394d598df4eb4925c6c46ae679,
+    type: 3}
+  m_PrefabInstance: {fileID: 6725429408927607017}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5db55e5349d4de39fc8709b13798c71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!43 &823534734
 Mesh:
   m_ObjectHideFlags: 0
@@ -3457,18 +3469,6 @@ LightingSettings:
   m_PVRTiledBaking: 0
   m_NumRaysToShootPerTexel: -1
   m_RespectSceneVisibilityWhenBakingGI: 0
---- !u!114 &1163976048 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4167067958708179379, guid: 5565b2394d598df4eb4925c6c46ae679,
-    type: 3}
-  m_PrefabInstance: {fileID: 6725429408927607017}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c577c2d6d8b7bd042849edffd59d5e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!43 &1168660538
 Mesh:
   m_ObjectHideFlags: 0
@@ -4037,6 +4037,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4954230194319083788, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954230194319083788, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7084658068376168626, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
         type: 3}
       propertyPath: onInteractAction.m_PersistentCalls.m_Calls.Array.size
@@ -4051,7 +4061,7 @@ PrefabInstance:
         type: 3}
       propertyPath: onInteractAction.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1163976048}
+      objectReference: {fileID: 805846195}
     - target: {fileID: 7084658068376168626, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
         type: 3}
       propertyPath: onInteractAction.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -4060,12 +4070,12 @@ PrefabInstance:
     - target: {fileID: 7084658068376168626, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
         type: 3}
       propertyPath: onInteractAction.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RotateNext
+      value: TargetCheck
       objectReference: {fileID: 0}
     - target: {fileID: 7084658068376168626, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
         type: 3}
       propertyPath: onInteractAction.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: World.DiceBehaviour, Assembly-CSharp
+      value: World.DiceSocketBehaviour, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7084658068376168626, guid: 57da50987ecc3c441b4e7bcb9a3cdc7d,
         type: 3}
