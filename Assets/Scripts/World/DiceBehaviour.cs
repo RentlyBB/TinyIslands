@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using EditorScripts;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 namespace World {
     public enum DiceFaces {
@@ -19,9 +17,11 @@ namespace World {
     public class DiceBehaviour : MonoBehaviour {
 
         public DiceFaces currentSide;
+        public Transform meshToRotate;
         public float moveSpeed = 10;
         public float rotSpeed = 10f;
-        public float lerpSpeed = 0.5f;
+        public float rotLerpSpeed = 0.5f;
+        public float moveLerpSpeed = 0.5f;
 
         public bool rotationCompleted = true;
 
@@ -31,7 +31,10 @@ namespace World {
         private Vector3 _targetPosition;
         private Vector3 _currentPosition;
 
-        public bool locked = false;
+        private Animator _animator;
+
+        [HideInInspector] public bool locked = false;
+        [HideInInspector] public bool lockAnim = false;
 
 
         private Quaternion[] _faceRotation = new Quaternion[] {
@@ -44,48 +47,38 @@ namespace World {
         };
 
         private void Awake() {
+            _currentPosition = transform.position;
             _targetPosition = transform.position;
         }
 
         private void Start() {
+            _animator = GetComponent<Animator>();
+            DisableAnimator();
             RotationToCurrent();
         }
 
         private void Update() {
-
-            if (Quaternion.Angle(transform.rotation, _targetRotation) <= 0.01f) {
-                rotationCompleted = true;
-            } else {
-                rotationCompleted = false;
-            }
-
-            Rotating();
             Moving();
+            if (!rotationCompleted) {
+                DisableAnimator();
+                Rotating();
+            } else {
+                EnableAnimator();
+            }
         }
         
-
-        [InvokeButton]
         public void RotationToCurrent() {
-            if(locked) return;
+            if (locked) return;
+
             RotateByIndex((int)currentSide);
         }
 
-        [InvokeButton]
-        public void RandomRotate() {
-            if(locked) return;
-            DiceFaces rndFace;
-            do {
-                rndFace = (DiceFaces)Random.Range(0, 6);
-            } while (rndFace == currentSide);
 
-            currentSide = rndFace;
-
-            RotationToCurrent();
-        }
-
+        // Rotate to the next face in the row
         [InvokeButton]
         public void RotateNext() {
-            if(locked) return;
+            if (locked) return;
+
             if ((int)currentSide == Enum.GetValues(typeof(DiceFaces)).Length - 1) {
                 currentSide = 0;
             } else {
@@ -93,10 +86,12 @@ namespace World {
             }
             RotationToCurrent();
         }
-
-
+        
+        //Set targetRotation
         private void RotateByIndex(int index) {
-            if(locked) return;
+            if (locked) return;
+
+            rotationCompleted = false;
             _targetRotation = _faceRotation[index];
         }
 
@@ -104,24 +99,51 @@ namespace World {
             _targetPosition = targetPosition;
         }
 
+        
+        //TRANSFORM
         private void Moving() {
-            Vector3 newPosition = Vector3.Slerp(_currentPosition, _targetPosition, lerpSpeed * Time.deltaTime * moveSpeed);
+
+            if (Vector3.Distance(_currentPosition, _targetPosition) < 0.001f) return;
+
+            Vector3 newPosition = Vector3.Slerp(_currentPosition, _targetPosition, moveLerpSpeed * Time.deltaTime * moveSpeed);
 
             transform.position = newPosition;
-            
+
             _currentPosition = newPosition;
         }
-        
+
         private void Rotating() {
 
+            if (Quaternion.Angle(meshToRotate.rotation, _targetRotation) <= 0.01f) {
+                rotationCompleted = true;
+            }
+
             // Calculate the rotation towards the target using slerp
-            Quaternion newRotation = Quaternion.Slerp(_currentRotation, _targetRotation, lerpSpeed * Time.deltaTime * rotSpeed);
+            Quaternion newRotation = Quaternion.Slerp(_currentRotation, _targetRotation, rotLerpSpeed * Time.deltaTime * rotSpeed);
 
             // Update the object's rotation
-            transform.rotation = newRotation;
+            meshToRotate.rotation = newRotation;
 
             // Update currentRotation for the next frame
             _currentRotation = newRotation;
+        }
+
+        
+        
+        //ANIMATION 
+        [InvokeButton]
+        public void Shake() {
+            _animator.SetTrigger("ShakeIt");
+        }
+
+        private void DisableAnimator() {
+            _animator.enabled = false;
+        }
+
+        private void EnableAnimator() {
+            if(lockAnim) return;
+
+            _animator.enabled = true;
         }
     }
 }

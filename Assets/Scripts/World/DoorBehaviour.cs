@@ -14,10 +14,23 @@ namespace World {
         private void Start() {
             animator = GetComponent<Animator>();
         }
+        
+        
+        [InvokeButton]
+        public void Toggle() {
+            _isOpen = !_isOpen;
+            animator.SetBool("IsOpen", _isOpen);
+        }
 
         [InvokeButton]
         public void Open() {
-            _isOpen = !_isOpen;
+            _isOpen = true;
+            animator.SetBool("IsOpen", _isOpen);
+        }
+
+        [InvokeButton]
+        public void Close() {
+            _isOpen = false;
             animator.SetBool("IsOpen", _isOpen);
         }
     }
