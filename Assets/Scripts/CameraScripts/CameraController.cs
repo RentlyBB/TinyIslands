@@ -50,6 +50,8 @@ namespace CameraScripts {
             _targetZoomSize = zoomInSize;
             _camera.orthographicSize = _targetZoomSize;
 
+            SetCameraTargetPosition(new Vector3());
+
         }
 
         private void LateUpdate() {
