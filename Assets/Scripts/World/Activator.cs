@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using InputCore;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace World {
     public class Activator : MonoBehaviour {
@@ -15,7 +10,7 @@ namespace World {
         public UnityEvent onActivated;
 
         //TODO: cooldown for activation
-        private bool _canBeActivated = true;
+        private readonly bool _canBeActivated = true;
 
         public void Activate() {
             if (_canBeActivated) {

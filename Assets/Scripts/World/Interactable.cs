@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using EditorScripts;
 using UnityEngine;
 using UnityEngine.Events;
-using EditorScripts;
 
 namespace World {
     public enum InteractionType {
@@ -12,22 +8,39 @@ namespace World {
         OnEnter,
         OnExit,
         OnEnterExit,
-        None
+        None,
     }
 
     public class Interactable : MonoBehaviour {
-        
+
         public InteractionType interactionType;
-        
+
         [Tooltip("Can be interact only once.")]
-        public bool oneTimeActivation = false;
+        public bool oneTimeActivation;
 
         [Header("Interact methods")]
         [Tooltip("Invoke interact method of interactable object.")]
         [Space]
         public UnityEvent onInteractAction;
 
-        private bool _wasActivated = false;
+        private bool _wasActivated;
+
+
+        private void OnTriggerEnter(Collider other) {
+            if (!other.CompareTag("Player")) return;
+
+            if (interactionType == InteractionType.OnEnter || interactionType == InteractionType.OnEnterExit) {
+                InvokeInteractableAction();
+            }
+        }
+
+        private void OnTriggerExit(Collider other) {
+            if (!other.CompareTag("Player")) return;
+
+            if (interactionType == InteractionType.OnExit || interactionType == InteractionType.OnEnterExit) {
+                InvokeInteractableAction();
+            }
+        }
 
         public void InteractableAction() {
             if (interactionType == InteractionType.PressButton) {
@@ -44,21 +57,6 @@ namespace World {
                 }
             } else {
                 onInteractAction?.Invoke();
-            }
-        }
-
-
-        private void OnTriggerEnter(Collider other) {
-            if (!other.CompareTag("Player")) return;
-            if (interactionType == InteractionType.OnEnter || interactionType == InteractionType.OnEnterExit) {
-                InvokeInteractableAction();
-            }
-        }
-
-        private void OnTriggerExit(Collider other) {
-            if (!other.CompareTag("Player")) return;
-            if (interactionType == InteractionType.OnExit || interactionType == InteractionType.OnEnterExit) {
-                InvokeInteractableAction();
             }
         }
     }

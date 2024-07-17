@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using KinematicCharacterController;
-using System;
 
-namespace KinematicCharacterController.Walkthrough.MovingPlatform
-{
-    public struct PlayerCharacterInputs
-    {
+namespace KinematicCharacterController.Walkthrough.MovingPlatform {
+    public struct PlayerCharacterInputs {
         public float MoveAxisForward;
         public float MoveAxisRight;
         public Quaternion CameraRotation;
@@ -16,8 +10,7 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
         public bool CrouchUp;
     }
 
-    public class MyCharacterController : MonoBehaviour, ICharacterController
-    {
+    public class MyCharacterController : MonoBehaviour, ICharacterController {
         public KinematicCharacterMotor Motor;
 
         [Header("Stable Movement")]
@@ -31,101 +24,52 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
         public float Drag = 0.1f;
 
         [Header("Jumping")]
-        public bool AllowJumpingWhenSliding = false;
-        public bool AllowDoubleJump = false;
-        public bool AllowWallJump = false;
+        public bool AllowJumpingWhenSliding;
+        public bool AllowDoubleJump;
+        public bool AllowWallJump;
         public float JumpSpeed = 10f;
-        public float JumpPreGroundingGraceTime = 0f;
-        public float JumpPostGroundingGraceTime = 0f;
+        public float JumpPreGroundingGraceTime;
+        public float JumpPostGroundingGraceTime;
 
         [Header("Misc")]
         public Vector3 Gravity = new Vector3(0, -30f, 0);
         public bool OrientTowardsGravity = true;
         public Transform MeshRoot;
-
-        private Collider[] _probedColliders = new Collider[8];
-        private Vector3 _moveInputVector;
-        private Vector3 _lookInputVector;
-        private bool _jumpRequested = false;
-        private bool _jumpConsumed = false;
-        private bool _jumpedThisFrame = false;
-        private float _timeSinceJumpRequested = Mathf.Infinity;
-        private float _timeSinceLastAbleToJump = 0f;
-        private bool _doubleJumpConsumed = false;
-        private bool _canWallJump = false;
-        private Vector3 _wallJumpNormal;
+        private bool _canWallJump;
+        private bool _doubleJumpConsumed;
         private Vector3 _internalVelocityAdd = Vector3.zero;
-        private bool _shouldBeCrouching = false;
-        private bool _isCrouching = false;
+        private bool _isCrouching;
+        private bool _jumpConsumed;
+        private bool _jumpedThisFrame;
+        private bool _jumpRequested;
+        private Vector3 _lookInputVector;
+        private Vector3 _moveInputVector;
 
-        private void Start()
-        {
+        private readonly Collider[] _probedColliders = new Collider[8];
+        private bool _shouldBeCrouching;
+        private float _timeSinceJumpRequested = Mathf.Infinity;
+        private float _timeSinceLastAbleToJump;
+        private Vector3 _wallJumpNormal;
+
+        private void Start() {
             // Assign to motor
             Motor.CharacterController = this;
         }
 
         /// <summary>
-        /// This is called every frame by MyPlayer in order to tell the character what its inputs are
+        ///     (Called by KinematicCharacterMotor during its update cycle)
+        ///     This is called before the character begins its movement update
         /// </summary>
-        public void SetInputs(ref PlayerCharacterInputs inputs)
-        {
-            // Clamp input
-            Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
-
-            // Calculate camera direction and rotation on the character plane
-            Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
-            if (cameraPlanarDirection.sqrMagnitude == 0f)
-            {
-                cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, Motor.CharacterUp).normalized;
-            }
-            Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
-
-            // Move and look inputs
-            _moveInputVector = cameraPlanarRotation * moveInputVector;
-            _lookInputVector = cameraPlanarDirection;
-
-            // Jumping input
-            if (inputs.JumpDown)
-            {
-                _timeSinceJumpRequested = 0f;
-                _jumpRequested = true;
-            }
-
-            // Crouching input
-            if (inputs.CrouchDown)
-            {
-                _shouldBeCrouching = true;
-
-                if (!_isCrouching)
-                {
-                    _isCrouching = true;
-                    Motor.SetCapsuleDimensions(0.5f, 1f, 0.5f);
-                    MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
-                }
-            }
-            else if (inputs.CrouchUp)
-            {
-                _shouldBeCrouching = false;
-            }
+        public void BeforeCharacterUpdate(float deltaTime) {
         }
 
         /// <summary>
-        /// (Called by KinematicCharacterMotor during its update cycle)
-        /// This is called before the character begins its movement update
+        ///     (Called by KinematicCharacterMotor during its update cycle)
+        ///     This is where you tell your character what its rotation should be right now.
+        ///     This is the ONLY place where you should set the character's rotation
         /// </summary>
-        public void BeforeCharacterUpdate(float deltaTime)
-        {
-        }
-
-        /// <summary>
-        /// (Called by KinematicCharacterMotor during its update cycle)
-        /// This is where you tell your character what its rotation should be right now. 
-        /// This is the ONLY place where you should set the character's rotation
-        /// </summary>
-        public void UpdateRotation(ref Quaternion currentRotation, float deltaTime)
-        {
-            if (_lookInputVector != Vector3.zero && OrientationSharpness > 0f)
-            {
+        public void UpdateRotation(ref Quaternion currentRotation, float deltaTime) {
+            if (_lookInputVector != Vector3.zero && OrientationSharpness > 0f) {
                 // Smoothly interpolate from current to target look direction
                 Vector3 smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
 
@@ -133,23 +77,20 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
                 currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, Motor.CharacterUp);
             }
 
-            if (OrientTowardsGravity)
-            {
+            if (OrientTowardsGravity) {
                 // Rotate from current up to invert gravity
-                currentRotation = Quaternion.FromToRotation((currentRotation * Vector3.up), -Gravity) * currentRotation;
+                currentRotation = Quaternion.FromToRotation(currentRotation * Vector3.up, -Gravity) * currentRotation;
             }
         }
 
         /// <summary>
-        /// (Called by KinematicCharacterMotor during its update cycle)
-        /// This is where you tell your character what its velocity should be right now. 
-        /// This is the ONLY place where you can set the character's velocity
+        ///     (Called by KinematicCharacterMotor during its update cycle)
+        ///     This is where you tell your character what its velocity should be right now.
+        ///     This is the ONLY place where you can set the character's velocity
         /// </summary>
-        public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime)
-        {
+        public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime) {
             Vector3 targetMovementVelocity = Vector3.zero;
-            if (Motor.GroundingStatus.IsStableOnGround)
-            {
+            if (Motor.GroundingStatus.IsStableOnGround) {
                 // Reorient velocity on slope
                 currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, Motor.GroundingStatus.GroundNormal) * currentVelocity.magnitude;
 
@@ -160,17 +101,13 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
 
                 // Smooth movement Velocity
                 currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity, 1 - Mathf.Exp(-StableMovementSharpness * deltaTime));
-            }
-            else
-            {
+            } else {
                 // Add move input
-                if (_moveInputVector.sqrMagnitude > 0f)
-                {
+                if (_moveInputVector.sqrMagnitude > 0f) {
                     targetMovementVelocity = _moveInputVector * MaxAirMoveSpeed;
 
                     // Prevent climbing on un-stable slopes with air movement
-                    if (Motor.GroundingStatus.FoundAnyGround)
-                    {
+                    if (Motor.GroundingStatus.FoundAnyGround) {
                         Vector3 perpenticularObstructionNormal = Vector3.Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal), Motor.CharacterUp).normalized;
                         targetMovementVelocity = Vector3.ProjectOnPlane(targetMovementVelocity, perpenticularObstructionNormal);
                     }
@@ -183,24 +120,21 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
                 currentVelocity += Gravity * deltaTime;
 
                 // Drag
-                currentVelocity *= (1f / (1f + (Drag * deltaTime)));
+                currentVelocity *= 1f / (1f + Drag * deltaTime);
             }
 
             // Handle jumping
             {
                 _jumpedThisFrame = false;
                 _timeSinceJumpRequested += deltaTime;
-                if (_jumpRequested)
-                {
+                if (_jumpRequested) {
                     // Handle double jump
-                    if (AllowDoubleJump)
-                    {
-                        if (_jumpConsumed && !_doubleJumpConsumed && (AllowJumpingWhenSliding ? !Motor.GroundingStatus.FoundAnyGround : !Motor.GroundingStatus.IsStableOnGround))
-                        {
-                            Motor.ForceUnground(0.1f);
+                    if (AllowDoubleJump) {
+                        if (_jumpConsumed && !_doubleJumpConsumed && (AllowJumpingWhenSliding ? !Motor.GroundingStatus.FoundAnyGround : !Motor.GroundingStatus.IsStableOnGround)) {
+                            Motor.ForceUnground();
 
                             // Add to the return velocity and reset jump state
-                            currentVelocity += (Motor.CharacterUp * JumpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                            currentVelocity += Motor.CharacterUp * JumpSpeed - Vector3.Project(currentVelocity, Motor.CharacterUp);
                             _jumpRequested = false;
                             _doubleJumpConsumed = true;
                             _jumpedThisFrame = true;
@@ -209,25 +143,21 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
 
                     // See if we actually are allowed to jump
                     if (_canWallJump ||
-                        (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime)))
-                    {
+                        !_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime)) {
                         // Calculate jump direction before ungrounding
                         Vector3 jumpDirection = Motor.CharacterUp;
-                        if (_canWallJump)
-                        {
+                        if (_canWallJump) {
                             jumpDirection = _wallJumpNormal;
-                        }
-                        else if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround)
-                        {
+                        } else if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround) {
                             jumpDirection = Motor.GroundingStatus.GroundNormal;
                         }
 
                         // Makes the character skip ground probing/snapping on its next update. 
                         // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
-                        Motor.ForceUnground(0.1f);
+                        Motor.ForceUnground();
 
                         // Add to the return velocity and reset jump state
-                        currentVelocity += (jumpDirection * JumpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                        currentVelocity += jumpDirection * JumpSpeed - Vector3.Project(currentVelocity, Motor.CharacterUp);
                         _jumpRequested = false;
                         _jumpConsumed = true;
                         _jumpedThisFrame = true;
@@ -239,61 +169,50 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
             }
 
             // Take into account additive velocity
-            if (_internalVelocityAdd.sqrMagnitude > 0f)
-            {
+            if (_internalVelocityAdd.sqrMagnitude > 0f) {
                 currentVelocity += _internalVelocityAdd;
                 _internalVelocityAdd = Vector3.zero;
             }
         }
 
         /// <summary>
-        /// (Called by KinematicCharacterMotor during its update cycle)
-        /// This is called after the character has finished its movement update
+        ///     (Called by KinematicCharacterMotor during its update cycle)
+        ///     This is called after the character has finished its movement update
         /// </summary>
-        public void AfterCharacterUpdate(float deltaTime)
-        {
+        public void AfterCharacterUpdate(float deltaTime) {
             // Handle jump-related values
             {
                 // Handle jumping pre-ground grace period
-                if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime)
-                {
+                if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime) {
                     _jumpRequested = false;
                 }
 
-                if (AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround)
-                {
+                if (AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) {
                     // If we're on a ground surface, reset jumping values
-                    if (!_jumpedThisFrame)
-                    {
+                    if (!_jumpedThisFrame) {
                         _doubleJumpConsumed = false;
                         _jumpConsumed = false;
                     }
                     _timeSinceLastAbleToJump = 0f;
-                }
-                else
-                {
+                } else {
                     // Keep track of time since we were last able to jump (for grace period)
                     _timeSinceLastAbleToJump += deltaTime;
                 }
             }
 
             // Handle uncrouching
-            if (_isCrouching && !_shouldBeCrouching)
-            {
+            if (_isCrouching && !_shouldBeCrouching) {
                 // Do an overlap test with the character's standing height to see if there are any obstructions
                 Motor.SetCapsuleDimensions(0.5f, 2f, 1f);
                 if (Motor.CharacterOverlap(
-                    Motor.TransientPosition,
-                    Motor.TransientRotation,
-                    _probedColliders,
-                    Motor.CollidableLayers,
-                    QueryTriggerInteraction.Ignore) > 0)
-                {
+                        Motor.TransientPosition,
+                        Motor.TransientRotation,
+                        _probedColliders,
+                        Motor.CollidableLayers,
+                        QueryTriggerInteraction.Ignore) > 0) {
                     // If obstructions, just stick to crouching dimensions
                     Motor.SetCapsuleDimensions(0.5f, 1f, 0.5f);
-                }
-                else
-                {
+                } else {
                     // If no obstructions, uncrouch
                     MeshRoot.localScale = new Vector3(1f, 1f, 1f);
                     _isCrouching = false;
@@ -301,40 +220,70 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
             }
         }
 
-        public bool IsColliderValidForCollisions(Collider coll)
-        {
+        public bool IsColliderValidForCollisions(Collider coll) {
             return true;
         }
 
-        public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
-        {
+        public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) {
         }
 
-        public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport)
-        {
+        public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) {
             // We can wall jump only if we are not stable on ground and are moving against an obstruction
-            if (AllowWallJump && !Motor.GroundingStatus.IsStableOnGround && !hitStabilityReport.IsStable)
-            {
+            if (AllowWallJump && !Motor.GroundingStatus.IsStableOnGround && !hitStabilityReport.IsStable) {
                 _canWallJump = true;
                 _wallJumpNormal = hitNormal;
             }
         }
 
-        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport)
-        {
+        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) {
         }
 
-        public void PostGroundingUpdate(float deltaTime)
-        {
+        public void PostGroundingUpdate(float deltaTime) {
         }
 
-        public void AddVelocity(Vector3 velocity)
-        {
+        public void OnDiscreteCollisionDetected(Collider hitCollider) {
+        }
+
+        /// <summary>
+        ///     This is called every frame by MyPlayer in order to tell the character what its inputs are
+        /// </summary>
+        public void SetInputs(ref PlayerCharacterInputs inputs) {
+            // Clamp input
+            Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
+
+            // Calculate camera direction and rotation on the character plane
+            Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
+            if (cameraPlanarDirection.sqrMagnitude == 0f) {
+                cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, Motor.CharacterUp).normalized;
+            }
+            Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
+
+            // Move and look inputs
+            _moveInputVector = cameraPlanarRotation * moveInputVector;
+            _lookInputVector = cameraPlanarDirection;
+
+            // Jumping input
+            if (inputs.JumpDown) {
+                _timeSinceJumpRequested = 0f;
+                _jumpRequested = true;
+            }
+
+            // Crouching input
+            if (inputs.CrouchDown) {
+                _shouldBeCrouching = true;
+
+                if (!_isCrouching) {
+                    _isCrouching = true;
+                    Motor.SetCapsuleDimensions(0.5f, 1f, 0.5f);
+                    MeshRoot.localScale = new Vector3(1f, 0.5f, 1f);
+                }
+            } else if (inputs.CrouchUp) {
+                _shouldBeCrouching = false;
+            }
+        }
+
+        public void AddVelocity(Vector3 velocity) {
             _internalVelocityAdd += velocity;
-        }
-
-        public void OnDiscreteCollisionDetected(Collider hitCollider)
-        {
         }
     }
 }

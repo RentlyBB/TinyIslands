@@ -1,22 +1,18 @@
 ﻿using UnityEditor;
 
-namespace ScriptableObjectArchitecture.Editor
-{
-    public abstract class BaseGameEventEditor : UnityEditor.Editor
-    {
-        private IStackTraceObject Target { get { return (IStackTraceObject)target; } }
+namespace ScriptableObjectArchitecture.Editor {
+    public abstract class BaseGameEventEditor : UnityEditor.Editor {
 
         private StackTrace _stackTrace;
+        private IStackTraceObject Target { get { return (IStackTraceObject)target; } }
 
-        protected abstract void DrawRaiseButton();
-
-        protected virtual void OnEnable()
-        {
+        protected virtual void OnEnable() {
             _stackTrace = new StackTrace(Target);
             _stackTrace.OnRepaint.AddListener(Repaint);
         }
-        public override void OnInspectorGUI()
-        {
+
+        protected abstract void DrawRaiseButton();
+        public override void OnInspectorGUI() {
             DrawRaiseButton();
 
             if (!SOArchitecturePreferences.IsDebugEnabled)

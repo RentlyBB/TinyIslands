@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace KinematicCharacterController.Examples {
@@ -35,7 +33,7 @@ namespace KinematicCharacterController.Examples {
             RenderOn.enabled = Camera.cullingMask == -1;
 
             // SimOn.enabled = Physics.autoSimulation;
-            
+
             SimOn.enabled = IsSimulationOn();
             InterpOn.enabled = KinematicCharacterSystem.Settings.Interpolate;
         }
@@ -89,13 +87,13 @@ namespace KinematicCharacterController.Examples {
             AIController.Characters.Clear();
 
             int charsPerRow = Mathf.CeilToInt(Mathf.Sqrt(SpawnCount));
-            Vector3 firstPos = ((charsPerRow * SpawnDistance) * 0.5f) * -Vector3.one;
+            Vector3 firstPos = charsPerRow * SpawnDistance * 0.5f * -Vector3.one;
             firstPos.y = 0f;
 
             for (int i = 0; i < SpawnCount; i++) {
                 int row = i / charsPerRow;
                 int col = i % charsPerRow;
-                Vector3 pos = firstPos + (Vector3.right * row * SpawnDistance) + (Vector3.forward * col * SpawnDistance);
+                Vector3 pos = firstPos + Vector3.right * row * SpawnDistance + Vector3.forward * col * SpawnDistance;
 
                 ExampleCharacterController newChar = Instantiate(CharacterPrefab);
                 newChar.Motor.SetPosition(pos);

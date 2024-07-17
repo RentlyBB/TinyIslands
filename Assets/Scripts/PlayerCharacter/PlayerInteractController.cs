@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using InputCore;
 using UnityEngine;
 using World;
@@ -19,6 +17,12 @@ namespace PlayerCharacter {
             inputReader.Interact -= OnInteract;
         }
 
+        private void OnDrawGizmosSelected() {
+            // Draw a yellow sphere at the transform's position
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, sphereRadius);
+        }
+
         private void OnInteract() {
             int maxColliders = 10;
             Collider[] hitColliders = new Collider[maxColliders];
@@ -29,7 +33,7 @@ namespace PlayerCharacter {
 
             for (int i = 0; i < numColliders; i++) {
                 if (hitColliders[i] != null &&
-                    hitColliders[i].TryGetComponent<Interactable>(out Interactable interactable)) {
+                    hitColliders[i].TryGetComponent(out Interactable interactable)) {
                     interactableObjects.Add(interactable);
                 }
             }
@@ -47,12 +51,6 @@ namespace PlayerCharacter {
             }
 
             closestInteractable?.InteractableAction();
-        }
-
-        void OnDrawGizmosSelected() {
-            // Draw a yellow sphere at the transform's position
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, sphereRadius);
         }
     }
 }

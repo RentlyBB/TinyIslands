@@ -1,11 +1,10 @@
+using System;
 using UnityEngine;
 
-namespace ScriptableObjectArchitecture
-{
-	[System.Serializable]
-	public sealed class AnimationCurveReference : BaseReference<AnimationCurve, AnimationCurveVariable>
-	{
-	    public AnimationCurveReference() : base() { }
-	    public AnimationCurveReference(AnimationCurve value) : base(value) { }
-	}
+namespace ScriptableObjectArchitecture {
+    [Serializable]
+    public sealed class AnimationCurveReference : BaseReference<AnimationCurve, AnimationCurveVariable> {
+        public AnimationCurveReference() { }
+        public AnimationCurveReference(AnimationCurve value) : base(value) { }
+    }
 }

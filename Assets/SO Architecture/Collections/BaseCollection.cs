@@ -1,18 +1,13 @@
 ﻿using System.Collections;
 using Type = System.Type;
 
-namespace ScriptableObjectArchitecture
-{
-    public abstract class BaseCollection : SOArchitectureBaseObject, IEnumerable
-    {
-        public object this[int index]
-        {
-            get
-            {
+namespace ScriptableObjectArchitecture {
+    public abstract class BaseCollection : SOArchitectureBaseObject, IEnumerable {
+        public object this[int index] {
+            get {
                 return List[index];
             }
-            set
-            {
+            set {
                 List[index] = value;
             }
         }
@@ -22,13 +17,11 @@ namespace ScriptableObjectArchitecture
         public abstract IList List { get; }
         public abstract Type Type { get; }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
             return List.GetEnumerator();
         }
-        public bool Contains(object obj)
-        {
+        public bool Contains(object obj) {
             return List.Contains(obj);
         }
-	}
+    }
 }

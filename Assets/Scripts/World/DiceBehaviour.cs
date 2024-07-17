@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using EditorScripts;
 using UnityEngine;
 
@@ -11,7 +9,7 @@ namespace World {
         Cyan,
         Green,
         Blue,
-        Pink
+        Pink,
     }
 
     public class DiceBehaviour : MonoBehaviour {
@@ -25,26 +23,26 @@ namespace World {
 
         public bool rotationCompleted = true;
 
-        private Quaternion _targetRotation;
-        private Quaternion _currentRotation;
-
-        private Vector3 _targetPosition;
-        private Vector3 _currentPosition;
+        [HideInInspector] public bool locked;
+        [HideInInspector] public bool lockAnim;
 
         private Animator _animator;
+        private Vector3 _currentPosition;
+        private Quaternion _currentRotation;
 
-        [HideInInspector] public bool locked = false;
-        [HideInInspector] public bool lockAnim = false;
 
-
-        private Quaternion[] _faceRotation = new Quaternion[] {
+        private readonly Quaternion[] _faceRotation = {
             Quaternion.Euler(0f, 0f, 0f), //Top
             Quaternion.Euler(180f, 0f, 0f), // Bottom
             Quaternion.Euler(-90f, 0f, 0f), // Front
             Quaternion.Euler(90f, 0f, 0f), // Back
             Quaternion.Euler(0f, 0f, -90f), // Left
-            Quaternion.Euler(0f, 0f, 90f) // Right
+            Quaternion.Euler(0f, 0f, 90f), // Right
         };
+
+        private Vector3 _targetPosition;
+
+        private Quaternion _targetRotation;
 
         private void Awake() {
             _currentPosition = transform.position;
@@ -66,7 +64,7 @@ namespace World {
                 EnableAnimator();
             }
         }
-        
+
         public void RotationToCurrent() {
             if (locked) return;
 
@@ -86,7 +84,7 @@ namespace World {
             }
             RotationToCurrent();
         }
-        
+
         //Set targetRotation
         private void RotateByIndex(int index) {
             if (locked) return;
@@ -99,7 +97,7 @@ namespace World {
             _targetPosition = targetPosition;
         }
 
-        
+
         //TRANSFORM
         private void Moving() {
 
@@ -128,8 +126,7 @@ namespace World {
             _currentRotation = newRotation;
         }
 
-        
-        
+
         //ANIMATION 
         [InvokeButton]
         public void Shake() {
@@ -141,7 +138,7 @@ namespace World {
         }
 
         private void EnableAnimator() {
-            if(lockAnim) return;
+            if (lockAnim) return;
 
             _animator.enabled = true;
         }

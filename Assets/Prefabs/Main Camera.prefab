@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6672712257701735377}
   - component: {fileID: 6795094205129918543}
   - component: {fileID: 8458123524006792598}
-  - component: {fileID: 326187221839609507}
   - component: {fileID: 7314357613622776560}
   - component: {fileID: 7838895317023585886}
   - component: {fileID: 1972233669088203885}
@@ -141,40 +140,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!114 &326187221839609507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7612781244138764013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24092a40b02616e479baeb940325e339, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Camera: {fileID: 6672712257701735377}
-  FollowPointFraming: {x: 0, y: 0}
-  FollowingSharpness: 10000
-  DefaultDistance: 6
-  MinDistance: 0
-  MaxDistance: 10
-  DistanceMovementSpeed: 5
-  DistanceMovementSharpness: 10
-  InvertX: 0
-  InvertY: 0
-  DefaultVerticalAngle: 20
-  MinVerticalAngle: -90
-  MaxVerticalAngle: 90
-  RotationSpeed: 1
-  RotationSharpness: 10000
-  RotateWithPhysicsMover: 0
-  ObstructionCheckRadius: 0.2
-  ObstructionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  ObstructionSharpness: 10000
-  IgnoredColliders: []
 --- !u!114 &7314357613622776560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,14 +187,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputReader: {fileID: 11400000, guid: fb20446b4c19dbb4592cef5846cdbf10, type: 2}
-  zoomSpeed: 25
-  minZoomSize: 1
-  maxZoomSize: 50
-  zoomSmoothing: 5
-  startZoom: 15
-  zoomOutSize: 50
+  minScrollZoomSize: 1
+  maxScrollZoomSize: 50
   canScrollZooming: 0
-  smoothTime: 0.3
+  zoomSmoothing: 5
+  zoomSpeed: 25
+  zoomInSize: 15
+  zoomOutSize: 50
+  moveSmoothTime: 0.3
   zOffset: -100
 --- !u!114 &1972233669088203885
 MonoBehaviour:

@@ -1,7 +1,5 @@
-using System;
 using InputCore;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace PlayerCharacter {
     public class PlayerInputManager : MonoBehaviour {
@@ -9,19 +7,11 @@ namespace PlayerCharacter {
         public CharacterMovementController character;
         public CharacterCamera characterCamera;
 
-        [SerializeField] private bool hideCursor = false;
+        [SerializeField] private bool hideCursor;
 
-        private PlayerCharacterInputs _characterInputs = new PlayerCharacterInputs();
+        private PlayerCharacterInputs _characterInputs;
 
-        private void OnEnable() {
-            inputReader.Movement += Move;
-        }
-
-        private void OnDisable() {
-            inputReader.Movement -= Move;
-        }
-
-        void Start() {
+        private void Start() {
             if (hideCursor) {
                 Cursor.lockState = CursorLockMode.Locked;
             }
@@ -31,7 +21,7 @@ namespace PlayerCharacter {
             characterCamera.IgnoredColliders.AddRange(character.GetComponentsInChildren<Collider>());
         }
 
-        void Update() {
+        private void Update() {
             if (hideCursor && Input.GetMouseButtonDown(0)) {
                 Cursor.lockState = CursorLockMode.Locked;
             }
@@ -44,6 +34,14 @@ namespace PlayerCharacter {
 
             //TODO: Camera Handling Should Be Done Here 
             HandleCameraInput();
+        }
+
+        private void OnEnable() {
+            inputReader.Movement += Move;
+        }
+
+        private void OnDisable() {
+            inputReader.Movement -= Move;
         }
 
         private void HandleCameraInput() {
@@ -60,7 +58,7 @@ namespace PlayerCharacter {
         }
 
         /*INPUT LISTENERS*/
-        void Move(Vector2 movementDirection) {
+        private void Move(Vector2 movementDirection) {
             _characterInputs.MoveAxisRight = movementDirection.x;
             _characterInputs.MoveAxisForward = movementDirection.y;
         }

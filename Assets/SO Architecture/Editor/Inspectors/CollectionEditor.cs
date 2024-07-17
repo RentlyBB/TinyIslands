@@ -1,19 +1,10 @@
 ﻿using UnityEditor;
-using UnityEngine;
 using UnityEditorInternal;
+using UnityEngine;
 
-namespace ScriptableObjectArchitecture.Editor
-{
+namespace ScriptableObjectArchitecture.Editor {
     [CustomEditor(typeof(BaseCollection), true)]
-    public class CollectionEditor : UnityEditor.Editor
-    {
-        private BaseCollection Target { get { return (BaseCollection)target; } }
-        private SerializedProperty CollectionItemsProperty
-        {
-            get { return serializedObject.FindProperty(LIST_PROPERTY_NAME);}
-        }
-
-        private ReorderableList _reorderableList;
+    public class CollectionEditor : UnityEditor.Editor {
 
         // UI
         private const bool DISABLE_ELEMENTS = false;
@@ -22,17 +13,22 @@ namespace ScriptableObjectArchitecture.Editor
         private const bool LIST_DISPLAY_ADD_BUTTON = true;
         private const bool LIST_DISPLAY_REMOVE_BUTTON = true;
 
-        private GUIContent _titleGUIContent;
-        private GUIContent _noPropertyDrawerWarningGUIContent;
-
         private const string TITLE_FORMAT = "List ({0})";
         private const string NO_PROPERTY_WARNING_FORMAT = "No PropertyDrawer for type [{0}]";
 
         // Property Names
         private const string LIST_PROPERTY_NAME = "_list";
+        private GUIContent _noPropertyDrawerWarningGUIContent;
 
-        private void OnEnable()
-        {
+        private ReorderableList _reorderableList;
+
+        private GUIContent _titleGUIContent;
+        private BaseCollection Target { get { return (BaseCollection)target; } }
+        private SerializedProperty CollectionItemsProperty {
+            get { return serializedObject.FindProperty(LIST_PROPERTY_NAME); }
+        }
+
+        private void OnEnable() {
             _titleGUIContent = new GUIContent(string.Format(TITLE_FORMAT, Target.Type));
             _noPropertyDrawerWarningGUIContent = new GUIContent(string.Format(NO_PROPERTY_WARNING_FORMAT, Target.Type));
 
@@ -42,30 +38,25 @@ namespace ScriptableObjectArchitecture.Editor
                 ELEMENT_DRAGGABLE,
                 LIST_DISPLAY_HEADER,
                 LIST_DISPLAY_ADD_BUTTON,
-                LIST_DISPLAY_REMOVE_BUTTON)
-            {
+                LIST_DISPLAY_REMOVE_BUTTON) {
                 drawHeaderCallback = DrawHeader,
                 drawElementCallback = DrawElement,
                 elementHeightCallback = GetHeight,
             };
         }
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             EditorGUI.BeginChangeCheck();
 
             _reorderableList.DoLayoutList();
 
-            if (EditorGUI.EndChangeCheck())
-            {
+            if (EditorGUI.EndChangeCheck()) {
                 serializedObject.ApplyModifiedProperties();
             }
         }
-        private void DrawHeader(Rect rect)
-        {
+        private void DrawHeader(Rect rect) {
             EditorGUI.LabelField(rect, _titleGUIContent);
         }
-        private void DrawElement(Rect rect, int index, bool isActive, bool isFocused)
-        {
+        private void DrawElement(Rect rect, int index, bool isActive, bool isFocused) {
             rect = SOArchitecture_EditorUtility.GetReorderableListElementFieldRect(rect);
             SerializedProperty property = CollectionItemsProperty.GetArrayElementAtIndex(index);
 
@@ -75,8 +66,7 @@ namespace ScriptableObjectArchitecture.Editor
 
             EditorGUI.EndDisabledGroup();
         }
-        private float GetHeight(int index)
-        {
+        private float GetHeight(int index) {
             SerializedProperty property = CollectionItemsProperty.GetArrayElementAtIndex(index);
 
             return GenericPropertyDrawer.GetHeight(property, Target.Type) + EditorGUIUtility.standardVerticalSpacing;

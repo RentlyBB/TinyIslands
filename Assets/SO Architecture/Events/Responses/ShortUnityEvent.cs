@@ -1,9 +1,8 @@
-﻿using UnityEngine.Events;
+﻿using System;
+using UnityEngine.Events;
 
-namespace ScriptableObjectArchitecture
-{
-    [System.Serializable]
-    public sealed class ShortUnityEvent : UnityEvent<short>
-    {
-    } 
+namespace ScriptableObjectArchitecture {
+    [Serializable]
+    public sealed class ShortUnityEvent : UnityEvent<short> {
+    }
 }

@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using KinematicCharacterController;
 using UnityEngine;
@@ -11,12 +9,12 @@ namespace PlayerCharacter {
         public float fallThreshold = 2f;
 
         public LayerMask layerMask = 1 << 8;
-
-        private List<Transform> _wallPoints = new List<Transform>();
-        private List<Transform> _fallWalls = new List<Transform>();
+        private readonly List<Transform> _fallWalls = new List<Transform>();
         private RaycastHit _hit;
 
         private KinematicCharacterMotor _motor;
+
+        private readonly List<Transform> _wallPoints = new List<Transform>();
 
         private void Start() {
             _motor = GetComponent<KinematicCharacterMotor>();
@@ -50,12 +48,12 @@ namespace PlayerCharacter {
                     Vector3 closestPoint = _motor.GroundingStatus.GroundCollider.ClosestPointOnBounds(_wallPoints[i].position);
                     Vector3 targetWallPos = new Vector3(closestPoint.x, transform.position.y + 1, closestPoint.z);
                     _fallWalls[i].position = targetWallPos;
-                
+
                     Debug.DrawRay(_wallPoints[i].position, _wallPoints[i].TransformDirection(Vector3.down) * fallThreshold, Color.yellow);
 
                 } else {
                     _fallWalls[i].position = _wallPoints[i].position;
-                
+
                     Debug.DrawRay(_wallPoints[i].position, _wallPoints[i].TransformDirection(Vector3.down) * fallThreshold, Color.red);
                 }
             }

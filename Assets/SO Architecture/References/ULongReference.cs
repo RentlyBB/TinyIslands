@@ -1,9 +1,9 @@
-﻿namespace ScriptableObjectArchitecture
-{
-    [System.Serializable]
-    public sealed class ULongReference : BaseReference<ulong, ULongVariable>
-    {
-        public ULongReference() : base() { }
+﻿using System;
+
+namespace ScriptableObjectArchitecture {
+    [Serializable]
+    public sealed class ULongReference : BaseReference<ulong, ULongVariable> {
+        public ULongReference() { }
         public ULongReference(ulong value) : base(value) { }
-    } 
+    }
 }

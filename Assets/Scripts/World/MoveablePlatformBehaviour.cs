@@ -1,8 +1,6 @@
-﻿using System;
-using EditorScripts;
+﻿using EditorScripts;
 using KinematicCharacterController;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
@@ -10,23 +8,23 @@ namespace World {
         public PhysicsMover mover;
 
         public Vector3 nextPositon;
-        
+
         [Range(0.1f, 1)]
         public float speed = 0.1f;
-        
-        public bool loop = false;
-        
+
+        public bool loop;
+
         public Transform wireCubeSize;
-        
+
+        private Vector3 _currentGoalPosition;
+
+        private float _fraction;
+        private Vector3 _nextGoalPosition;
+
         private Vector3 _originalPosition;
         private Quaternion _originalRotation;
 
-        private Vector3 _currentGoalPosition;
-        private Vector3 _nextGoalPosition;
-
         private bool _toOriginalPosition;
-
-        private float _fraction;
 
         private void Start() {
             _originalPosition = mover.Rigidbody.position;
@@ -40,18 +38,6 @@ namespace World {
             mover.MoverController = this;
         }
 
-        void OnDrawGizmosSelected() {
-            // Draw a yellow cube at the transform position
-            
-            if (wireCubeSize == null) {
-                wireCubeSize = transform;
-            }
-            
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireCube(transform.position + nextPositon, wireCubeSize.localScale);
-            
-        }
-
         private void Update() {
             if (_fraction < 1) {
                 _fraction += Time.deltaTime * (speed / 10);
@@ -63,6 +49,23 @@ namespace World {
 
         }
 
+        private void OnDrawGizmosSelected() {
+            // Draw a yellow cube at the transform position
+
+            if (wireCubeSize == null) {
+                wireCubeSize = transform;
+            }
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireCube(transform.position + nextPositon, wireCubeSize.localScale);
+
+        }
+
+        public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
+            goalPosition = _currentGoalPosition;
+            goalRotation = _originalRotation;
+        }
+
 
         private void LoopingMovement() {
             if (!loop) return;
@@ -71,11 +74,6 @@ namespace World {
                 MovePlatform();
             }
 
-        }
-
-        public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
-            goalPosition = _currentGoalPosition;
-            goalRotation = _originalRotation;
         }
 
         [InvokeButton]

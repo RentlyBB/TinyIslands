@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 
-namespace ScriptableObjectArchitecture
-{
+namespace ScriptableObjectArchitecture {
     /// <summary>
-    /// Base class for SOArchitecture assets
+    ///     Base class for SOArchitecture assets
     /// </summary>
-    public abstract class SOArchitectureBaseObject : ScriptableObject
-    {
-    } 
+    public abstract class SOArchitectureBaseObject : ScriptableObject {
+    }
 }

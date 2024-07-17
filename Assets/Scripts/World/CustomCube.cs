@@ -1,75 +1,73 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace World {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class CustomCube : MonoBehaviour {
 
-        void Start() {
+        private void Start() {
             MeshFilter meshFilter = GetComponent<MeshFilter>();
             Mesh mesh = new Mesh();
             mesh.name = "CustomCube";
 
             // Define vertices for each face
-            Vector3[][] faceVertices = new Vector3[][] {
-                new Vector3[] // Front face
+            Vector3[][] faceVertices = {
+                new[] // Front face
                 {
                     new Vector3(-0.5f, -0.5f, 0.5f),
                     new Vector3(0.5f, -0.5f, 0.5f),
                     new Vector3(0.5f, 0.5f, 0.5f),
-                    new Vector3(-0.5f, 0.5f, 0.5f)
+                    new Vector3(-0.5f, 0.5f, 0.5f),
                 },
-                new Vector3[] // Back face
+                new[] // Back face
                 {
                     new Vector3(-0.5f, -0.5f, -0.5f),
                     new Vector3(0.5f, -0.5f, -0.5f),
                     new Vector3(0.5f, 0.5f, -0.5f),
-                    new Vector3(-0.5f, 0.5f, -0.5f)
+                    new Vector3(-0.5f, 0.5f, -0.5f),
                 },
-                new Vector3[] // Left face
+                new[] // Left face
                 {
                     new Vector3(-0.5f, -0.5f, -0.5f),
                     new Vector3(-0.5f, 0.5f, -0.5f),
                     new Vector3(-0.5f, 0.5f, 0.5f),
-                    new Vector3(-0.5f, -0.5f, 0.5f)
+                    new Vector3(-0.5f, -0.5f, 0.5f),
                 },
-                new Vector3[] // Right face
+                new[] // Right face
                 {
                     new Vector3(0.5f, -0.5f, -0.5f),
                     new Vector3(0.5f, -0.5f, 0.5f),
                     new Vector3(0.5f, 0.5f, 0.5f),
-                    new Vector3(0.5f, 0.5f, -0.5f)
+                    new Vector3(0.5f, 0.5f, -0.5f),
                 },
-                new Vector3[] // Top face
+                new[] // Top face
                 {
                     new Vector3(-0.5f, 0.5f, 0.5f),
                     new Vector3(0.5f, 0.5f, 0.5f),
                     new Vector3(0.5f, 0.5f, -0.5f),
-                    new Vector3(-0.5f, 0.5f, -0.5f)
+                    new Vector3(-0.5f, 0.5f, -0.5f),
                 },
-                new Vector3[] // Bottom face
+                new[] // Bottom face
                 {
                     new Vector3(-0.5f, -0.5f, 0.5f),
                     new Vector3(0.5f, -0.5f, 0.5f),
                     new Vector3(0.5f, -0.5f, -0.5f),
-                    new Vector3(-0.5f, -0.5f, -0.5f)
-                }
+                    new Vector3(-0.5f, -0.5f, -0.5f),
+                },
             };
 
             // Define triangles for each face
-            int[][] faceTriangles = new int[][] {
-                new int[] { 0, 1, 2, 0, 2, 3 }, // Back face
-                new int[] { 0, 2, 1, 0, 3, 2 }, // Front face
-                new int[] { 0, 3, 2, 0, 2, 1 }, // Left face
-                new int[] { 0, 2, 1, 0, 3, 2 }, // Right face
-                new int[] { 0, 1, 2, 0, 2, 3 }, // Bottom face
-                new int[] { 0, 2, 1, 0, 3, 2 } // Top face
+            int[][] faceTriangles = {
+                new[] { 0, 1, 2, 0, 2, 3 }, // Back face
+                new[] { 0, 2, 1, 0, 3, 2 }, // Front face
+                new[] { 0, 3, 2, 0, 2, 1 }, // Left face
+                new[] { 0, 2, 1, 0, 3, 2 }, // Right face
+                new[] { 0, 1, 2, 0, 2, 3 }, // Bottom face
+                new[] { 0, 2, 1, 0, 3, 2 }, // Top face
             };
 
             // Define normals for each face
             Vector3[] faceNormals = {
-                Vector3.forward, Vector3.back, Vector3.left, Vector3.right, Vector3.up, Vector3.down
+                Vector3.forward, Vector3.back, Vector3.left, Vector3.right, Vector3.up, Vector3.down,
             };
 
             // Initialize arrays for vertices, normals, and submeshes
@@ -127,6 +125,5 @@ namespace World {
                 meshRenderer.materials[faceIndex].color = color;
             }
         }
-
     }
 }

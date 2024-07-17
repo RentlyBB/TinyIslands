@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace EditorScripts {
-    [CustomEditor(typeof(MonoBehaviour), true), CanEditMultipleObjects]
+    [CustomEditor(typeof(MonoBehaviour), true)] [CanEditMultipleObjects]
     public class InvokeButtonEditor : Editor {
-        
+
         public override void OnInspectorGUI() {
             DrawDefaultInspector();
 
@@ -18,16 +16,16 @@ namespace EditorScripts {
             }
 
             // Get the target object
-            var targetObject = target as MonoBehaviour;
+            MonoBehaviour targetObject = target as MonoBehaviour;
 
             // Get all methods in the target object
-            var methods = targetObject?.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            MethodInfo[] methods = targetObject?.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
 
             // Iterate through the methods
             if (methods != null) {
-                foreach (var method in methods) {
+                foreach (MethodInfo method in methods) {
                     // Check if the method has the InvokeButton attribute
-                    var attribute = method.GetCustomAttribute<InvokeButtonAttribute>();
+                    InvokeButtonAttribute attribute = method.GetCustomAttribute<InvokeButtonAttribute>();
                     if (attribute != null) {
                         // Determine the button label
                         string buttonLabel = attribute.ButtonName ?? method.Name;

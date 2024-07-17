@@ -1,14 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using KinematicCharacterController;
-using KinematicCharacterController.Examples;
-using System;
 
-namespace KinematicCharacterController.Examples
-{
-    public class PlanetManager : MonoBehaviour, IMoverController
-    {
+namespace KinematicCharacterController.Examples {
+    public class PlanetManager : MonoBehaviour, IMoverController {
         public PhysicsMover PlanetMover;
         public SphereCollider GravityField;
         public float GravityStrength = 10;
@@ -18,12 +12,11 @@ namespace KinematicCharacterController.Examples
         public Teleporter OnPlaygroundTeleportingZone;
         public Teleporter OnPlanetTeleportingZone;
 
-        private List<ExampleCharacterController> _characterControllersOnPlanet = new List<ExampleCharacterController>();
-        private Vector3 _savedGravity;
+        private readonly List<ExampleCharacterController> _characterControllersOnPlanet = new List<ExampleCharacterController>();
         private Quaternion _lastRotation;
+        private Vector3 _savedGravity;
 
-        private void Start()
-        {
+        private void Start() {
             OnPlaygroundTeleportingZone.OnCharacterTeleport -= ControlGravity;
             OnPlaygroundTeleportingZone.OnCharacterTeleport += ControlGravity;
 
@@ -35,8 +28,7 @@ namespace KinematicCharacterController.Examples
             PlanetMover.MoverController = this;
         }
 
-        public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime)
-        {
+        public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
             goalPosition = PlanetMover.Rigidbody.position;
 
             // Rotate
@@ -45,20 +37,17 @@ namespace KinematicCharacterController.Examples
             _lastRotation = targetRotation;
 
             // Apply gravity to characters
-            foreach (ExampleCharacterController cc in _characterControllersOnPlanet)
-            {
+            foreach (ExampleCharacterController cc in _characterControllersOnPlanet) {
                 cc.Gravity = (PlanetMover.transform.position - cc.transform.position).normalized * GravityStrength;
             }
         }
 
-        void ControlGravity(ExampleCharacterController cc)
-        {
+        private void ControlGravity(ExampleCharacterController cc) {
             _savedGravity = cc.Gravity;
             _characterControllersOnPlanet.Add(cc);
         }
 
-        void UnControlGravity(ExampleCharacterController cc)
-        {
+        private void UnControlGravity(ExampleCharacterController cc) {
             cc.Gravity = _savedGravity;
             _characterControllersOnPlanet.Remove(cc);
         }

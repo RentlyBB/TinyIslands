@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 
-namespace KinematicCharacterController
-{
-    public class ReadOnlyAttribute : PropertyAttribute
-    {
+namespace KinematicCharacterController {
+    public class ReadOnlyAttribute : PropertyAttribute {
     }
 }

@@ -1,16 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace KinematicCharacterController.Examples
-{
-    public class FrameratePanel : MonoBehaviour
-    {
+namespace KinematicCharacterController.Examples {
+    public class FrameratePanel : MonoBehaviour {
         public float PollingRate = 1f;
         public Text PhysicsRate;
         public Text PhysicsFPS;
@@ -18,60 +14,49 @@ namespace KinematicCharacterController.Examples
         public Text AvgFPSMin;
         public Text AvgFPSMax;
 
-        public Action<float> OnPhysicsFPSReady;
-
         public string[] FramerateStrings = new string[0];
 
-        private bool _isFixedUpdateThisFrame = false;
-        private bool _wasFixedUpdateLastFrame = false;
-        private int _physFramesCount = 0;
-        private float _physFramesDeltaSum = 0;
+        private int _framesCount;
+        private float _framesDeltaSum;
 
-        private int _framesCount = 0;
-        private float _framesDeltaSum = 0;
-        private float _minDeltaTimeForAvg = Mathf.Infinity;
+        private bool _isFixedUpdateThisFrame;
         private float _maxDeltaTimeForAvg = Mathf.NegativeInfinity;
-        private float _timeOfLastPoll = 0;
+        private float _minDeltaTimeForAvg = Mathf.Infinity;
+        private int _physFramesCount;
+        private float _physFramesDeltaSum;
+        private float _timeOfLastPoll;
+        private bool _wasFixedUpdateLastFrame;
 
-        private void FixedUpdate()
-        {
-            _isFixedUpdateThisFrame = true;
-        }
+        public Action<float> OnPhysicsFPSReady;
 
-        void Update()
-        {
+        private void Update() {
             // Regular frames
             _framesCount++;
             _framesDeltaSum += Time.deltaTime;
 
             // Max and min
-            if (Time.deltaTime < _minDeltaTimeForAvg)
-            {
+            if (Time.deltaTime < _minDeltaTimeForAvg) {
                 _minDeltaTimeForAvg = Time.deltaTime;
             }
-            if (Time.deltaTime > _maxDeltaTimeForAvg)
-            {
+            if (Time.deltaTime > _maxDeltaTimeForAvg) {
                 _maxDeltaTimeForAvg = Time.deltaTime;
             }
 
             // Fixed frames
-            if (_wasFixedUpdateLastFrame)
-            {
+            if (_wasFixedUpdateLastFrame) {
                 _wasFixedUpdateLastFrame = false;
 
                 _physFramesCount++;
                 _physFramesDeltaSum += Time.deltaTime;
             }
-            if (_isFixedUpdateThisFrame)
-            {
+            if (_isFixedUpdateThisFrame) {
                 _wasFixedUpdateLastFrame = true;
                 _isFixedUpdateThisFrame = false;
             }
 
             // Polling timer
-            float timeSinceLastPoll = (Time.unscaledTime - _timeOfLastPoll);
-            if (timeSinceLastPoll > PollingRate)
-            {
+            float timeSinceLastPoll = Time.unscaledTime - _timeOfLastPoll;
+            if (timeSinceLastPoll > PollingRate) {
                 float physicsFPS = 1f / (_physFramesDeltaSum / _physFramesCount);
 
                 AvgFPS.text = GetNumberString(Mathf.RoundToInt(1f / (_framesDeltaSum / _framesCount)));
@@ -79,8 +64,7 @@ namespace KinematicCharacterController.Examples
                 AvgFPSMax.text = GetNumberString(Mathf.RoundToInt(1f / _minDeltaTimeForAvg));
                 PhysicsFPS.text = GetNumberString(Mathf.RoundToInt(physicsFPS));
 
-                if(OnPhysicsFPSReady != null)
-                {
+                if (OnPhysicsFPSReady != null) {
                     OnPhysicsFPSReady(physicsFPS);
                 }
 
@@ -97,54 +81,44 @@ namespace KinematicCharacterController.Examples
             PhysicsRate.text = GetNumberString(Mathf.RoundToInt(1f / Time.fixedDeltaTime));
         }
 
-        public string GetNumberString(int fps)
-        {
-            if (fps < FramerateStrings.Length - 1 && fps >= 0)
-            {
+        private void FixedUpdate() {
+            _isFixedUpdateThisFrame = true;
+        }
+
+        public string GetNumberString(int fps) {
+            if (fps < FramerateStrings.Length - 1 && fps >= 0) {
                 return FramerateStrings[fps];
             }
-            else
-            {
-                return FramerateStrings[FramerateStrings.Length - 1];
-            }
+            return FramerateStrings[FramerateStrings.Length - 1];
         }
     }
 
 #if UNITY_EDITOR
     [CustomEditor(typeof(FrameratePanel))]
-    public class FrameratePanelEditor : Editor
-    {
+    public class FrameratePanelEditor : Editor {
         private const int MaxFPS = 999;
 
-        private void OnEnable()
-        {
+        private void OnEnable() {
             InitStringsArray();
         }
 
-        public override void OnInspectorGUI()
-        {
+        public override void OnInspectorGUI() {
             DrawDefaultInspector();
 
-            if (GUILayout.Button("Init strings array"))
-            {
+            if (GUILayout.Button("Init strings array")) {
                 InitStringsArray();
             }
         }
 
-        private void InitStringsArray()
-        {
+        private void InitStringsArray() {
             FrameratePanel fp = target as FrameratePanel;
             fp.FramerateStrings = new string[MaxFPS + 1];
 
-            for (int i = 0; i < fp.FramerateStrings.Length; i++)
-            {
-                if (i >= fp.FramerateStrings.Length - 1)
-                {
-                    fp.FramerateStrings[i] = i.ToString() + "+" + " (<" + (1000f / (float)i).ToString("F") + "ms)";
-                }
-                else
-                {
-                    fp.FramerateStrings[i] = i.ToString() + " (" + (1000f/(float)i).ToString("F") + "ms)" ;
+            for (int i = 0; i < fp.FramerateStrings.Length; i++) {
+                if (i >= fp.FramerateStrings.Length - 1) {
+                    fp.FramerateStrings[i] = i + "+" + " (<" + (1000f / i).ToString("F") + "ms)";
+                } else {
+                    fp.FramerateStrings[i] = i + " (" + (1000f / i).ToString("F") + "ms)";
                 }
             }
         }

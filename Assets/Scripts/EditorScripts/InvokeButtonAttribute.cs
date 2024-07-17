@@ -1,13 +1,13 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 namespace EditorScripts {
-    [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class InvokeButtonAttribute : PropertyAttribute {
         public readonly string ButtonName;
 
         public InvokeButtonAttribute(string buttonName = null) {
-            this.ButtonName = buttonName;
+            ButtonName = buttonName;
         }
     }
 }

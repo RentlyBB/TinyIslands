@@ -1,7 +1,5 @@
-﻿namespace ScriptableObjectArchitecture
-{
-    public static class SOArchitecture_Utility
-    {
+﻿namespace ScriptableObjectArchitecture {
+    public static class SOArchitecture_Utility {
         public const int ASSET_MENU_ORDER_VARIABLES = 121;
         public const int ASSET_MENU_ORDER_EVENTS = 122;
         public const int ASSET_MENU_ORDER_COLLECTIONS = 123;

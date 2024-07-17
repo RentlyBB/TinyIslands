@@ -1,25 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using KinematicCharacterController;
 using KinematicCharacterController.Examples;
+using UnityEngine;
 
-namespace KinematicCharacterController.Walkthrough.LandingLeavingGround
-{
-    public class MyPlayer : MonoBehaviour
-    {
-        public ExampleCharacterCamera OrbitCamera;
-        public Transform CameraFollowPoint;
-        public MyCharacterController Character;
+namespace KinematicCharacterController.Walkthrough.LandingLeavingGround {
+    public class MyPlayer : MonoBehaviour {
 
         private const string MouseXInput = "Mouse X";
         private const string MouseYInput = "Mouse Y";
         private const string MouseScrollInput = "Mouse ScrollWheel";
         private const string HorizontalInput = "Horizontal";
         private const string VerticalInput = "Vertical";
+        public ExampleCharacterCamera OrbitCamera;
+        public Transform CameraFollowPoint;
+        public MyCharacterController Character;
 
-        private void Start()
-        {
+        private void Start() {
             Cursor.lockState = CursorLockMode.Locked;
 
             // Tell camera to follow transform
@@ -30,31 +24,26 @@ namespace KinematicCharacterController.Walkthrough.LandingLeavingGround
             OrbitCamera.IgnoredColliders.AddRange(Character.GetComponentsInChildren<Collider>());
         }
 
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
+        private void Update() {
+            if (Input.GetMouseButtonDown(0)) {
                 Cursor.lockState = CursorLockMode.Locked;
             }
 
             HandleCharacterInput();
         }
 
-        private void LateUpdate()
-        {
+        private void LateUpdate() {
             HandleCameraInput();
         }
 
-        private void HandleCameraInput()
-        {
+        private void HandleCameraInput() {
             // Create the look input vector for the camera
             float mouseLookAxisUp = Input.GetAxisRaw(MouseYInput);
             float mouseLookAxisRight = Input.GetAxisRaw(MouseXInput);
             Vector3 lookInputVector = new Vector3(mouseLookAxisRight, mouseLookAxisUp, 0f);
 
             // Prevent moving the camera while the cursor isn't locked
-            if (Cursor.lockState != CursorLockMode.Locked)
-            {
+            if (Cursor.lockState != CursorLockMode.Locked) {
                 lookInputVector = Vector3.zero;
             }
 
@@ -68,14 +57,12 @@ namespace KinematicCharacterController.Walkthrough.LandingLeavingGround
             OrbitCamera.UpdateWithInput(Time.deltaTime, scrollInput, lookInputVector);
 
             // Handle toggling zoom level
-            if (Input.GetMouseButtonDown(1))
-            {
-                OrbitCamera.TargetDistance = (OrbitCamera.TargetDistance == 0f) ? OrbitCamera.DefaultDistance : 0f;
+            if (Input.GetMouseButtonDown(1)) {
+                OrbitCamera.TargetDistance = OrbitCamera.TargetDistance == 0f ? OrbitCamera.DefaultDistance : 0f;
             }
         }
 
-        private void HandleCharacterInput()
-        {
+        private void HandleCharacterInput() {
             PlayerCharacterInputs characterInputs = new PlayerCharacterInputs();
 
             // Build the CharacterInputs struct

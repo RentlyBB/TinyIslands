@@ -116,7 +116,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""id"": ""b1460d4c-b834-441c-a122-865451ae9b7a"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone(min=0.2,max=0.85)"",
                     ""groups"": ""PS5_Controller"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,

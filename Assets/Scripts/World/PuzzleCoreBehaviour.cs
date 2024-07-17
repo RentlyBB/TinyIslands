@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EditorScripts;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using World.Interfaces;
 
 namespace World {
@@ -12,16 +10,16 @@ namespace World {
 
         [TextArea] public string description;
         [Space]
-        public bool autoResolve = false;
+        public bool autoResolve;
         [Space]
         public List<GameObject> puzzlesObj = new List<GameObject>();
-        private readonly List<IPuzzle> _iPuzzles = new List<IPuzzle>();
 
         public UnityEvent onResolve;
+        private readonly List<IPuzzle> _iPuzzles = new List<IPuzzle>();
 
-        private UnityEvent _eCheckPuzzle = new UnityEvent();
-        private UnityEvent _eResolvePuzzle = new UnityEvent();
-        private UnityEvent _eWrongSolutionPuzzle = new UnityEvent();
+        private readonly UnityEvent _eCheckPuzzle = new UnityEvent();
+        private readonly UnityEvent _eResolvePuzzle = new UnityEvent();
+        private readonly UnityEvent _eWrongSolutionPuzzle = new UnityEvent();
 
 
         private void Start() {
@@ -37,7 +35,7 @@ namespace World {
 
         private void Update() {
             if (autoResolve) {
-               ResolveAllPuzzles(); 
+                ResolveAllPuzzles();
             }
         }
 
@@ -46,7 +44,7 @@ namespace World {
             if (puzzlesObj.Count == 0) return;
 
             _eCheckPuzzle?.Invoke();
-                
+
             // If one puzzle is wrong, return it
             foreach (IPuzzle puz in _iPuzzles) {
                 if (!puz.IsSolved()) {

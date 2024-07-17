@@ -1,8 +1,6 @@
-﻿using System;
-using EditorScripts;
+﻿using EditorScripts;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 using World.Interfaces;
 
 namespace World {
@@ -18,7 +16,7 @@ namespace World {
 
         private DiceBehaviour _diceBehaviour;
 
-        private bool _isSolved = false;
+        private bool _isSolved;
 
 
         private void Start() {
@@ -32,12 +30,6 @@ namespace World {
             } else {
                 _diceBehaviour.lockAnim = false;
             }
-        }
-
-        [InvokeButton]
-        public void CheckAndResolve() {
-            CheckPuzzle();
-            ResolvePuzzle();
         }
 
         public void CheckPuzzle() {
@@ -66,6 +58,12 @@ namespace World {
 
         public bool IsSolved() {
             return _isSolved;
+        }
+
+        [InvokeButton]
+        public void CheckAndResolve() {
+            CheckPuzzle();
+            ResolvePuzzle();
         }
     }
 }

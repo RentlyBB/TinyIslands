@@ -2,10 +2,8 @@
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
-namespace ScriptableObjectArchitecture.Editor
-{
-    public class SO_CodeGenerationWindow : EditorWindow
-    {
+namespace ScriptableObjectArchitecture.Editor {
+    public class SO_CodeGenerationWindow : EditorWindow {
         /* --------- DEPENDENCY GRAPH ---------*
          * [1] Game Event Listener
          * [2] Game Event
@@ -23,19 +21,19 @@ namespace ScriptableObjectArchitecture.Editor
          * 6
          */
 
-        private readonly bool[,] _dependencyGraph = new bool[SO_CodeGenerator.TYPE_COUNT, SO_CodeGenerator.TYPE_COUNT]
-        {
-            { false, true, false, false, true, false, },
-            { false, false, true, false, false, false, },
-            { false, false, false, false, false, true, },
-            { false, false, false, false, false, false, },
-            { false, false, false, false, false, false, },
-            { false, false, false, false, false, false, },
+        private readonly bool[,] _dependencyGraph = new bool[SO_CodeGenerator.TYPE_COUNT, SO_CodeGenerator.TYPE_COUNT] {
+            { false, true, false, false, true, false },
+            { false, false, true, false, false, false },
+            { false, false, false, false, false, true },
+            { false, false, false, false, false, false },
+            { false, false, false, false, false, false },
+            { false, false, false, false, false, false },
         };
 
-        private readonly bool[] _states = new bool[SO_CodeGenerator.TYPE_COUNT];
-        private readonly string[] _names = new string[SO_CodeGenerator.TYPE_COUNT]
-        {
+        private readonly bool[] _menuRequirement = new bool[SO_CodeGenerator.TYPE_COUNT] {
+            false, true, false, true, false, true,
+        };
+        private readonly string[] _names = new string[SO_CodeGenerator.TYPE_COUNT] {
             "Event Listener",
             "Game Event",
             "Reference",
@@ -44,24 +42,14 @@ namespace ScriptableObjectArchitecture.Editor
             "Variable",
         };
 
-        private readonly bool[] _menuRequirement = new bool[SO_CodeGenerator.TYPE_COUNT]
-        {
-            false, true, false, true, false, true
-        };
+        private readonly bool[] _states = new bool[SO_CodeGenerator.TYPE_COUNT];
+        private AnimBool _clampedValueHelpBoxAnim;
+        private AnimBool _menuAnim;
+        private string _menuName;
 
         private int _order;
         private string _typeName;
-        private string _menuName;
-        private AnimBool _menuAnim;
-        private AnimBool _clampedValueHelpBoxAnim;
-
-        [MenuItem("Window/SO Code Generation")]
-        private static void ShowWindow()
-        {
-            GetWindow(typeof(SO_CodeGenerationWindow), true, "SO Code Generation");
-        }
-        private void OnEnable()
-        {
+        private void OnEnable() {
             _menuAnim = new AnimBool();
             _menuAnim.valueChanged.AddListener(Repaint);
 
@@ -70,18 +58,15 @@ namespace ScriptableObjectArchitecture.Editor
 
             _order = SOArchitecture_Settings.Instance.DefaultCreateAssetMenuOrder;
         }
-        private void OnGUI()
-        {
+        private void OnGUI() {
             TypeSelection();
 
             EditorGUILayout.Space();
 
             DataFields();
 
-            if (GUILayout.Button("Generate"))
-            {
-                SO_CodeGenerator.Data data = new SO_CodeGenerator.Data()
-                {
+            if (GUILayout.Button("Generate")) {
+                SO_CodeGenerator.Data data = new SO_CodeGenerator.Data {
                     Types = _states,
                     TypeName = _typeName,
                     MenuName = RequiresMenu() ? _menuName : default(string),
@@ -92,16 +77,18 @@ namespace ScriptableObjectArchitecture.Editor
                 AssetDatabase.Refresh();
             }
         }
-        private void TypeSelection()
-        {
+
+        [MenuItem("Window/SO Code Generation")]
+        private static void ShowWindow() {
+            GetWindow(typeof(SO_CodeGenerationWindow), true, "SO Code Generation");
+        }
+        private void TypeSelection() {
             EditorGUILayout.LabelField("Select Type(s)", EditorStyles.boldLabel);
 
-            for (int i = 0; i < SO_CodeGenerator.TYPE_COUNT; i++)
-            {
+            for (int i = 0; i < SO_CodeGenerator.TYPE_COUNT; i++) {
                 bool isDepending = IsDepending(i);
 
-                if (isDepending)
-                {
+                if (isDepending) {
                     _states[i] = true;
                 }
 
@@ -112,8 +99,7 @@ namespace ScriptableObjectArchitecture.Editor
                 EditorGUI.EndDisabledGroup();
             }
         }
-        private void DataFields()
-        {
+        private void DataFields() {
             EditorGUILayout.LabelField("Information", EditorStyles.boldLabel);
 
             // Type name.
@@ -132,13 +118,11 @@ namespace ScriptableObjectArchitecture.Editor
             _order = EditorGUILayout.IntField(new GUIContent("Order", "Use default if unsure"), _order);
         }
         /// <summary>
-        /// Polls the currently selected state types to determine whether any require menus
+        ///     Polls the currently selected state types to determine whether any require menus
         /// </summary>
         /// <returns></returns>
-        private bool RequiresMenu()
-        {
-            for (int i = 0; i < SO_CodeGenerator.TYPE_COUNT; i++)
-            {
+        private bool RequiresMenu() {
+            for (int i = 0; i < SO_CodeGenerator.TYPE_COUNT; i++) {
                 if (_states[i] && _menuRequirement[i])
                     return true;
             }
@@ -146,12 +130,10 @@ namespace ScriptableObjectArchitecture.Editor
             return false;
         }
         /// <summary>
-        /// Given an index, polls the dependency graph, and returns whether anyone is depending on it
+        ///     Given an index, polls the dependency graph, and returns whether anyone is depending on it
         /// </summary>
-        private bool IsDepending(int index)
-        {
-            for (int i = 0; i < SO_CodeGenerator.TYPE_COUNT; i++)
-            {
+        private bool IsDepending(int index) {
+            for (int i = 0; i < SO_CodeGenerator.TYPE_COUNT; i++) {
                 if (_states[i] && _dependencyGraph[i, index])
                     return true;
             }

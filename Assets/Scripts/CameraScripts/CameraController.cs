@@ -1,15 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using InputCore;
 using PlayerCharacter;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace CameraScripts {
     public class CameraController : MonoBehaviour {
-
-        private Camera _camera;
 
         public InputReaderSo inputReader;
 
@@ -17,7 +11,7 @@ namespace CameraScripts {
         [Header("Zoom Settings")]
         public float minScrollZoomSize = 1.0f; // Minimum orthographic size (zoom out limit)
         public float maxScrollZoomSize = 50.0f; // Maximum orthographic size (zoom in limit)
-        public bool canScrollZooming = false;
+        public bool canScrollZooming;
         [Space]
         public float zoomSmoothing = 5.0f; // Smoothing factor for zooming
         public float zoomSpeed = 25.0f; // Speed of zooming
@@ -29,21 +23,13 @@ namespace CameraScripts {
         public float moveSmoothTime = 0.3f; // Time for the smooth 
         public float zOffset = -100;
 
-        private Vector3 _velocity = Vector3.zero;
-        private float _targetZoomSize = 50;
-        private Vector3 _targetPosition;
-        
+        private Camera _camera;
+
         private Vector3 _lastCalculatedTargetPosition; // WARNING! This is a position with calculated offset, do not put this into SetCameraTargetPosition() method
+        private Vector3 _targetPosition;
+        private float _targetZoomSize = 50;
 
-        private void OnEnable() {
-            inputReader.ZoomOut += ZoomCameraOut;
-            inputReader.ZoomIn += ZoomCameraIn;
-        }
-
-        private void OnDisable() {
-            inputReader.ZoomOut -= ZoomCameraOut;
-            inputReader.ZoomIn -= ZoomCameraIn;
-        }
+        private Vector3 _velocity = Vector3.zero;
 
         private void Start() {
             _camera = GetComponent<CharacterCamera>().Camera;
@@ -57,7 +43,17 @@ namespace CameraScripts {
         private void LateUpdate() {
             ZoomingCamera();
             transform.position = Vector3.SmoothDamp(transform.position, _targetPosition, ref _velocity, moveSmoothTime);
-            
+
+        }
+
+        private void OnEnable() {
+            inputReader.ZoomOut += ZoomCameraOut;
+            inputReader.ZoomIn += ZoomCameraIn;
+        }
+
+        private void OnDisable() {
+            inputReader.ZoomOut -= ZoomCameraOut;
+            inputReader.ZoomIn -= ZoomCameraIn;
         }
 
 
@@ -74,10 +70,10 @@ namespace CameraScripts {
             // Smoothly interpolate towards the target orthographic size
             _camera.orthographicSize = Mathf.Lerp(_camera.orthographicSize, _targetZoomSize, zoomSmoothing * Time.deltaTime);
         }
-        
+
         private void ZoomCameraOut() {
             _targetZoomSize = zoomOutSize;
-            
+
             // Save last target position with calculated camera offset;
             _lastCalculatedTargetPosition = _targetPosition;
 

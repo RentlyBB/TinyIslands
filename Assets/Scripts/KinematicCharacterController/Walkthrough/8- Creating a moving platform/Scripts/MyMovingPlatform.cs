@@ -1,36 +1,27 @@
-﻿using KinematicCharacterController;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using UnityEngine;
 using UnityEngine.Playables;
 
-namespace KinematicCharacterController.Walkthrough.MovingPlatform
-{
-    public struct MyMovingPlatformState
-    {
+namespace KinematicCharacterController.Walkthrough.MovingPlatform {
+    public struct MyMovingPlatformState {
         public PhysicsMoverState MoverState;
         public float DirectorTime;
     }
 
-    public class MyMovingPlatform : MonoBehaviour, IMoverController
-    {
+    public class MyMovingPlatform : MonoBehaviour, IMoverController {
         public PhysicsMover Mover;
 
         public PlayableDirector Director;
 
         private Transform _transform;
 
-        private void Start()
-        {
-            _transform = this.transform;
+        private void Start() {
+            _transform = transform;
 
             Mover.MoverController = this;
         }
 
         // This is called every FixedUpdate by our PhysicsMover in order to tell it what pose it should go to
-        public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime)
-        {
+        public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
             // Remember pose before animation
             Vector3 _positionBeforeAnim = _transform.position;
             Quaternion _rotationBeforeAnim = _transform.rotation;
@@ -48,8 +39,7 @@ namespace KinematicCharacterController.Walkthrough.MovingPlatform
             _transform.rotation = _rotationBeforeAnim;
         }
 
-        public void EvaluateAtTime(double time)
-        {
+        public void EvaluateAtTime(double time) {
             Director.time = time % Director.duration;
             Director.Evaluate();
         }

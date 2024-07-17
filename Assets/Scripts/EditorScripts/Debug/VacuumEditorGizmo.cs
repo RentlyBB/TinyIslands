@@ -3,11 +3,11 @@ using UnityEditor;
 using UnityEngine;
 
 namespace EditorScripts.Debug {
-    
+
     [CustomEditor(typeof(VacuumAbility))]
     public class VacuumEditorGizmo : Editor {
         private void OnSceneGUI() {
-            
+
             VacuumAbility fov = (VacuumAbility)target;
             Handles.color = Color.white;
             Handles.DrawWireArc(fov.transform.position, Vector3.up, Vector3.forward, 360, fov.radius);

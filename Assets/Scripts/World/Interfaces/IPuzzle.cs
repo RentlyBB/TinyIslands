@@ -2,7 +2,7 @@
     public interface IPuzzle {
 
         bool IsSolved();
-        
+
         void ResolvePuzzle();
 
         void CheckPuzzle();

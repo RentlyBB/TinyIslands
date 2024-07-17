@@ -1,11 +1,10 @@
+using System;
 using UnityEngine;
 
-namespace ScriptableObjectArchitecture
-{
-	[System.Serializable]
-	public sealed class AudioClipReference : BaseReference<AudioClip, AudioClipVariable>
-	{
-	    public AudioClipReference() : base() { }
-	    public AudioClipReference(AudioClip value) : base(value) { }
-	}
+namespace ScriptableObjectArchitecture {
+    [Serializable]
+    public sealed class AudioClipReference : BaseReference<AudioClip, AudioClipVariable> {
+        public AudioClipReference() { }
+        public AudioClipReference(AudioClip value) : base(value) { }
+    }
 }

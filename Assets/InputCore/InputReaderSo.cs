@@ -5,12 +5,6 @@ using UnityEngine.InputSystem;
 namespace InputCore {
     [CreateAssetMenu(fileName = "InputReader", menuName = "Game/Input Reader")]
     public class InputReaderSo : ScriptableObject, GameInput.IGameplayActions {
-        // Events for each player input
-        public event UnityAction<Vector2> Movement = delegate { };
-        public event UnityAction Interact = delegate { };
-        
-        public event UnityAction ZoomOut = delegate { };
-        public event UnityAction ZoomIn = delegate { };
 
         public GameInput GameInput;
 
@@ -41,10 +35,16 @@ namespace InputCore {
         public void OnZoomOut(InputAction.CallbackContext context) {
             if (context.phase == InputActionPhase.Performed) {
                 ZoomOut?.Invoke();
-            }else if (context.phase == InputActionPhase.Canceled) {
+            } else if (context.phase == InputActionPhase.Canceled) {
                 ZoomIn?.Invoke();
             }
         }
+        // Events for each player input
+        public event UnityAction<Vector2> Movement = delegate { };
+        public event UnityAction Interact = delegate { };
+
+        public event UnityAction ZoomOut = delegate { };
+        public event UnityAction ZoomIn = delegate { };
 
         public void EnableGameplayInput() {
             GameInput.Gameplay.Enable();

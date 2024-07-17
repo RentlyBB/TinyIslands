@@ -1,9 +1,9 @@
-﻿namespace ScriptableObjectArchitecture
-{
-    [System.Serializable]
-    public sealed class LongReference : BaseReference<long, LongVariable>
-    {
-        public LongReference() : base() { }
+﻿using System;
+
+namespace ScriptableObjectArchitecture {
+    [Serializable]
+    public sealed class LongReference : BaseReference<long, LongVariable> {
+        public LongReference() { }
         public LongReference(long value) : base(value) { }
-    } 
+    }
 }

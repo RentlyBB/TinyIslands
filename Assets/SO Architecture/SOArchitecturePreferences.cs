@@ -3,30 +3,13 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace ScriptableObjectArchitecture
-{
+namespace ScriptableObjectArchitecture {
     /// <summary>
-    /// An editor class for managing project and user preferences for the SOArchitecture library. This is kept
-    /// in the runtime assembly for the purpose of enabling editor-only additional features when playing such as
-    /// gizmos and debugging.
+    ///     An editor class for managing project and user preferences for the SOArchitecture library. This is kept
+    ///     in the runtime assembly for the purpose of enabling editor-only additional features when playing such as
+    ///     gizmos and debugging.
     /// </summary>
-    public static class SOArchitecturePreferences
-    {
-        /// <summary>
-        /// Returns true if debug features should be enabled, otherwise false.
-        /// </summary>
-        public static bool IsDebugEnabled
-        {
-            get { return GetBoolPref(ENABLE_DEBUG_PREF, ENABLE_DEBUG_DEFAULT); }
-        }
-
-        /// <summary>
-        /// Returns true if Gizmos should be enabled, otherwise false.
-        /// </summary>
-        public static bool AreGizmosEnabled
-        {
-            get { return GetBoolPref(DRAW_EVENT_GIZMOS_PREF, DRAW_EVENT_GIZMOS_DEFAULT); }
-        }
+    public static class SOArchitecturePreferences {
 
         // UI
         private const string PREFERENCES_TITLE_PATH = "Preferences/SOArchitecture";
@@ -47,17 +30,6 @@ namespace ScriptableObjectArchitecture
         private const string ASSET_MENU_ORDER_DESCRIPTION =
             "This determines the order in which the CreateAsset Context Menu will be placed into.";
 
-        private static readonly GUILayoutOption MAX_WIDTH;
-
-#if UNITY_2018_3_OR_NEWER
-        // Searchable Fields
-        private static readonly string[] KEYWORDS =
-        {
-            "Scriptable",
-            "Architecture"
-        };
-#endif
-
         // User Editor Preferences
         private const string DRAW_EVENT_GIZMOS_PREF = "SOArchitecture.DrawEventGizmoos";
         private const string ENABLE_DEBUG_PREF = "SOArchitecture.EnableDebug";
@@ -65,90 +37,82 @@ namespace ScriptableObjectArchitecture
         private const bool DRAW_EVENT_GIZMOS_DEFAULT = true;
         private const bool ENABLE_DEBUG_DEFAULT = true;
 
-        static SOArchitecturePreferences()
-        {
-            MAX_WIDTH = GUILayout.MaxWidth(200f);
-        }
+        private static readonly GUILayoutOption MAX_WIDTH;
 
 #if UNITY_2018_3_OR_NEWER
-        [SettingsProvider]
-        private static SettingsProvider CreateProjectPreferenceSettingsProvider()
-        {
-            return new SettingsProvider(PROJECT_TITLE_PATH, SettingsScope.Project)
-            {
-                guiHandler = DrawProjectGUI,
-                keywords = KEYWORDS
-            };
+        // Searchable Fields
+        private static readonly string[] KEYWORDS = {
+            "Scriptable",
+            "Architecture",
+        };
+#endif
+
+        static SOArchitecturePreferences() {
+            MAX_WIDTH = GUILayout.MaxWidth(200f);
+        }
+        /// <summary>
+        ///     Returns true if debug features should be enabled, otherwise false.
+        /// </summary>
+        public static bool IsDebugEnabled {
+            get { return GetBoolPref(ENABLE_DEBUG_PREF, ENABLE_DEBUG_DEFAULT); }
         }
 
-        [SettingsProvider]
-        private static SettingsProvider CreatePersonalPreferenceSettingsProvider()
-        {
-            return new SettingsProvider(PREFERENCES_TITLE_PATH, SettingsScope.User)
-            {
-                guiHandler = DrawPersonalPrefsGUI,
-                keywords = KEYWORDS
-            };
+        /// <summary>
+        ///     Returns true if Gizmos should be enabled, otherwise false.
+        /// </summary>
+        public static bool AreGizmosEnabled {
+            get { return GetBoolPref(DRAW_EVENT_GIZMOS_PREF, DRAW_EVENT_GIZMOS_DEFAULT); }
         }
-#endif
-        private static void DrawAllGUI()
-        {
+        private static void DrawAllGUI() {
             DrawProjectGUI();
             DrawPersonalPrefsGUI();
         }
 
-        private static void DrawProjectGUI(string value = "")
-        {
+        private static void DrawProjectGUI(string value = "") {
             EditorGUILayout.LabelField(PROJECT_REFERENCES_HEADER, EditorStyles.boldLabel);
 
-            var settings = SOArchitecture_Settings.Instance;
+            SOArchitecture_Settings settings = SOArchitecture_Settings.Instance;
 
             GUI.changed = false;
 
             // Code Generation Target Directory
             EditorGUILayout.HelpBox(CODE_GEN_DIRECTORY_DESCRIPTION, MessageType.Info);
-            using (new EditorGUILayout.HorizontalScope())
-            {
+            using (new EditorGUILayout.HorizontalScope()) {
                 EditorGUILayout.LabelField(new GUIContent(CODE_GEN_DIRECTORY_LABEL), MAX_WIDTH);
-                var directory = EditorGUILayout.TextField(settings.CodeGenerationTargetDirectory);
+                string directory = EditorGUILayout.TextField(settings.CodeGenerationTargetDirectory);
                 settings.CodeGenerationTargetDirectory = directory;
             }
 
             // Code Generation Allow Overwrite
             EditorGUILayout.HelpBox(ALLOW_OVERWRITE_DESCRIPTION, MessageType.Info);
-            using (new EditorGUILayout.HorizontalScope())
-            {
+            using (new EditorGUILayout.HorizontalScope()) {
                 EditorGUILayout.LabelField(new GUIContent(ALLOW_OVERWRITE_LABEL), MAX_WIDTH);
-                var newOverwrite = EditorGUILayout.Toggle(settings.CodeGenerationAllowOverwrite);
+                bool newOverwrite = EditorGUILayout.Toggle(settings.CodeGenerationAllowOverwrite);
                 settings.CodeGenerationAllowOverwrite = newOverwrite;
             }
 
             // Default Create Asset Menu Order
             EditorGUILayout.HelpBox(ASSET_MENU_ORDER_DESCRIPTION, MessageType.Info);
-            using (new EditorGUILayout.HorizontalScope())
-            {
+            using (new EditorGUILayout.HorizontalScope()) {
                 EditorGUILayout.LabelField(ASSET_MENU_ORDER_LABEL, MAX_WIDTH);
-                var newMenuOrder = EditorGUILayout.IntField(settings.DefaultCreateAssetMenuOrder);
+                int newMenuOrder = EditorGUILayout.IntField(settings.DefaultCreateAssetMenuOrder);
                 settings.DefaultCreateAssetMenuOrder = newMenuOrder;
             }
 
-            if (GUI.changed)
-            {
+            if (GUI.changed) {
                 EditorUtility.SetDirty(settings);
             }
         }
 
-        private static void DrawPersonalPrefsGUI(string value = "")
-        {
+        private static void DrawPersonalPrefsGUI(string value = "") {
             EditorGUILayout.LabelField(USER_PREFERENCES_HEADER, EditorStyles.boldLabel);
 
             // Draw Event Gizmo
-            var drawEventPref = GetBoolPref(DRAW_EVENT_GIZMOS_PREF, DRAW_EVENT_GIZMOS_DEFAULT);
+            bool drawEventPref = GetBoolPref(DRAW_EVENT_GIZMOS_PREF, DRAW_EVENT_GIZMOS_DEFAULT);
 
             GUI.changed = false;
             drawEventPref = EditorGUILayout.Toggle("Draw Event Gizmo", drawEventPref);
-            if (GUI.changed)
-            {
+            if (GUI.changed) {
                 EditorPrefs.SetBool(DRAW_EVENT_GIZMOS_PREF, drawEventPref);
             }
 
@@ -156,31 +120,46 @@ namespace ScriptableObjectArchitecture
             EditorGUILayout.HelpBox("This will enable debug features for troubleshooting purposes such as " +
                                     "game events collecting stack traces. This will decrease performance " +
                                     "in-editor.", MessageType.Info);
-            var enableDebugPref = GetBoolPref(ENABLE_DEBUG_PREF, ENABLE_DEBUG_DEFAULT);
+            bool enableDebugPref = GetBoolPref(ENABLE_DEBUG_PREF, ENABLE_DEBUG_DEFAULT);
 
             GUI.changed = false;
             enableDebugPref = EditorGUILayout.Toggle("Enable Debug", enableDebugPref);
-            if (GUI.changed)
-            {
+            if (GUI.changed) {
                 EditorPrefs.SetBool(ENABLE_DEBUG_PREF, enableDebugPref);
             }
         }
 
         /// <summary>
-        /// Returns the current bool preference; if none exists, the default is set and returned.
+        ///     Returns the current bool preference; if none exists, the default is set and returned.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        private static bool GetBoolPref(string key, bool defaultValue)
-        {
-            if (!EditorPrefs.HasKey(key))
-            {
+        private static bool GetBoolPref(string key, bool defaultValue) {
+            if (!EditorPrefs.HasKey(key)) {
                 EditorPrefs.SetBool(key, defaultValue);
             }
 
             return EditorPrefs.GetBool(key);
         }
+
+#if UNITY_2018_3_OR_NEWER
+        [SettingsProvider]
+        private static SettingsProvider CreateProjectPreferenceSettingsProvider() {
+            return new SettingsProvider(PROJECT_TITLE_PATH, SettingsScope.Project) {
+                guiHandler = DrawProjectGUI,
+                keywords = KEYWORDS,
+            };
+        }
+
+        [SettingsProvider]
+        private static SettingsProvider CreatePersonalPreferenceSettingsProvider() {
+            return new SettingsProvider(PREFERENCES_TITLE_PATH, SettingsScope.User) {
+                guiHandler = DrawPersonalPrefsGUI,
+                keywords = KEYWORDS,
+            };
+        }
+#endif
     }
 }
 
