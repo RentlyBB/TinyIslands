@@ -52,5 +52,12 @@ namespace PlayerCharacter {
 
             closestInteractable?.InteractableAction();
         }
+        
+        
+        //Temp function just for test
+        public void TestListener(GameObject obj) {
+            
+            Debug.Log("Poslouchaaaam: " + obj.name);
+        }
     }
 }
