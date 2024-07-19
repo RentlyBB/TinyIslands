@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 1600835431536854556}
   - component: {fileID: 1518297169423350927}
   m_Layer: 0
-  m_Name: Elevator
+  m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mover: {fileID: 5544973765395995688}
-  nextPositon: {x: -4.24, y: -4.33, z: 6.91}
+  nextPositon: {x: 0, y: 0, z: -9.68}
   speed: 0.2
   loop: 0
   wireCubeSize: {fileID: 8892778134651909428}

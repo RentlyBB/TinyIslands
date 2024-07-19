@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using KinematicCharacterController;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PlayerCharacter.Abilities {
     public class FallPreventer : MonoBehaviour {
@@ -8,7 +9,7 @@ namespace PlayerCharacter.Abilities {
         public Transform fallWalls;
         public float fallThreshold = 2f;
 
-        public LayerMask layerMask = 1 << 8;
+        public LayerMask ignoreLayerMasks = 1 << 8;
         private readonly List<Transform> _fallWalls = new List<Transform>();
         private RaycastHit _hit;
 
@@ -18,7 +19,7 @@ namespace PlayerCharacter.Abilities {
 
         private void Start() {
             _motor = GetComponent<KinematicCharacterMotor>();
-            layerMask = ~layerMask;
+            //ignoreLayerMasks = ~ignoreLayerMasks;
 
             fallWallPoints.position = transform.position;
             fallWalls.position = transform.position;
@@ -44,7 +45,7 @@ namespace PlayerCharacter.Abilities {
             for (int i = 0; i < _wallPoints.Count; i++) {
                 fallWalls.position = transform.position;
 
-                if (!Physics.Raycast(_wallPoints[i].position, _wallPoints[i].TransformDirection(Vector3.down), out _hit, fallThreshold, layerMask) && _motor.GroundingStatus.GroundCollider) {
+                if (!Physics.Raycast(_wallPoints[i].position, _wallPoints[i].TransformDirection(Vector3.down), out _hit, fallThreshold, ~ignoreLayerMasks) && _motor.GroundingStatus.GroundCollider) {
                     Vector3 closestPoint = _motor.GroundingStatus.GroundCollider.ClosestPointOnBounds(_wallPoints[i].position);
                     Vector3 targetWallPos = new Vector3(closestPoint.x, transform.position.y + 1, closestPoint.z);
                     _fallWalls[i].position = targetWallPos;

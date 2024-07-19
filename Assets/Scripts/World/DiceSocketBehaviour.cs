@@ -24,7 +24,7 @@ namespace World {
         }
 
         private void Update() {
-            if (autoCheckPuzzle) {
+            if (autoCheckPuzzle && !_isSolved) {
                 _diceBehaviour.lockAnim = true;
                 CheckAndResolve();
             } else {
