@@ -1,7 +1,7 @@
 using UnityEngine;
 using World;
 
-namespace PlayerCharacter {
+namespace PlayerCharacter.Abilities {
     public class VacuumAbility : MonoBehaviour {
 
         public float radius;

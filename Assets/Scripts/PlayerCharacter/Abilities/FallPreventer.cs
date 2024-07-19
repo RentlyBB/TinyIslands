@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using KinematicCharacterController;
 using UnityEngine;
 
-namespace PlayerCharacter {
+namespace PlayerCharacter.Abilities {
     public class FallPreventer : MonoBehaviour {
         public Transform fallWallPoints;
         public Transform fallWalls;
