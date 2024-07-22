@@ -18,7 +18,6 @@ namespace World {
 
         private bool _isSolved;
 
-
         private void Start() {
             dice.TryGetComponent(out _diceBehaviour);
         }
@@ -30,6 +29,12 @@ namespace World {
             } else {
                 _diceBehaviour.lockAnim = false;
             }
+        }
+        
+        [InvokeButton]
+        public void CheckAndResolve() {
+            CheckPuzzle();
+            ResolvePuzzle();
         }
 
         public void CheckPuzzle() {
@@ -58,12 +63,6 @@ namespace World {
 
         public bool IsSolved() {
             return _isSolved;
-        }
-
-        [InvokeButton]
-        public void CheckAndResolve() {
-            CheckPuzzle();
-            ResolvePuzzle();
         }
     }
 }

@@ -21,7 +21,6 @@ namespace World {
         private readonly UnityEvent _eResolvePuzzle = new UnityEvent();
         private readonly UnityEvent _eWrongSolutionPuzzle = new UnityEvent();
 
-
         private void Start() {
             if (puzzlesObj.Count != 0) {
                 foreach (IPuzzle puz in puzzlesObj.Select(puzzle => puzzle.GetComponent<IPuzzle>())) {
