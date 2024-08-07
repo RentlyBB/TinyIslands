@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EditorScripts;
+using ScriptableObjects;
 using UnityEngine;
 using World.Interfaces;
 
@@ -25,23 +26,16 @@ namespace World {
         
         public bool rotationCompleted = true;
         
-        [Space]
-        [Header("Interactables")]
-        [SerializeField]public List<GameObject> yellowInteractables = new List<GameObject>();
-        [SerializeField]public List<GameObject> redInteractables = new List<GameObject>();
-        [SerializeField]public List<GameObject> cyanInteractables = new List<GameObject>();
-        [SerializeField]public List<GameObject> greenInteractables = new List<GameObject>();
-        [SerializeField]public List<GameObject> blueInteractables = new List<GameObject>();
-        [SerializeField]public List<GameObject> pinkInteractables = new List<GameObject>();
-
+        public DiceEventHandlerSo firstEvent;
+        public DiceEventHandlerSo secondEvent;
+        
         [HideInInspector] public bool locked;
         [HideInInspector] public bool lockAnim;
 
         private Animator _animator;
         private Vector3 _currentPosition;
         private Quaternion _currentRotation;
-
-
+        
         private readonly Quaternion[] _faceRotation = {
             Quaternion.Euler(0f, 0f, 0f), //Top
             Quaternion.Euler(180f, 0f, 0f), // Bottom
@@ -102,6 +96,8 @@ namespace World {
 
             rotationCompleted = false;
             _targetRotation = _faceRotation[index];
+            //OnFaceChangeEvent?.Invoke(currentSide);
+            //TODO: Invoke method which say to other object that the color was changed
         }
 
         public void SetTargetPosition(Vector3 targetPosition) {
@@ -121,6 +117,7 @@ namespace World {
             _currentPosition = newPosition;
         }
 
+        //ROTATION
         private void Rotating() {
 
             if (Quaternion.Angle(meshToRotate.rotation, _targetRotation) <= 0.01f) {
@@ -137,14 +134,6 @@ namespace World {
             _currentRotation = newRotation;
         }
 
-        [InvokeButton]
-        public void ResolveInteractable() {
-            
-            //TODO
-            
-        }
-
-
         //ANIMATION 
         [InvokeButton]
         public void Shake() {
@@ -160,5 +149,16 @@ namespace World {
 
             _animator.enabled = true;
         }
+
+        [InvokeButton]
+        public void testFirstEvent() {
+            firstEvent.RaiseEvent("First event");
+        }
+
+        [InvokeButton]
+        public void testSecondEvent() {
+            secondEvent.RaiseEvent("Second event");
+        }
+
     }
 }

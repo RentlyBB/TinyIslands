@@ -8,7 +8,7 @@ namespace PlayerCharacter.Abilities {
         public Transform fallWallPoints;
         public Transform fallWalls;
         public float fallThreshold = 2f;
-
+        
         public LayerMask ignoreLayerMasks = 1 << 8;
         private readonly List<Transform> _fallWalls = new List<Transform>();
         private RaycastHit _hit;

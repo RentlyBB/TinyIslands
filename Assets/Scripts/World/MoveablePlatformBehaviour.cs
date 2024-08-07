@@ -1,7 +1,9 @@
-﻿using EditorScripts;
+﻿using System;
+using EditorScripts;
 using KinematicCharacterController;
 using UnityEngine;
 using World.Interfaces;
+using ScriptableObjects;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
@@ -28,6 +30,9 @@ namespace World {
         private bool _toOriginalPosition;
 
         public bool IsEnabled = false;
+        
+        public DiceEventHandlerSo firstEvent;
+        public DiceEventHandlerSo secondEvent;
 
         private void Start() {
             _originalPosition = mover.Rigidbody.position;
@@ -114,6 +119,27 @@ namespace World {
 
         public void Interact() {
             MovePlatform();
+        }
+        
+        //TODO: This whole section needs to be in different code, because this script should only handle the platform movement
+        private void OnEnable()
+        {
+            firstEvent.OnEventRaised += TestEventChange;
+            secondEvent.OnEventRaised += TestEventChange;
+        }
+
+        private void OnDisable()
+        {
+            firstEvent.OnEventRaised -= TestEventChange;
+            secondEvent.OnEventRaised -= TestEventChange;
+        }
+
+        public void TestEventChange(DiceFaces current) {
+            Debug.Log(this.name + " know that dice side is: " + current);
+        }
+        
+        public void TestEventChange(String text) {
+            Debug.Log(this.name + " listen to event: " + text);
         }
     }
 }
