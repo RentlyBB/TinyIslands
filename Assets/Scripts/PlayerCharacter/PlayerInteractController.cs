@@ -29,28 +29,28 @@ namespace PlayerCharacter {
 
             int numColliders = Physics.OverlapSphereNonAlloc(transform.position, sphereRadius, hitColliders);
 
-            List<Interactable> interactableObjects = new List<Interactable>();
+            List<Activator> interactableObjects = new List<Activator>();
 
             for (int i = 0; i < numColliders; i++) {
                 if (hitColliders[i] != null &&
-                    hitColliders[i].TryGetComponent(out Interactable interactable)) {
+                    hitColliders[i].TryGetComponent(out Activator interactable)) {
                     interactableObjects.Add(interactable);
                 }
             }
 
-            Interactable closestInteractable = null;
-            foreach (Interactable interactableObj in interactableObjects) {
-                if (closestInteractable == null) {
-                    closestInteractable = interactableObj;
+            Activator closestActivator = null;
+            foreach (Activator interactableObj in interactableObjects) {
+                if (closestActivator == null) {
+                    closestActivator = interactableObj;
                 } else {
                     if (Vector3.Distance(transform.position, interactableObj.transform.position) <
-                        Vector3.Distance(transform.position, closestInteractable.transform.position)) {
-                        closestInteractable = interactableObj;
+                        Vector3.Distance(transform.position, closestActivator.transform.position)) {
+                        closestActivator = interactableObj;
                     }
                 }
             }
 
-            closestInteractable?.InteractableAction();
+            closestActivator?.InteractableAction();
         }
     }
 }

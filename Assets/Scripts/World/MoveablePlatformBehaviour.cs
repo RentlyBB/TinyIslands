@@ -1,10 +1,11 @@
 ﻿using EditorScripts;
 using KinematicCharacterController;
 using UnityEngine;
+using World.Interfaces;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
-    public class MoveablePlatformBehaviour : MonoBehaviour, IMoverController {
+    public class MoveablePlatformBehaviour : MonoBehaviour, IMoverController, IInteractable {
         public PhysicsMover mover;
 
         public Vector3 nextPositon;
@@ -25,6 +26,8 @@ namespace World {
         private Quaternion _originalRotation;
 
         private bool _toOriginalPosition;
+
+        public bool IsEnabled = false;
 
         private void Start() {
             _originalPosition = mover.Rigidbody.position;
@@ -99,6 +102,18 @@ namespace World {
         private void ElevateTo(Vector3 elevateTarget) {
             _fraction = 0;
             _nextGoalPosition = elevateTarget;
+        }
+
+        public void EnableInteraction() {
+            IsEnabled = true;
+        }
+
+        public void DisableInteraction() {
+            IsEnabled = false;
+        }
+
+        public void Interact() {
+            MovePlatform();
         }
     }
 }

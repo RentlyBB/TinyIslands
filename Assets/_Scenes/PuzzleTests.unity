@@ -1045,12 +1045,18 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 277570193}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 277570195}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8047b56e86ad4b3992e1a52b1f10dd11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &277570195 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6264493258744413673, guid: e56228dbdc77e4a4a92ae692e3432df1,
+    type: 3}
+  m_PrefabInstance: {fileID: 277570193}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &283820078 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 603975784152681248, guid: 20299a72213254978b10ec44659f77b0,
@@ -1232,24 +1238,14 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 959775276348024447, guid: 5565b2394d598df4eb4925c6c46ae679,
         type: 3}
-      propertyPath: targetFace
-      value: 5
+      propertyPath: autoCheckPuzzle
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 959775276348024447, guid: 5565b2394d598df4eb4925c6c46ae679,
         type: 3}
       propertyPath: onSolve.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 277570194}
-    - target: {fileID: 959775276348024447, guid: 5565b2394d598df4eb4925c6c46ae679,
-        type: 3}
-      propertyPath: onSolve.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: MovePlatform
-      objectReference: {fileID: 0}
-    - target: {fileID: 959775276348024447, guid: 5565b2394d598df4eb4925c6c46ae679,
-        type: 3}
-      propertyPath: onSolve.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: World.MoveablePlatformBehaviour, Assembly-CSharp
-      objectReference: {fileID: 0}
     - target: {fileID: 2368799100513731049, guid: 5565b2394d598df4eb4925c6c46ae679,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1300,6 +1296,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4167067958708179379, guid: 5565b2394d598df4eb4925c6c46ae679,
+        type: 3}
+      propertyPath: yellowInteractables.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4167067958708179379, guid: 5565b2394d598df4eb4925c6c46ae679,
+        type: 3}
+      propertyPath: yellowInteractables.Array.data[0]
+      value: 
+      objectReference: {fileID: 277570195}
     - target: {fileID: 4704637616111751342, guid: 5565b2394d598df4eb4925c6c46ae679,
         type: 3}
       propertyPath: m_Name

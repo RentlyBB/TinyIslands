@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using EditorScripts;
 using UnityEngine;
+using World.Interfaces;
 
 namespace World {
     public enum DiceFaces {
@@ -20,8 +22,17 @@ namespace World {
         public float rotSpeed = 10f;
         public float rotLerpSpeed = 0.5f;
         public float moveLerpSpeed = 0.5f;
-
+        
         public bool rotationCompleted = true;
+        
+        [Space]
+        [Header("Interactables")]
+        [SerializeField]public List<GameObject> yellowInteractables = new List<GameObject>();
+        [SerializeField]public List<GameObject> redInteractables = new List<GameObject>();
+        [SerializeField]public List<GameObject> cyanInteractables = new List<GameObject>();
+        [SerializeField]public List<GameObject> greenInteractables = new List<GameObject>();
+        [SerializeField]public List<GameObject> blueInteractables = new List<GameObject>();
+        [SerializeField]public List<GameObject> pinkInteractables = new List<GameObject>();
 
         [HideInInspector] public bool locked;
         [HideInInspector] public bool lockAnim;
@@ -46,7 +57,7 @@ namespace World {
 
         private void Awake() {
             _currentPosition = transform.position;
-            _targetPosition = transform.position;
+            _targetPosition = transform.position; 
         }
 
         private void Start() {
@@ -124,6 +135,13 @@ namespace World {
 
             // Update currentRotation for the next frame
             _currentRotation = newRotation;
+        }
+
+        [InvokeButton]
+        public void ResolveInteractable() {
+            
+            //TODO
+            
         }
 
 

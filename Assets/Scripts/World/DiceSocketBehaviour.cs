@@ -5,7 +5,7 @@ using World.Interfaces;
 
 namespace World {
     public class DiceSocketBehaviour : MonoBehaviour, IPuzzle {
-
+        
         public Transform dice;
         public Transform diceSocketPosition;
 

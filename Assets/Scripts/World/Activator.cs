@@ -1,20 +1,62 @@
+using EditorScripts;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace World {
+    public enum InteractionType {
+        PressButton,
+        OnEnter,
+        OnExit,
+        OnEnterExit,
+        None,
+    }
+
     public class Activator : MonoBehaviour {
 
-        [Header("On Pressure Plate Activated")]
+        public InteractionType interactionType;
+
+        [Tooltip("Can be interact only once.")]
+        public bool oneTimeActivation;
+
+        [Header("Interact methods")]
+        [Tooltip("Invoke interact method of interactable object.")]
         [Space]
-        [Tooltip("Invoke methods which should be triggered if pressure plate is activated.")]
-        public UnityEvent onActivated;
+        public UnityEvent onInteractAction;
 
-        //TODO: cooldown for activation
-        private readonly bool _canBeActivated = true;
+        private bool _wasActivated;
 
-        public void Activate() {
-            if (_canBeActivated) {
-                onActivated?.Invoke();
+
+        private void OnTriggerEnter(Collider other) {
+            if (!other.CompareTag("Player")) return;
+
+            if (interactionType == InteractionType.OnEnter || interactionType == InteractionType.OnEnterExit) {
+                InvokeInteractableAction();
+            }
+        }
+
+        private void OnTriggerExit(Collider other) {
+            if (!other.CompareTag("Player")) return;
+
+            if (interactionType == InteractionType.OnExit || interactionType == InteractionType.OnEnterExit) {
+                InvokeInteractableAction();
+            }
+        }
+
+        public void InteractableAction() {
+            if (interactionType == InteractionType.PressButton) {
+                InvokeInteractableAction();
+            }
+        }
+
+        [InvokeButton]
+        private void InvokeInteractableAction() {
+            if (oneTimeActivation) {
+                if (!_wasActivated) {
+                    onInteractAction?.Invoke();
+                    _wasActivated = true;
+                }
+            } else {
+                onInteractAction?.Invoke();
             }
         }
     }
