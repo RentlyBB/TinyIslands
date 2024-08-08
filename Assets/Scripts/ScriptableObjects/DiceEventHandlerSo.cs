@@ -5,7 +5,6 @@ namespace ScriptableObjects
 {
     [CreateAssetMenu(fileName = "DiceEventHandler", menuName = "Game/DiceEventHandler", order = 0)]
     public class DiceEventHandlerSo : ScriptableObject {
-
         
         public event Action<String> OnEventRaised;
 

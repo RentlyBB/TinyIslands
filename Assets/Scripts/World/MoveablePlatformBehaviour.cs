@@ -7,7 +7,7 @@ using ScriptableObjects;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
-    public class MoveablePlatformBehaviour : MonoBehaviour, IMoverController, IInteractable {
+    public class MoveablePlatformBehaviour : MonoBehaviour, IMoverController {
         public PhysicsMover mover;
 
         public Vector3 nextPositon;
@@ -30,9 +30,6 @@ namespace World {
         private bool _toOriginalPosition;
 
         public bool IsEnabled = false;
-        
-        public DiceEventHandlerSo firstEvent;
-        public DiceEventHandlerSo secondEvent;
 
         private void Start() {
             _originalPosition = mover.Rigidbody.position;
@@ -107,35 +104,6 @@ namespace World {
         private void ElevateTo(Vector3 elevateTarget) {
             _fraction = 0;
             _nextGoalPosition = elevateTarget;
-        }
-
-        public void EnableInteraction() {
-            IsEnabled = true;
-        }
-
-        public void DisableInteraction() {
-            IsEnabled = false;
-        }
-
-        public void Interact() {
-            MovePlatform();
-        }
-        
-        //TODO: This whole section needs to be in different code, because this script should only handle the platform movement
-        private void OnEnable()
-        {
-            firstEvent.OnEventRaised += TestEventChange;
-            secondEvent.OnEventRaised += TestEventChange;
-        }
-
-        private void OnDisable()
-        {
-            firstEvent.OnEventRaised -= TestEventChange;
-            secondEvent.OnEventRaised -= TestEventChange;
-        }
-
-        public void TestEventChange(DiceFaces current) {
-            Debug.Log(this.name + " know that dice side is: " + current);
         }
         
         public void TestEventChange(String text) {

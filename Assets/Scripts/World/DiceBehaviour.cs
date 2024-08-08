@@ -151,12 +151,12 @@ namespace World {
         }
 
         [InvokeButton]
-        public void testFirstEvent() {
+        public void TestFirstEvent() {
             firstEvent.RaiseEvent("First event");
         }
 
         [InvokeButton]
-        public void testSecondEvent() {
+        public void TestSecondEvent() {
             secondEvent.RaiseEvent("Second event");
         }
 

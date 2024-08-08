@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1049,7 +1049,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6264493258744413673, guid: e56228dbdc77e4a4a92ae692e3432df1,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 277570199}
   m_SourcePrefab: {fileID: 100100000, guid: e56228dbdc77e4a4a92ae692e3432df1, type: 3}
 --- !u!114 &277570194 stripped
 MonoBehaviour:
@@ -1069,6 +1073,36 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 277570193}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &277570199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277570195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4b1f5309a9745b1a812e6b72689b740, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  diceEvents:
+  - {fileID: 11400000, guid: 07966c7e4c397f344b1e315717a0991c, type: 2}
+  - {fileID: 11400000, guid: 55f718b76b4a30d4b93c39d82a678534, type: 2}
+  methodToInvoke:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 277570194}
+        m_TargetAssemblyTypeName: World.MoveablePlatformBehaviour, Assembly-CSharp
+        m_MethodName: TestEventChange
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &283820078 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 603975784152681248, guid: 20299a72213254978b10ec44659f77b0,
