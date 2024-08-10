@@ -4,8 +4,7 @@ namespace World.Interfaces {
         void EnableInteraction();
 
         void DisableInteraction();
-        
-        void Interact();
 
+        void Interact();
     }
 }

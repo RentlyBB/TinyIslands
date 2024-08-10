@@ -8,19 +8,19 @@ public static class BaseReferenceHelper {
     public static Type GetReferenceType(FieldInfo fieldInfo) {
         return fieldInfo.FieldType;
     }
+
     public static Type GetValueType(FieldInfo fieldInfo) {
-        Type referenceType = GetReferenceType(fieldInfo);
+        var referenceType = GetReferenceType(fieldInfo);
 
-        if (referenceType.IsArray) {
+        if (referenceType.IsArray)
             referenceType = referenceType.GetElementType();
-        } else if (IsList(referenceType)) {
-            referenceType = referenceType.GetGenericArguments()[0];
-        }
+        else if (IsList(referenceType)) referenceType = referenceType.GetGenericArguments()[0];
 
-        FieldInfo constantValueField = referenceType.GetField(ConstantValueName, NonPublicBindingsFlag);
+        var constantValueField = referenceType.GetField(ConstantValueName, NonPublicBindingsFlag);
 
         return constantValueField.FieldType;
     }
+
     private static bool IsList(Type referenceType) {
         return referenceType.IsGenericType;
     }

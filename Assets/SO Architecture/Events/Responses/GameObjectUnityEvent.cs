@@ -4,6 +4,5 @@ using UnityEngine.Events;
 
 namespace ScriptableObjectArchitecture {
     [Serializable]
-    public sealed class GameObjectUnityEvent : UnityEvent<GameObject> {
-    }
+    public sealed class GameObjectUnityEvent : UnityEvent<GameObject> { }
 }

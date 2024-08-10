@@ -3,7 +3,6 @@ using World;
 
 namespace PlayerCharacter.Abilities {
     public class VacuumAbility : MonoBehaviour {
-
         public float radius;
 
         [Range(0, 360)]
@@ -18,24 +17,22 @@ namespace PlayerCharacter.Abilities {
         }
 
         public void VacuumObjects() {
-            Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
+            var rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
 
-            if (rangeChecks.Length != 0) {
-                foreach (Collider coll in rangeChecks) {
-                    Transform target = coll.transform;
+            if (rangeChecks.Length != 0)
+                foreach (var coll in rangeChecks) {
+                    var target = coll.transform;
 
-                    Vector3 directionToTarget = (target.position - transform.position).normalized;
+                    var directionToTarget = (target.position - transform.position).normalized;
 
                     // Collider (target) is in the angle – Do something
                     if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2) {
                         // TODO: Vacuuming the objects
-
                         // TODO: This should be made by object pooling 
                         target.GetComponent<TrashBehaviour>().TrashActivate(transform.position);
                         Debug.DrawLine(transform.position, target.position, Color.green);
                     }
                 }
-            }
         }
     }
 }

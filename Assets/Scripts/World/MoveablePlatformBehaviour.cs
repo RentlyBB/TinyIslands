@@ -1,13 +1,13 @@
-﻿using System;
-using EditorScripts;
+﻿using EditorScripts;
 using KinematicCharacterController;
 using UnityEngine;
+using UnityEngine.Serialization;
+using World.Enums;
 using World.Interfaces;
-using ScriptableObjects;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
-    public class MoveablePlatformBehaviour : MonoBehaviour, IMoverController {
+    public class MoveablePlatformBehaviour : MonoBehaviour, IMoverController, IInteractable {
         public PhysicsMover mover;
 
         public Vector3 nextPositon;
@@ -19,6 +19,8 @@ namespace World {
 
         public Transform wireCubeSize;
 
+        public bool isEnabled = true;
+
         private Vector3 _currentGoalPosition;
 
         private float _fraction;
@@ -28,8 +30,6 @@ namespace World {
         private Quaternion _originalRotation;
 
         private bool _toOriginalPosition;
-
-        public bool IsEnabled = false;
 
         private void Start() {
             _originalPosition = mover.Rigidbody.position;
@@ -50,20 +50,15 @@ namespace World {
             }
 
             LoopingMovement();
-
-
         }
 
         private void OnDrawGizmosSelected() {
             // Draw a yellow cube at the transform position
 
-            if (wireCubeSize == null) {
-                wireCubeSize = transform;
-            }
+            if (wireCubeSize == null) wireCubeSize = transform;
 
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireCube(transform.position + nextPositon, wireCubeSize.localScale);
-
         }
 
         public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
@@ -75,18 +70,16 @@ namespace World {
         private void LoopingMovement() {
             if (!loop) return;
 
-            if (transform.position == _nextGoalPosition) {
-                MovePlatform();
-            }
-
+            if (transform.position == _nextGoalPosition) MovePlatform();
         }
 
+        //Root method
         [InvokeButton]
         public void MovePlatform() {
+            if (!isEnabled) return;
             SelectNextPosition();
         }
-
-
+        
         private void SelectNextPosition() {
             Vector3 elevateTo;
 
@@ -105,9 +98,23 @@ namespace World {
             _fraction = 0;
             _nextGoalPosition = elevateTarget;
         }
-        
-        public void TestEventChange(String text) {
-            Debug.Log(this.name + " listen to event: " + text);
+
+        public void TestEventChange(DiceFaces diceFace) {
+            Debug.Log(name + " current face is: " + diceFace);
+        }
+
+        public void EnableInteraction() {
+            Debug.Log("Platform Enabled");
+            isEnabled = true;
+        }
+
+        public void DisableInteraction() {
+            Debug.Log("Platform Disabled");
+            isEnabled = false;
+        }
+
+        public void Interact() {
+            MovePlatform();
         }
     }
 }

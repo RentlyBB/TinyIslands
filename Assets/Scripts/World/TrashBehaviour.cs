@@ -1,17 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace World {
     public class TrashBehaviour : MonoBehaviour {
-        private Vector3 _targetPosition;
-
-        private Rigidbody _rb;
-
         public float speed = 10;
 
         public float distance;
+
+        private Rigidbody _rb;
+        private Vector3 _targetPosition;
 
 
         private void Awake() {
@@ -29,9 +25,7 @@ namespace World {
         public void TrashActivate(Vector3 targetPosition) {
             _targetPosition = targetPosition;
             distance = Vector3.Distance(transform.position, targetPosition);
-            if (distance < 1f) {
-                Destroy(this.transform.gameObject);
-            }
+            if (distance < 1f) Destroy(transform.gameObject);
         }
     }
 }

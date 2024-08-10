@@ -4,12 +4,10 @@ using UnityEngine;
 
 namespace World {
     public class Scannable : MonoBehaviour {
-        
-        
         [Header("Broadcasting events")]
         [SerializeField]
-        private GameObjectGameEvent onScanObjectEvent = default(GameObjectGameEvent);
-        
+        private GameObjectGameEvent onScanObjectEvent = default;
+
         //Broadcast game event with game object in it. 
         //Player new script called ScannerBehaviour will be listening to this event
         // and save the scannable object in ScannerBehaviour script

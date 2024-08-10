@@ -7,7 +7,7 @@ namespace KinematicCharacterController.Examples {
 
         private void Update() {
             if (Input.GetKeyDown(KeyCode.Return)) {
-                Rigidbody inst = Instantiate(ToLaunch, transform.position, transform.rotation);
+                var inst = Instantiate(ToLaunch, transform.position, transform.rotation);
                 inst.AddForce(transform.forward * Force, ForceMode.VelocityChange);
                 Destroy(inst.gameObject, 8f);
             }

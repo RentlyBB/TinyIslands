@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using UnityEditor;
 using UnityEngine;
-using Type = System.Type;
 
 namespace ScriptableObjectArchitecture.Editor {
     [CustomEditor(typeof(BaseGameEventListener<,,>), true)]
@@ -13,21 +12,22 @@ namespace ScriptableObjectArchitecture.Editor {
 
             _raiseMethod = target.GetType().BaseType.GetMethod("OnEventRaised");
         }
+
         protected override void DrawRaiseButton() {
-            SerializedProperty property = serializedObject.FindProperty("_debugValue");
+            var property = serializedObject.FindProperty("_debugValue");
 
             EditorGUILayout.PropertyField(property);
 
-            if (GUILayout.Button("Raise")) {
-                CallMethod(GetDebugValue(property));
-            }
+            if (GUILayout.Button("Raise")) CallMethod(GetDebugValue(property));
         }
+
         private object GetDebugValue(SerializedProperty property) {
-            Type targetType = property.serializedObject.targetObject.GetType();
-            FieldInfo targetField = targetType.GetField("_debugValue", BindingFlags.Instance | BindingFlags.NonPublic);
+            var targetType = property.serializedObject.targetObject.GetType();
+            var targetField = targetType.GetField("_debugValue", BindingFlags.Instance | BindingFlags.NonPublic);
 
             return targetField.GetValue(property.serializedObject.targetObject);
         }
+
         private void CallMethod(object value) {
             _raiseMethod.Invoke(target, new object[1] { value });
         }

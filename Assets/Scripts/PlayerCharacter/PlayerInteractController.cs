@@ -24,31 +24,27 @@ namespace PlayerCharacter {
         }
 
         private void OnInteract() {
-            int maxColliders = 10;
-            Collider[] hitColliders = new Collider[maxColliders];
+            var maxColliders = 10;
+            var hitColliders = new Collider[maxColliders];
 
-            int numColliders = Physics.OverlapSphereNonAlloc(transform.position, sphereRadius, hitColliders);
+            var numColliders = Physics.OverlapSphereNonAlloc(transform.position, sphereRadius, hitColliders);
 
-            List<Activator> interactableObjects = new List<Activator>();
+            var interactableObjects = new List<Activator>();
 
-            for (int i = 0; i < numColliders; i++) {
+            for (var i = 0; i < numColliders; i++)
                 if (hitColliders[i] != null &&
-                    hitColliders[i].TryGetComponent(out Activator interactable)) {
+                    hitColliders[i].TryGetComponent(out Activator interactable))
                     interactableObjects.Add(interactable);
-                }
-            }
 
             Activator closestActivator = null;
-            foreach (Activator interactableObj in interactableObjects) {
+            foreach (var interactableObj in interactableObjects)
                 if (closestActivator == null) {
                     closestActivator = interactableObj;
                 } else {
                     if (Vector3.Distance(transform.position, interactableObj.transform.position) <
-                        Vector3.Distance(transform.position, closestActivator.transform.position)) {
+                        Vector3.Distance(transform.position, closestActivator.transform.position))
                         closestActivator = interactableObj;
-                    }
                 }
-            }
 
             closestActivator?.InteractableAction();
         }

@@ -1,33 +1,46 @@
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
+using World.Enums;
+using World.Interfaces;
 
 namespace ScriptableObjects {
     public class DiceEventsListener : MonoBehaviour {
-        
         [SerializeField]
-        public List<DiceEventHandlerSo> diceEvents = new List<DiceEventHandlerSo>();
+        public List<DiceEventHandlerSo> diceEvents = new();
 
-        [SerializeField]
-        [CanBeNull]
-        private UnityEvent<String> methodToInvoke;
+        // [SerializeField]
+        // [CanBeNull]
+        // private UnityEvent<DiceFaces> methodToInvoke;
+
+        public DiceFaces targetFace;
+
+        private IInteractable _interactable;
+
+        private void Awake() {
+            TryGetComponent<IInteractable>(out _interactable);
+        }
 
         private void OnEnable() {
-            foreach (var diceEvent in diceEvents) {
-                diceEvent.OnEventRaised += PowerInteractable;
-            }
+            foreach (var diceEvent in diceEvents) diceEvent.OnEventRaised += PowerInteractable;
         }
 
         private void OnDisable() {
-            foreach (var diceEvent in diceEvents) {
-                diceEvent.OnEventRaised -= PowerInteractable;
-            }
+            foreach (var diceEvent in diceEvents) diceEvent.OnEventRaised -= PowerInteractable;
         }
 
-        private void PowerInteractable(String text) {
-            methodToInvoke?.Invoke(text);
+
+        private void PowerInteractable(DiceFaces face) {
+            // methodToInvoke?.Invoke(face);
+
+            if (targetFace == face) {
+                _interactable?.EnableInteraction();
+            } else {
+                _interactable?.DisableInteraction();
+            }
+
+            
         }
     }
 }

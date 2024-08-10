@@ -4,15 +4,11 @@ using Type = System.Type;
 namespace ScriptableObjectArchitecture {
     public abstract class BaseCollection : SOArchitectureBaseObject, IEnumerable {
         public object this[int index] {
-            get {
-                return List[index];
-            }
-            set {
-                List[index] = value;
-            }
+            get => List[index];
+            set => List[index] = value;
         }
 
-        public int Count { get { return List.Count; } }
+        public int Count => List.Count;
 
         public abstract IList List { get; }
         public abstract Type Type { get; }
@@ -20,6 +16,7 @@ namespace ScriptableObjectArchitecture {
         IEnumerator IEnumerable.GetEnumerator() {
             return List.GetEnumerator();
         }
+
         public bool Contains(object obj) {
             return List.Contains(obj);
         }

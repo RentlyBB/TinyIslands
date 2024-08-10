@@ -3,47 +3,43 @@ using System.Collections.Generic;
 using EditorScripts;
 using ScriptableObjects;
 using UnityEngine;
-using World.Interfaces;
+using World.Enums;
 
 namespace World {
-    public enum DiceFaces {
-        Yellow,
-        Red,
-        Cyan,
-        Green,
-        Blue,
-        Pink,
-    }
 
     public class DiceBehaviour : MonoBehaviour {
-
-        public DiceFaces currentSide;
+        public DiceFaces currentFace;
         public Transform meshToRotate;
         public float moveSpeed = 10;
         public float rotSpeed = 10f;
         public float rotLerpSpeed = 0.5f;
         public float moveLerpSpeed = 0.5f;
-        
-        public bool rotationCompleted = true;
-        
-        public DiceEventHandlerSo firstEvent;
-        public DiceEventHandlerSo secondEvent;
-        
-        [HideInInspector] public bool locked;
-        [HideInInspector] public bool lockAnim;
 
-        private Animator _animator;
-        private Vector3 _currentPosition;
-        private Quaternion _currentRotation;
-        
+        public bool rotationCompleted = true;
+
+        [Space]
+        [Header("DiceEventsList")]
+        [SerializeField]
+        public List<DiceEventHandlerSo> broadcastingDiceEvents;
+
+        [HideInInspector]
+        public bool locked;
+
+        [HideInInspector]
+        public bool lockAnim;
+
         private readonly Quaternion[] _faceRotation = {
             Quaternion.Euler(0f, 0f, 0f), //Top
             Quaternion.Euler(180f, 0f, 0f), // Bottom
             Quaternion.Euler(-90f, 0f, 0f), // Front
             Quaternion.Euler(90f, 0f, 0f), // Back
             Quaternion.Euler(0f, 0f, -90f), // Left
-            Quaternion.Euler(0f, 0f, 90f), // Right
+            Quaternion.Euler(0f, 0f, 90f) // Right
         };
+
+        private Animator _animator;
+        private Vector3 _currentPosition;
+        private Quaternion _currentRotation;
 
         private Vector3 _targetPosition;
 
@@ -51,7 +47,7 @@ namespace World {
 
         private void Awake() {
             _currentPosition = transform.position;
-            _targetPosition = transform.position; 
+            _targetPosition = transform.position;
         }
 
         private void Start() {
@@ -73,7 +69,7 @@ namespace World {
         public void RotationToCurrent() {
             if (locked) return;
 
-            RotateByIndex((int)currentSide);
+            RotateByIndex((int)currentFace);
         }
 
 
@@ -82,11 +78,10 @@ namespace World {
         public void RotateNext() {
             if (locked) return;
 
-            if ((int)currentSide == Enum.GetValues(typeof(DiceFaces)).Length - 1) {
-                currentSide = 0;
-            } else {
-                currentSide += 1;
-            }
+            if ((int)currentFace == Enum.GetValues(typeof(DiceFaces)).Length - 1)
+                currentFace = 0;
+            else
+                currentFace += 1;
             RotationToCurrent();
         }
 
@@ -96,8 +91,7 @@ namespace World {
 
             rotationCompleted = false;
             _targetRotation = _faceRotation[index];
-            //OnFaceChangeEvent?.Invoke(currentSide);
-            //TODO: Invoke method which say to other object that the color was changed
+            PingInteractablesWithColor();
         }
 
         public void SetTargetPosition(Vector3 targetPosition) {
@@ -107,10 +101,9 @@ namespace World {
 
         //TRANSFORM
         private void Moving() {
-
             if (Vector3.Distance(_currentPosition, _targetPosition) < 0.001f) return;
 
-            Vector3 newPosition = Vector3.Slerp(_currentPosition, _targetPosition, moveLerpSpeed * Time.deltaTime * moveSpeed);
+            var newPosition = Vector3.Slerp(_currentPosition, _targetPosition, moveLerpSpeed * Time.deltaTime * moveSpeed);
 
             transform.position = newPosition;
 
@@ -119,13 +112,10 @@ namespace World {
 
         //ROTATION
         private void Rotating() {
-
-            if (Quaternion.Angle(meshToRotate.rotation, _targetRotation) <= 0.01f) {
-                rotationCompleted = true;
-            }
+            if (Quaternion.Angle(meshToRotate.rotation, _targetRotation) <= 0.01f) rotationCompleted = true;
 
             // Calculate the rotation towards the target using slerp
-            Quaternion newRotation = Quaternion.Slerp(_currentRotation, _targetRotation, rotLerpSpeed * Time.deltaTime * rotSpeed);
+            var newRotation = Quaternion.Slerp(_currentRotation, _targetRotation, rotLerpSpeed * Time.deltaTime * rotSpeed);
 
             // Update the object's rotation
             meshToRotate.rotation = newRotation;
@@ -149,16 +139,12 @@ namespace World {
 
             _animator.enabled = true;
         }
-
+        
         [InvokeButton]
-        public void TestFirstEvent() {
-            firstEvent.RaiseEvent("First event");
+        public void PingInteractablesWithColor() {
+            foreach (var diceEvent in broadcastingDiceEvents) {
+                diceEvent?.RaiseEvent(currentFace);
+            }
         }
-
-        [InvokeButton]
-        public void TestSecondEvent() {
-            secondEvent.RaiseEvent("Second event");
-        }
-
     }
 }

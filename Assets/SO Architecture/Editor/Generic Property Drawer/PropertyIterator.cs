@@ -8,6 +8,7 @@ namespace ScriptableObjectArchitecture.Editor {
 
         private bool consumeChildren;
         private int parentDepth;
+
         public PropertyIterator(SerializedProperty property) {
             iterator = property.Copy();
             endProperty = iterator.GetEndProperty();
@@ -17,7 +18,7 @@ namespace ScriptableObjectArchitecture.Editor {
         }
 
         public virtual bool Next() {
-            bool nextVisible = false;
+            var nextVisible = false;
             if (IsSingleLine(iterator)) {
                 parentDepth = iterator.depth;
                 nextVisible = iterator.NextVisible(false);
@@ -28,24 +29,26 @@ namespace ScriptableObjectArchitecture.Editor {
             if (!CanDraw())
                 return false;
 
-            if (nextVisible) {
+            if (nextVisible)
                 if (iterator.propertyType == SerializedPropertyType.Generic)
                     nextVisible = iterator.NextVisible(true);
-            }
 
             return nextVisible && CanDraw();
         }
-        public virtual void End() {
-        }
+
+        public virtual void End() { }
+
         private void UpdateState(SerializedProperty property) {
             if (IsSingleLine(iterator)) {
                 parentDepth = iterator.depth;
                 consumeChildren = true;
             }
         }
+
         private bool CanDraw() {
             return !SerializedProperty.EqualContents(iterator, endProperty);
         }
+
         private bool IsSingleLine(SerializedProperty property) {
             switch (property.propertyType) {
                 case SerializedPropertyType.Vector3:
@@ -63,6 +66,7 @@ namespace ScriptableObjectArchitecture.Editor {
 
             return false;
         }
+
         private bool NextVisible() {
             return iterator.NextVisible(true);
         }

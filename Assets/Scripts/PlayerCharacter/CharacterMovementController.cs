@@ -6,19 +6,25 @@ namespace PlayerCharacter {
     public class CharacterMovementController : MonoBehaviour, ICharacterController {
         public KinematicCharacterMotor Motor;
 
-        [Header("Stable Movement")] public float MaxStableMoveSpeed = 10f;
+        [Header("Stable Movement")]
+        public float MaxStableMoveSpeed = 10f;
+
         public float StableMovementSharpness = 15f;
         public float OrientationSharpness = 10f;
         public OrientationMethod OrientationMethod = OrientationMethod.TowardsCamera;
 
-        [Header("Air Movement")] public float MaxAirMoveSpeed = 15f;
+        [Header("Air Movement")]
+        public float MaxAirMoveSpeed = 15f;
+
         public float AirAccelerationSpeed = 15f;
         public float Drag = 0.1f;
 
-        [Header("Misc")] public List<Collider> IgnoredColliders = new List<Collider>();
+        [Header("Misc")]
+        public List<Collider> IgnoredColliders = new();
+
         public BonusOrientationMethod BonusOrientationMethod = BonusOrientationMethod.None;
         public float BonusOrientationSharpness = 10f;
-        public Vector3 Gravity = new Vector3(0, -30f, 0);
+        public Vector3 Gravity = new(0, -30f, 0);
         public Transform MeshRoot;
         public Transform CameraFollowPoint;
 
@@ -60,25 +66,25 @@ namespace PlayerCharacter {
                 case CharacterState.Default: {
                     if (_lookInputVector.sqrMagnitude > 0f && OrientationSharpness > 0f) {
                         // Smoothly interpolate from current to target look direction
-                        Vector3 smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector,
+                        var smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector,
                             1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
 
                         // Set the current rotation (which will be used by the KinematicCharacterMotor)
                         currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, Motor.CharacterUp);
                     }
 
-                    Vector3 currentUp = currentRotation * Vector3.up;
+                    var currentUp = currentRotation * Vector3.up;
                     if (BonusOrientationMethod == BonusOrientationMethod.TowardsGravity) {
                         // Rotate from current up to invert gravity
-                        Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized,
+                        var smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized,
                             1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                         currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
                     } else if (BonusOrientationMethod == BonusOrientationMethod.TowardsGroundSlopeAndGravity) {
                         if (Motor.GroundingStatus.IsStableOnGround) {
-                            Vector3 initialCharacterBottomHemiCenter =
+                            var initialCharacterBottomHemiCenter =
                                 Motor.TransientPosition + currentUp * Motor.Capsule.radius;
 
-                            Vector3 smoothedGroundNormal = Vector3.Slerp(Motor.CharacterUp,
+                            var smoothedGroundNormal = Vector3.Slerp(Motor.CharacterUp,
                                 Motor.GroundingStatus.GroundNormal, 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                             currentRotation = Quaternion.FromToRotation(currentUp, smoothedGroundNormal) * currentRotation;
 
@@ -86,12 +92,12 @@ namespace PlayerCharacter {
                             Motor.SetTransientPosition(initialCharacterBottomHemiCenter +
                                                        currentRotation * Vector3.down * Motor.Capsule.radius);
                         } else {
-                            Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized,
+                            var smoothedGravityDir = Vector3.Slerp(currentUp, -Gravity.normalized,
                                 1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                             currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
                         }
                     } else {
-                        Vector3 smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up,
+                        var smoothedGravityDir = Vector3.Slerp(currentUp, Vector3.up,
                             1 - Mathf.Exp(-BonusOrientationSharpness * deltaTime));
                         currentRotation = Quaternion.FromToRotation(currentUp, smoothedGravityDir) * currentRotation;
                     }
@@ -111,19 +117,19 @@ namespace PlayerCharacter {
                 case CharacterState.Default: {
                     // Ground movement
                     if (Motor.GroundingStatus.IsStableOnGround) {
-                        float currentVelocityMagnitude = currentVelocity.magnitude;
+                        var currentVelocityMagnitude = currentVelocity.magnitude;
 
-                        Vector3 effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
+                        var effectiveGroundNormal = Motor.GroundingStatus.GroundNormal;
 
                         // Reorient velocity on slope
                         currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, effectiveGroundNormal) *
                                           currentVelocityMagnitude;
 
                         // Calculate target velocity
-                        Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
-                        Vector3 reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized *
-                                                  _moveInputVector.magnitude;
-                        Vector3 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
+                        var inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                        var reorientedInput = Vector3.Cross(effectiveGroundNormal, inputRight).normalized *
+                                              _moveInputVector.magnitude;
+                        var targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
 
                         // Smooth movement Velocity
                         currentVelocity = Vector3.Lerp(currentVelocity, targetMovementVelocity,
@@ -133,34 +139,32 @@ namespace PlayerCharacter {
                     else {
                         // Add move input
                         if (_moveInputVector.sqrMagnitude > 0f) {
-                            Vector3 addedVelocity = deltaTime * AirAccelerationSpeed * _moveInputVector;
+                            var addedVelocity = deltaTime * AirAccelerationSpeed * _moveInputVector;
 
-                            Vector3 currentVelocityOnInputsPlane =
+                            var currentVelocityOnInputsPlane =
                                 Vector3.ProjectOnPlane(currentVelocity, Motor.CharacterUp);
 
                             // Limit air velocity from inputs
                             if (currentVelocityOnInputsPlane.magnitude < MaxAirMoveSpeed) {
                                 // clamp addedVel to make total vel not exceed max vel on inputs plane
-                                Vector3 newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity,
+                                var newTotal = Vector3.ClampMagnitude(currentVelocityOnInputsPlane + addedVelocity,
                                     MaxAirMoveSpeed);
                                 addedVelocity = newTotal - currentVelocityOnInputsPlane;
                             } else {
                                 // Make sure added vel doesn't go in the direction of the already-exceeding velocity
-                                if (Vector3.Dot(currentVelocityOnInputsPlane, addedVelocity) > 0f) {
+                                if (Vector3.Dot(currentVelocityOnInputsPlane, addedVelocity) > 0f)
                                     addedVelocity = Vector3.ProjectOnPlane(addedVelocity,
                                         currentVelocityOnInputsPlane.normalized);
-                                }
                             }
 
                             // Prevent air-climbing sloped walls
-                            if (Motor.GroundingStatus.FoundAnyGround) {
+                            if (Motor.GroundingStatus.FoundAnyGround)
                                 if (Vector3.Dot(currentVelocity + addedVelocity, addedVelocity) > 0f) {
-                                    Vector3 perpenticularObstructionNormal = Vector3
+                                    var perpenticularObstructionNormal = Vector3
                                         .Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal),
                                             Motor.CharacterUp).normalized;
                                     addedVelocity = Vector3.ProjectOnPlane(addedVelocity, perpenticularObstructionNormal);
                                 }
-                            }
 
                             // Apply added velocity
                             currentVelocity += addedVelocity;
@@ -198,36 +202,27 @@ namespace PlayerCharacter {
 
         public void PostGroundingUpdate(float deltaTime) {
             // Handle landing and leaving ground
-            if (Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround) {
+            if (Motor.GroundingStatus.IsStableOnGround && !Motor.LastGroundingStatus.IsStableOnGround)
                 OnLanded();
-            } else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround) {
-                OnLeaveStableGround();
-            }
+            else if (!Motor.GroundingStatus.IsStableOnGround && Motor.LastGroundingStatus.IsStableOnGround) OnLeaveStableGround();
         }
 
         public bool IsColliderValidForCollisions(Collider coll) {
-            if (IgnoredColliders.Count == 0) {
-                return true;
-            }
+            if (IgnoredColliders.Count == 0) return true;
 
-            if (IgnoredColliders.Contains(coll)) {
-                return false;
-            }
+            if (IgnoredColliders.Contains(coll)) return false;
 
             return true;
         }
 
         public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint,
-            ref HitStabilityReport hitStabilityReport) {
-        }
+            ref HitStabilityReport hitStabilityReport) { }
 
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint,
-            ref HitStabilityReport hitStabilityReport) {
-        }
+            ref HitStabilityReport hitStabilityReport) { }
 
         public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint,
-            Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) {
-        }
+            Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) { }
 
         public void OnDiscreteCollisionDetected(Collider hitCollider) { }
 
@@ -235,7 +230,7 @@ namespace PlayerCharacter {
         ///     Handles movement state transitions and enter/exit callbacks
         /// </summary>
         public void TransitionToState(CharacterState newState) {
-            CharacterState tmpInitialState = CurrentCharacterState;
+            var tmpInitialState = CurrentCharacterState;
             OnStateExit(tmpInitialState, newState);
             CurrentCharacterState = newState;
             OnStateEnter(newState, tmpInitialState);
@@ -268,18 +263,17 @@ namespace PlayerCharacter {
         /// </summary>
         public void SetInputs(ref PlayerCharacterInputs inputs) {
             // Clamp input
-            Vector3 moveInputVector =
+            var moveInputVector =
                 Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
 
             // Calculate camera direction and rotation on the character plane
-            Vector3 cameraPlanarDirection =
+            var cameraPlanarDirection =
                 Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
-            if (cameraPlanarDirection.sqrMagnitude == 0f) {
+            if (cameraPlanarDirection.sqrMagnitude == 0f)
                 cameraPlanarDirection =
                     Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, Motor.CharacterUp).normalized;
-            }
 
-            Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
+            var cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
 
             switch (CurrentCharacterState) {
                 case CharacterState.Default: {
@@ -294,6 +288,7 @@ namespace PlayerCharacter {
                             _lookInputVector = _moveInputVector.normalized;
                             break;
                     }
+
                     break;
                 }
             }
@@ -323,12 +318,12 @@ namespace PlayerCharacter {
 }
 
 public enum CharacterState {
-    Default,
+    Default
 }
 
 public enum OrientationMethod {
     TowardsCamera,
-    TowardsMovement,
+    TowardsMovement
 }
 
 public struct PlayerCharacterInputs {
@@ -348,5 +343,5 @@ public struct AICharacterInputs {
 public enum BonusOrientationMethod {
     None,
     TowardsGravity,
-    TowardsGroundSlopeAndGravity,
+    TowardsGroundSlopeAndGravity
 }

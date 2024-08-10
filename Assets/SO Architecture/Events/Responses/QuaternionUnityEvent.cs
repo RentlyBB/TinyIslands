@@ -4,6 +4,5 @@ using UnityEngine.Events;
 
 namespace ScriptableObjectArchitecture {
     [Serializable]
-    public sealed class QuaternionUnityEvent : UnityEvent<Quaternion> {
-    }
+    public sealed class QuaternionUnityEvent : UnityEvent<Quaternion> { }
 }

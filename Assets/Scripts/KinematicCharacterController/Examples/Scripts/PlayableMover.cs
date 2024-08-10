@@ -20,8 +20,8 @@ namespace KinematicCharacterController.Examples {
         // This is called every FixedUpdate by our PhysicsMover in order to tell it what pose it should go to
         public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
             // Remember pose before animation
-            Vector3 _positionBeforeAnim = _transform.position;
-            Quaternion _rotationBeforeAnim = _transform.rotation;
+            var _positionBeforeAnim = _transform.position;
+            var _rotationBeforeAnim = _transform.rotation;
 
             // Update animation
             EvaluateAtTime(Time.time * Speed);

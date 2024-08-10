@@ -2,9 +2,8 @@
 
 namespace ScriptableObjectArchitecture.Editor {
     public abstract class BaseGameEventEditor : UnityEditor.Editor {
-
         private StackTrace _stackTrace;
-        private IStackTraceObject Target { get { return (IStackTraceObject)target; } }
+        private IStackTraceObject Target => (IStackTraceObject)target;
 
         protected virtual void OnEnable() {
             _stackTrace = new StackTrace(Target);
@@ -12,6 +11,7 @@ namespace ScriptableObjectArchitecture.Editor {
         }
 
         protected abstract void DrawRaiseButton();
+
         public override void OnInspectorGUI() {
             DrawRaiseButton();
 

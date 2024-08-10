@@ -25,7 +25,6 @@ namespace KinematicCharacterController.Examples {
         }
 
         private void Update() {
-
             KinematicCharacterSystem.Simulate(Time.deltaTime, KinematicCharacterSystem.CharacterMotors, KinematicCharacterSystem.PhysicsMovers);
         }
 
@@ -39,38 +38,32 @@ namespace KinematicCharacterController.Examples {
         }
 
         private bool IsSimulationOn() {
-
-            bool isSimOn = Physics.simulationMode == SimulationMode.FixedUpdate;
+            var isSimOn = Physics.simulationMode == SimulationMode.FixedUpdate;
 
             return isSimOn;
-
         }
 
         public void SetSpawnCount(string count) {
-            if (int.TryParse(count, out int result)) {
-                SpawnCount = result;
-            }
+            if (int.TryParse(count, out var result)) SpawnCount = result;
         }
 
         public void ToggleRendering() {
-            if (Camera.cullingMask == -1) {
+            if (Camera.cullingMask == -1)
                 Camera.cullingMask = UIMask;
-            } else {
+            else
                 Camera.cullingMask = -1;
-            }
             UpdateOnImages();
         }
 
         public void TogglePhysicsSim() {
             //Physics.autoSimulation = !Physics.autoSimulation;
 
-            if (Physics.simulationMode == SimulationMode.FixedUpdate) {
+            if (Physics.simulationMode == SimulationMode.FixedUpdate)
                 // Switch to manual simulation mode
                 Physics.simulationMode = SimulationMode.Script;
-            } else {
+            else
                 // Switch back to automatic fixed update simulation mode
                 Physics.simulationMode = SimulationMode.FixedUpdate;
-            }
 
             UpdateOnImages();
         }
@@ -81,21 +74,19 @@ namespace KinematicCharacterController.Examples {
         }
 
         public void Spawn() {
-            for (int i = 0; i < AIController.Characters.Count; i++) {
-                Destroy(AIController.Characters[i].gameObject);
-            }
+            for (var i = 0; i < AIController.Characters.Count; i++) Destroy(AIController.Characters[i].gameObject);
             AIController.Characters.Clear();
 
-            int charsPerRow = Mathf.CeilToInt(Mathf.Sqrt(SpawnCount));
-            Vector3 firstPos = charsPerRow * SpawnDistance * 0.5f * -Vector3.one;
+            var charsPerRow = Mathf.CeilToInt(Mathf.Sqrt(SpawnCount));
+            var firstPos = charsPerRow * SpawnDistance * 0.5f * -Vector3.one;
             firstPos.y = 0f;
 
-            for (int i = 0; i < SpawnCount; i++) {
-                int row = i / charsPerRow;
-                int col = i % charsPerRow;
-                Vector3 pos = firstPos + Vector3.right * row * SpawnDistance + Vector3.forward * col * SpawnDistance;
+            for (var i = 0; i < SpawnCount; i++) {
+                var row = i / charsPerRow;
+                var col = i % charsPerRow;
+                var pos = firstPos + Vector3.right * row * SpawnDistance + Vector3.forward * col * SpawnDistance;
 
-                ExampleCharacterController newChar = Instantiate(CharacterPrefab);
+                var newChar = Instantiate(CharacterPrefab);
                 newChar.Motor.SetPosition(pos);
 
                 AIController.Characters.Add(newChar);

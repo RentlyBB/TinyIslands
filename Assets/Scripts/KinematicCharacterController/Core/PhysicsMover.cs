@@ -34,11 +34,13 @@ namespace KinematicCharacterController {
         private Vector3 _internalTransientPosition;
 
         private Quaternion _internalTransientRotation;
+
         /// <summary>
         ///     Remembers latest position in interpolation
         /// </summary>
         [NonSerialized]
         public Vector3 LatestInterpolationPosition;
+
         /// <summary>
         ///     Remembers latest rotation in interpolation
         /// </summary>
@@ -50,11 +52,13 @@ namespace KinematicCharacterController {
         /// </summary>
         [NonSerialized]
         public IMoverController MoverController;
+
         /// <summary>
         ///     The latest movement made by interpolation
         /// </summary>
         [NonSerialized]
         public Vector3 PositionDeltaFromInterpolation;
+
         /// <summary>
         ///     The latest rotation made by interpolation
         /// </summary>
@@ -65,18 +69,22 @@ namespace KinematicCharacterController {
         ///     Index of this motor in KinematicCharacterSystem arrays
         /// </summary>
         public int IndexInCharacterSystem { get; set; }
+
         /// <summary>
         ///     Remembers initial position before all simulation are done
         /// </summary>
         public Vector3 Velocity { get; protected set; }
+
         /// <summary>
         ///     Remembers initial position before all simulation are done
         /// </summary>
         public Vector3 AngularVelocity { get; protected set; }
+
         /// <summary>
         ///     Remembers initial position before all simulation are done
         /// </summary>
         public Vector3 InitialTickPosition { get; set; }
+
         /// <summary>
         ///     Remembers initial rotation before all simulation are done
         /// </summary>
@@ -86,10 +94,12 @@ namespace KinematicCharacterController {
         ///     The mover's Transform
         /// </summary>
         public Transform Transform { get; private set; }
+
         /// <summary>
         ///     The character's position before the movement calculations began
         /// </summary>
         public Vector3 InitialSimulationPosition { get; private set; }
+
         /// <summary>
         ///     The character's rotation before the movement calculations began
         /// </summary>
@@ -99,23 +109,16 @@ namespace KinematicCharacterController {
         ///     The mover's rotation (always up-to-date during the character update phase)
         /// </summary>
         public Vector3 TransientPosition {
-            get {
-                return _internalTransientPosition;
-            }
-            private set {
-                _internalTransientPosition = value;
-            }
+            get => _internalTransientPosition;
+            private set => _internalTransientPosition = value;
         }
+
         /// <summary>
         ///     The mover's rotation (always up-to-date during the character update phase)
         /// </summary>
         public Quaternion TransientRotation {
-            get {
-                return _internalTransientRotation;
-            }
-            private set {
-                _internalTransientRotation = value;
-            }
+            get => _internalTransientRotation;
+            private set => _internalTransientRotation = value;
         }
 
         private void Awake() {
@@ -198,7 +201,7 @@ namespace KinematicCharacterController {
         ///     Returns all the state information of the mover that is pertinent for simulation
         /// </summary>
         public PhysicsMoverState GetState() {
-            PhysicsMoverState state = new PhysicsMoverState();
+            var state = new PhysicsMoverState();
 
             state.Position = TransientPosition;
             state.Rotation = TransientRotation;
@@ -229,7 +232,7 @@ namespace KinematicCharacterController {
             if (deltaTime > 0f) {
                 Velocity = (TransientPosition - InitialSimulationPosition) / deltaTime;
 
-                Quaternion rotationFromCurrentToGoal = TransientRotation * Quaternion.Inverse(InitialSimulationRotation);
+                var rotationFromCurrentToGoal = TransientRotation * Quaternion.Inverse(InitialSimulationRotation);
                 AngularVelocity = Mathf.Deg2Rad * rotationFromCurrentToGoal.eulerAngles / deltaTime;
             }
         }

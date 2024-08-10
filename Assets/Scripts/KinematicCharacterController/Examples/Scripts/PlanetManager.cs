@@ -12,7 +12,7 @@ namespace KinematicCharacterController.Examples {
         public Teleporter OnPlaygroundTeleportingZone;
         public Teleporter OnPlanetTeleportingZone;
 
-        private readonly List<ExampleCharacterController> _characterControllersOnPlanet = new List<ExampleCharacterController>();
+        private readonly List<ExampleCharacterController> _characterControllersOnPlanet = new();
         private Quaternion _lastRotation;
         private Vector3 _savedGravity;
 
@@ -32,14 +32,12 @@ namespace KinematicCharacterController.Examples {
             goalPosition = PlanetMover.Rigidbody.position;
 
             // Rotate
-            Quaternion targetRotation = Quaternion.Euler(OrbitAxis * OrbitSpeed * deltaTime) * _lastRotation;
+            var targetRotation = Quaternion.Euler(OrbitAxis * OrbitSpeed * deltaTime) * _lastRotation;
             goalRotation = targetRotation;
             _lastRotation = targetRotation;
 
             // Apply gravity to characters
-            foreach (ExampleCharacterController cc in _characterControllersOnPlanet) {
-                cc.Gravity = (PlanetMover.transform.position - cc.transform.position).normalized * GravityStrength;
-            }
+            foreach (var cc in _characterControllersOnPlanet) cc.Gravity = (PlanetMover.transform.position - cc.transform.position).normalized * GravityStrength;
         }
 
         private void ControlGravity(ExampleCharacterController cc) {

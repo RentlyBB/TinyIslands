@@ -3,6 +3,5 @@ using UnityEngine.Events;
 
 namespace ScriptableObjectArchitecture {
     [Serializable]
-    public sealed class ULongUnityEvent : UnityEvent<ulong> {
-    }
+    public sealed class ULongUnityEvent : UnityEvent<ulong> { }
 }

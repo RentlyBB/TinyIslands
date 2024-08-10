@@ -5,9 +5,9 @@ namespace KinematicCharacterController {
     [CustomEditor(typeof(KinematicCharacterMotor))]
     public class KinematicCharacterMotorEditor : Editor {
         protected virtual void OnSceneGUI() {
-            KinematicCharacterMotor motor = target as KinematicCharacterMotor;
+            var motor = target as KinematicCharacterMotor;
             if (motor) {
-                Vector3 characterBottom = motor.transform.position + (motor.Capsule.center + -Vector3.up * (motor.Capsule.height * 0.5f));
+                var characterBottom = motor.transform.position + (motor.Capsule.center + -Vector3.up * (motor.Capsule.height * 0.5f));
 
                 Handles.color = Color.yellow;
                 Handles.CircleHandleCap(

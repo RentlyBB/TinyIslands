@@ -3,5 +3,4 @@
         bool Next();
         void End();
     }
-
 }

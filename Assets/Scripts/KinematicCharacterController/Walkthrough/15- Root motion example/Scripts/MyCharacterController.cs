@@ -11,21 +11,25 @@ namespace KinematicCharacterController.Walkthrough.RootMotionExample {
 
         [Header("Stable Movement")]
         public float MaxStableMoveSpeed = 10f;
+
         public float StableMovementSharpness = 15;
         public float OrientationSharpness = 10;
 
         [Header("Air Movement")]
         public float MaxAirMoveSpeed = 10f;
+
         public float AirAccelerationSpeed = 5f;
         public float Drag = 0.1f;
 
         [Header("Animation Parameters")]
         public Animator CharacterAnimator;
+
         public float ForwardAxisSharpness = 10;
         public float TurnAxisSharpness = 5;
 
         [Header("Misc")]
-        public Vector3 Gravity = new Vector3(0, -30f, 0);
+        public Vector3 Gravity = new(0, -30f, 0);
+
         public Transform MeshRoot;
         private float _forwardAxis;
         private Vector3 _lookInputVector;
@@ -64,8 +68,7 @@ namespace KinematicCharacterController.Walkthrough.RootMotionExample {
         ///     (Called by KinematicCharacterMotor during its update cycle)
         ///     This is called before the character begins its movement update
         /// </summary>
-        public void BeforeCharacterUpdate(float deltaTime) {
-        }
+        public void BeforeCharacterUpdate(float deltaTime) { }
 
         /// <summary>
         ///     (Called by KinematicCharacterMotor during its update cycle)
@@ -94,8 +97,8 @@ namespace KinematicCharacterController.Walkthrough.RootMotionExample {
             } else {
                 if (_forwardAxis > 0f) {
                     // If we want to move, add an acceleration to the velocity
-                    Vector3 targetMovementVelocity = Motor.CharacterForward * _forwardAxis * MaxAirMoveSpeed;
-                    Vector3 velocityDiff = Vector3.ProjectOnPlane(targetMovementVelocity - currentVelocity, Gravity);
+                    var targetMovementVelocity = Motor.CharacterForward * _forwardAxis * MaxAirMoveSpeed;
+                    var velocityDiff = Vector3.ProjectOnPlane(targetMovementVelocity - currentVelocity, Gravity);
                     currentVelocity += velocityDiff * AirAccelerationSpeed * deltaTime;
                 }
 
@@ -121,20 +124,16 @@ namespace KinematicCharacterController.Walkthrough.RootMotionExample {
             return true;
         }
 
-        public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) {
-        }
+        public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
 
-        public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) {
-        }
+        public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
 
-        public void PostGroundingUpdate(float deltaTime) {
-        }
+        public void PostGroundingUpdate(float deltaTime) { }
 
-        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) {
-        }
+        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation,
+            ref HitStabilityReport hitStabilityReport) { }
 
-        public void OnDiscreteCollisionDetected(Collider hitCollider) {
-        }
+        public void OnDiscreteCollisionDetected(Collider hitCollider) { }
 
         /// <summary>
         ///     This is called every frame by MyPlayer in order to tell the character what its inputs are
@@ -145,7 +144,6 @@ namespace KinematicCharacterController.Walkthrough.RootMotionExample {
             _targetRightAxis = inputs.MoveAxisRight;
         }
 
-        public void AddVelocity(Vector3 velocity) {
-        }
+        public void AddVelocity(Vector3 velocity) { }
     }
 }

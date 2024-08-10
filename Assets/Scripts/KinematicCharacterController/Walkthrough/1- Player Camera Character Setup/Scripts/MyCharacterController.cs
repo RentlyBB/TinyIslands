@@ -38,7 +38,8 @@ namespace KinematicCharacterController.Walkthrough.PlayerCameraCharacterSetup {
             // This is called when the motor's movement logic detects a hit
         }
 
-        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) {
+        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation,
+            ref HitStabilityReport hitStabilityReport) {
             // This is called after every hit detected in the motor, to give you a chance to modify the HitStabilityReport any way you want
         }
 

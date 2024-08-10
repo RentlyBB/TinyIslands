@@ -14,17 +14,17 @@ namespace ScriptableObjectArchitecture.Editor {
             }
 
             if (SOArchitecture_EditorUtility.HasPropertyDrawer(type)) {
-                if (drawLabel) {
+                if (drawLabel)
                     EditorGUI.PropertyField(rect, property);
-                } else {
+                else
                     EditorGUI.PropertyField(rect, property, GUIContent.none);
-                }
             } else {
-                PropertyDrawIterator iter = new PropertyDrawIterator(rect, property.Copy(), drawLabel);
+                var iter = new PropertyDrawIterator(rect, property.Copy(), drawLabel);
 
                 DrawPropertyDrawerInternal(iter);
             }
         }
+
         public static void DrawPropertyDrawerLayout(SerializedProperty property, Type type, bool drawLabel = true) {
             if (property == null) {
                 Debug.LogError(NullPropertyText);
@@ -32,17 +32,17 @@ namespace ScriptableObjectArchitecture.Editor {
             }
 
             if (SOArchitecture_EditorUtility.HasPropertyDrawer(type)) {
-                if (drawLabel) {
+                if (drawLabel)
                     EditorGUILayout.PropertyField(property);
-                } else {
+                else
                     EditorGUILayout.PropertyField(property, GUIContent.none);
-                }
             } else {
-                PropertyDrawIteratorLayout iter = new PropertyDrawIteratorLayout(property.Copy(), drawLabel);
+                var iter = new PropertyDrawIteratorLayout(property.Copy(), drawLabel);
 
                 DrawPropertyDrawerInternal(iter);
             }
         }
+
         private static void DrawPropertyDrawerInternal(IPropertyDrawIterator iter) {
             do {
                 iter.Draw();
@@ -50,23 +50,22 @@ namespace ScriptableObjectArchitecture.Editor {
 
             iter.End();
         }
+
         public static float GetHeight(SerializedProperty property, Type type) {
-            if (SOArchitecture_EditorUtility.HasPropertyDrawer(type)) {
-                return EditorGUI.GetPropertyHeight(property);
-            }
+            if (SOArchitecture_EditorUtility.HasPropertyDrawer(type)) return EditorGUI.GetPropertyHeight(property);
             property = property.Copy();
 
-            int elements = 0;
+            var elements = 0;
 
-            PropertyIterator iter = new PropertyIterator(property);
+            var iter = new PropertyIterator(property);
             do {
                 ++elements;
             } while (iter.Next());
 
             iter.End();
 
-            float spacing = (elements - 1) * EditorGUIUtility.standardVerticalSpacing;
-            float elementHeights = elements * EditorGUIUtility.singleLineHeight;
+            var spacing = (elements - 1) * EditorGUIUtility.standardVerticalSpacing;
+            var elementHeights = elements * EditorGUIUtility.singleLineHeight;
 
             return spacing + elementHeights;
         }

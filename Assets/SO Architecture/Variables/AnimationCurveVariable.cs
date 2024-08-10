@@ -4,13 +4,11 @@ using UnityEngine.Events;
 
 namespace ScriptableObjectArchitecture {
     [Serializable]
-    public class AnimationCurveEvent : UnityEvent<AnimationCurve> {
-    }
+    public class AnimationCurveEvent : UnityEvent<AnimationCurve> { }
 
     [CreateAssetMenu(
         fileName = "AnimationCurveVariable.asset",
         menuName = SOArchitecture_Utility.ADVANCED_VARIABLE_SUBMENU + "AnimationCurve",
         order = 120)]
-    public class AnimationCurveVariable : BaseVariable<AnimationCurve, AnimationCurveEvent> {
-    }
+    public class AnimationCurveVariable : BaseVariable<AnimationCurve, AnimationCurveEvent> { }
 }

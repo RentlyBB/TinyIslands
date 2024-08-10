@@ -5,7 +5,6 @@ using UnityEngine;
 namespace ScriptableObjectArchitecture.Editor {
     [CustomEditor(typeof(BaseCollection), true)]
     public class CollectionEditor : UnityEditor.Editor {
-
         // UI
         private const bool DISABLE_ELEMENTS = false;
         private const bool ELEMENT_DRAGGABLE = true;
@@ -23,10 +22,9 @@ namespace ScriptableObjectArchitecture.Editor {
         private ReorderableList _reorderableList;
 
         private GUIContent _titleGUIContent;
-        private BaseCollection Target { get { return (BaseCollection)target; } }
-        private SerializedProperty CollectionItemsProperty {
-            get { return serializedObject.FindProperty(LIST_PROPERTY_NAME); }
-        }
+        private BaseCollection Target => (BaseCollection)target;
+
+        private SerializedProperty CollectionItemsProperty => serializedObject.FindProperty(LIST_PROPERTY_NAME);
 
         private void OnEnable() {
             _titleGUIContent = new GUIContent(string.Format(TITLE_FORMAT, Target.Type));
@@ -41,24 +39,25 @@ namespace ScriptableObjectArchitecture.Editor {
                 LIST_DISPLAY_REMOVE_BUTTON) {
                 drawHeaderCallback = DrawHeader,
                 drawElementCallback = DrawElement,
-                elementHeightCallback = GetHeight,
+                elementHeightCallback = GetHeight
             };
         }
+
         public override void OnInspectorGUI() {
             EditorGUI.BeginChangeCheck();
 
             _reorderableList.DoLayoutList();
 
-            if (EditorGUI.EndChangeCheck()) {
-                serializedObject.ApplyModifiedProperties();
-            }
+            if (EditorGUI.EndChangeCheck()) serializedObject.ApplyModifiedProperties();
         }
+
         private void DrawHeader(Rect rect) {
             EditorGUI.LabelField(rect, _titleGUIContent);
         }
+
         private void DrawElement(Rect rect, int index, bool isActive, bool isFocused) {
             rect = SOArchitecture_EditorUtility.GetReorderableListElementFieldRect(rect);
-            SerializedProperty property = CollectionItemsProperty.GetArrayElementAtIndex(index);
+            var property = CollectionItemsProperty.GetArrayElementAtIndex(index);
 
             EditorGUI.BeginDisabledGroup(DISABLE_ELEMENTS);
 
@@ -66,8 +65,9 @@ namespace ScriptableObjectArchitecture.Editor {
 
             EditorGUI.EndDisabledGroup();
         }
+
         private float GetHeight(int index) {
-            SerializedProperty property = CollectionItemsProperty.GetArrayElementAtIndex(index);
+            var property = CollectionItemsProperty.GetArrayElementAtIndex(index);
 
             return GenericPropertyDrawer.GetHeight(property, Target.Type) + EditorGUIUtility.standardVerticalSpacing;
         }

@@ -8,11 +8,10 @@ namespace World {
         OnEnter,
         OnExit,
         OnEnterExit,
-        None,
+        None
     }
 
     public class Activator : MonoBehaviour {
-
         public InteractionType interactionType;
 
         [Tooltip("Can be interact only once.")]
@@ -29,23 +28,17 @@ namespace World {
         private void OnTriggerEnter(Collider other) {
             if (!other.CompareTag("Player")) return;
 
-            if (interactionType == InteractionType.OnEnter || interactionType == InteractionType.OnEnterExit) {
-                InvokeInteractableAction();
-            }
+            if (interactionType == InteractionType.OnEnter || interactionType == InteractionType.OnEnterExit) InvokeInteractableAction();
         }
 
         private void OnTriggerExit(Collider other) {
             if (!other.CompareTag("Player")) return;
 
-            if (interactionType == InteractionType.OnExit || interactionType == InteractionType.OnEnterExit) {
-                InvokeInteractableAction();
-            }
+            if (interactionType == InteractionType.OnExit || interactionType == InteractionType.OnEnterExit) InvokeInteractableAction();
         }
 
         public void InteractableAction() {
-            if (interactionType == InteractionType.PressButton) {
-                InvokeInteractableAction();
-            }
+            if (interactionType == InteractionType.PressButton) InvokeInteractableAction();
         }
 
         [InvokeButton]

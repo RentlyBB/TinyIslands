@@ -2,10 +2,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 using World.Interfaces;
+using World.Enums;
 
 namespace World {
     public class DiceSocketBehaviour : MonoBehaviour, IPuzzle {
-        
         public Transform dice;
         public Transform diceSocketPosition;
 
@@ -30,25 +30,20 @@ namespace World {
                 _diceBehaviour.lockAnim = false;
             }
         }
-        
-        [InvokeButton]
-        public void CheckAndResolve() {
-            CheckPuzzle();
-            ResolvePuzzle();
-        }
 
         public void CheckPuzzle() {
             if (!_diceBehaviour.rotationCompleted)
                 return;
 
-            if (targetFace != _diceBehaviour.currentSide) {
+            if (targetFace != _diceBehaviour.currentFace)
                 _isSolved = false;
-            } else {
+            else
                 _isSolved = true;
-            }
         }
+
         public void WrongSolution() {
             _diceBehaviour.Shake();
+                        ;
         }
 
         public void ResolvePuzzle() {
@@ -63,6 +58,12 @@ namespace World {
 
         public bool IsSolved() {
             return _isSolved;
+        }
+
+        [InvokeButton]
+        public void CheckAndResolve() {
+            CheckPuzzle();
+            ResolvePuzzle();
         }
     }
 }

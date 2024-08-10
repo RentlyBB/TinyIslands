@@ -12,9 +12,7 @@ public class BuildManager : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.F1)) {
-            SceneManager.LoadScene(0);
-        }
+        if (Input.GetKeyDown(KeyCode.F1)) SceneManager.LoadScene(0);
 
 #if UNITY_WEBGL && !UNITY_EDITOR
         if(Input.GetKeyDown(KeyCode.H))

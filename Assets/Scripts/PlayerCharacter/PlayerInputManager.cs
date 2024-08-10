@@ -7,14 +7,13 @@ namespace PlayerCharacter {
         public CharacterMovementController character;
         public CharacterCamera characterCamera;
 
-        [SerializeField] private bool hideCursor;
+        [SerializeField]
+        private bool hideCursor;
 
         private PlayerCharacterInputs _characterInputs;
 
         private void Start() {
-            if (hideCursor) {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
+            if (hideCursor) Cursor.lockState = CursorLockMode.Locked;
 
             // Ignore the character's collider(s) for camera obstruction checks
             characterCamera.IgnoredColliders.Clear();
@@ -22,16 +21,12 @@ namespace PlayerCharacter {
         }
 
         private void Update() {
-            if (hideCursor && Input.GetMouseButtonDown(0)) {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
+            if (hideCursor && Input.GetMouseButtonDown(0)) Cursor.lockState = CursorLockMode.Locked;
 
             HandleCharacterInput();
-
         }
 
         private void LateUpdate() {
-
             //TODO: Camera Handling Should Be Done Here 
             HandleCameraInput();
         }
@@ -49,7 +44,6 @@ namespace PlayerCharacter {
         }
 
         private void HandleCharacterInput() {
-
             // Build the CharacterInputs struct
             _characterInputs.CameraRotation = characterCamera.Transform.rotation;
 

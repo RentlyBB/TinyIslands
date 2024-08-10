@@ -1,20 +1,17 @@
-using PlayerCharacter;
 using PlayerCharacter.Abilities;
 using UnityEditor;
 using UnityEngine;
 
 namespace EditorScripts.Debug {
-
     [CustomEditor(typeof(VacuumAbility))]
     public class VacuumEditorGizmo : Editor {
         private void OnSceneGUI() {
-
-            VacuumAbility fov = (VacuumAbility)target;
+            var fov = (VacuumAbility)target;
             Handles.color = Color.white;
             Handles.DrawWireArc(fov.transform.position, Vector3.up, Vector3.forward, 360, fov.radius);
 
-            Vector3 viewAngle01 = DirectionFromAngle(fov.transform.eulerAngles.y, -fov.angle / 2);
-            Vector3 viewAngle02 = DirectionFromAngle(fov.transform.eulerAngles.y, fov.angle / 2);
+            var viewAngle01 = DirectionFromAngle(fov.transform.eulerAngles.y, -fov.angle / 2);
+            var viewAngle02 = DirectionFromAngle(fov.transform.eulerAngles.y, fov.angle / 2);
 
             Handles.color = Color.yellow;
             Handles.DrawLine(fov.transform.position, fov.transform.position + viewAngle01 * fov.radius);

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace KinematicCharacterController.Walkthrough.ChargingState {
     public enum CharacterState {
         Default,
-        Charging,
+        Charging
     }
 
     public struct PlayerCharacterInputs {
@@ -22,19 +22,23 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
 
         [Header("Stable Movement")]
         public float MaxStableMoveSpeed = 10f;
+
         public float StableMovementSharpness = 15;
         public float OrientationSharpness = 10;
         public float MaxStableDistanceFromLedge = 5f;
+
         [Range(0f, 180f)]
         public float MaxStableDenivelationAngle = 180f;
 
         [Header("Air Movement")]
         public float MaxAirMoveSpeed = 10f;
+
         public float AirAccelerationSpeed = 5f;
         public float Drag = 0.1f;
 
         [Header("Jumping")]
         public bool AllowJumpingWhenSliding;
+
         public bool AllowDoubleJump;
         public bool AllowWallJump;
         public float JumpSpeed = 10f;
@@ -43,14 +47,18 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
 
         [Header("Charging")]
         public float ChargeSpeed = 15f;
+
         public float MaxChargeTime = 1.5f;
         public float StoppedTime = 1f;
 
         [Header("Misc")]
-        public List<Collider> IgnoredColliders = new List<Collider>();
+        public List<Collider> IgnoredColliders = new();
+
         public bool OrientTowardsGravity;
-        public Vector3 Gravity = new Vector3(0, -30f, 0);
+        public Vector3 Gravity = new(0, -30f, 0);
         public Transform MeshRoot;
+
+        private readonly Collider[] _probedColliders = new Collider[8];
         private bool _canWallJump;
 
         private Vector3 _currentChargeVelocity;
@@ -64,8 +72,6 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
         private Vector3 _lookInputVector;
         private Vector3 _moveInputVector;
         private bool _mustStopVelocity;
-
-        private readonly Collider[] _probedColliders = new Collider[8];
         private bool _shouldBeCrouching;
         private float _timeSinceJumpRequested = Mathf.Infinity;
         private float _timeSinceLastAbleToJump;
@@ -95,9 +101,7 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                 case CharacterState.Charging: {
                     // Update times
                     _timeSinceStartedCharge += deltaTime;
-                    if (_isStopped) {
-                        _timeSinceStopped += deltaTime;
-                    }
+                    if (_isStopped) _timeSinceStopped += deltaTime;
                     break;
                 }
             }
@@ -113,15 +117,15 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                 case CharacterState.Default: {
                     if (_lookInputVector != Vector3.zero && OrientationSharpness > 0f) {
                         // Smoothly interpolate from current to target look direction
-                        Vector3 smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
+                        var smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
 
                         // Set the current rotation (which will be used by the KinematicCharacterMotor)
                         currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, Motor.CharacterUp);
                     }
-                    if (OrientTowardsGravity) {
+
+                    if (OrientTowardsGravity)
                         // Rotate from current up to invert gravity
                         currentRotation = Quaternion.FromToRotation(currentRotation * Vector3.up, -Gravity) * currentRotation;
-                    }
                     break;
                 }
             }
@@ -135,14 +139,14 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime) {
             switch (CurrentCharacterState) {
                 case CharacterState.Default: {
-                    Vector3 targetMovementVelocity = Vector3.zero;
+                    var targetMovementVelocity = Vector3.zero;
                     if (Motor.GroundingStatus.IsStableOnGround) {
                         // Reorient velocity on slope
                         currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, Motor.GroundingStatus.GroundNormal) * currentVelocity.magnitude;
 
                         // Calculate target velocity
-                        Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
-                        Vector3 reorientedInput = Vector3.Cross(Motor.GroundingStatus.GroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                        var inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                        var reorientedInput = Vector3.Cross(Motor.GroundingStatus.GroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                         targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
 
                         // Smooth movement Velocity
@@ -154,11 +158,11 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
 
                             // Prevent climbing on un-stable slopes with air movement
                             if (Motor.GroundingStatus.FoundAnyGround) {
-                                Vector3 perpenticularObstructionNormal = Vector3.Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal), Motor.CharacterUp).normalized;
+                                var perpenticularObstructionNormal = Vector3.Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal), Motor.CharacterUp).normalized;
                                 targetMovementVelocity = Vector3.ProjectOnPlane(targetMovementVelocity, perpenticularObstructionNormal);
                             }
 
-                            Vector3 velocityDiff = Vector3.ProjectOnPlane(targetMovementVelocity - currentVelocity, Gravity);
+                            var velocityDiff = Vector3.ProjectOnPlane(targetMovementVelocity - currentVelocity, Gravity);
                             currentVelocity += velocityDiff * AirAccelerationSpeed * deltaTime;
                         }
 
@@ -175,7 +179,7 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                         _timeSinceJumpRequested += deltaTime;
                         if (_jumpRequested) {
                             // Handle double jump
-                            if (AllowDoubleJump) {
+                            if (AllowDoubleJump)
                                 if (_jumpConsumed && !_doubleJumpConsumed && (AllowJumpingWhenSliding ? !Motor.GroundingStatus.FoundAnyGround : !Motor.GroundingStatus.IsStableOnGround)) {
                                     Motor.ForceUnground();
 
@@ -185,18 +189,16 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                                     _doubleJumpConsumed = true;
                                     _jumpedThisFrame = true;
                                 }
-                            }
 
                             // See if we actually are allowed to jump
                             if (_canWallJump ||
-                                !_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime)) {
+                                (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) ||
+                                                    _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))) {
                                 // Calculate jump direction before ungrounding
-                                Vector3 jumpDirection = Motor.CharacterUp;
-                                if (_canWallJump) {
+                                var jumpDirection = Motor.CharacterUp;
+                                if (_canWallJump)
                                     jumpDirection = _wallJumpNormal;
-                                } else if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround) {
-                                    jumpDirection = Motor.GroundingStatus.GroundNormal;
-                                }
+                                else if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround) jumpDirection = Motor.GroundingStatus.GroundNormal;
 
                                 // Makes the character skip ground probing/snapping on its next update. 
                                 // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
@@ -219,6 +221,7 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                         currentVelocity += _internalVelocityAdd;
                         _internalVelocityAdd = Vector3.zero;
                     }
+
                     break;
                 }
                 case CharacterState.Charging: {
@@ -233,11 +236,12 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                         currentVelocity += Gravity * deltaTime;
                     } else {
                         // When charging, velocity is always constant
-                        float previousY = currentVelocity.y;
+                        var previousY = currentVelocity.y;
                         currentVelocity = _currentChargeVelocity;
                         currentVelocity.y = previousY;
                         currentVelocity += Gravity * deltaTime;
                     }
+
                     break;
                 }
             }
@@ -253,9 +257,7 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                     // Handle jump-related values
                     {
                         // Handle jumping pre-ground grace period
-                        if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime) {
-                            _jumpRequested = false;
-                        }
+                        if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime) _jumpRequested = false;
 
                         if (AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) {
                             // If we're on a ground surface, reset jumping values
@@ -263,6 +265,7 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                                 _doubleJumpConsumed = false;
                                 _jumpConsumed = false;
                             }
+
                             _timeSinceLastAbleToJump = 0f;
                         } else {
                             // Keep track of time since we were last able to jump (for grace period)
@@ -288,6 +291,7 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                             _isCrouching = false;
                         }
                     }
+
                     break;
                 }
                 case CharacterState.Charging: {
@@ -298,23 +302,18 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                     }
 
                     // Detect end of stopping phase and transition back to default movement state
-                    if (_timeSinceStopped > StoppedTime) {
-                        TransitionToState(CharacterState.Default);
-                    }
+                    if (_timeSinceStopped > StoppedTime) TransitionToState(CharacterState.Default);
                     break;
                 }
             }
         }
 
         public bool IsColliderValidForCollisions(Collider coll) {
-            if (IgnoredColliders.Contains(coll)) {
-                return false;
-            }
+            if (IgnoredColliders.Contains(coll)) return false;
             return true;
         }
 
-        public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) {
-        }
+        public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
 
         public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) {
             switch (CurrentCharacterState) {
@@ -324,6 +323,7 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                         _canWallJump = true;
                         _wallJumpNormal = hitNormal;
                     }
+
                     break;
                 }
                 case CharacterState.Charging: {
@@ -332,25 +332,24 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
                         _mustStopVelocity = true;
                         _isStopped = true;
                     }
+
                     break;
                 }
             }
         }
 
-        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) {
-        }
+        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation,
+            ref HitStabilityReport hitStabilityReport) { }
 
-        public void PostGroundingUpdate(float deltaTime) {
-        }
+        public void PostGroundingUpdate(float deltaTime) { }
 
-        public void OnDiscreteCollisionDetected(Collider hitCollider) {
-        }
+        public void OnDiscreteCollisionDetected(Collider hitCollider) { }
 
         /// <summary>
         ///     Handles movement state transitions and enter/exit callbacks
         /// </summary>
         public void TransitionToState(CharacterState newState) {
-            CharacterState tmpInitialState = CurrentCharacterState;
+            var tmpInitialState = CurrentCharacterState;
             OnStateExit(tmpInitialState, newState);
             CurrentCharacterState = newState;
             OnStateEnter(newState, tmpInitialState);
@@ -390,19 +389,15 @@ namespace KinematicCharacterController.Walkthrough.ChargingState {
         /// </summary>
         public void SetInputs(ref PlayerCharacterInputs inputs) {
             // Handle state transition from input
-            if (inputs.ChargingDown) {
-                TransitionToState(CharacterState.Charging);
-            }
+            if (inputs.ChargingDown) TransitionToState(CharacterState.Charging);
 
             // Clamp input
-            Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
+            var moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
 
             // Calculate camera direction and rotation on the character plane
-            Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
-            if (cameraPlanarDirection.sqrMagnitude == 0f) {
-                cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, Motor.CharacterUp).normalized;
-            }
-            Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
+            var cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
+            if (cameraPlanarDirection.sqrMagnitude == 0f) cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, Motor.CharacterUp).normalized;
+            var cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
 
             switch (CurrentCharacterState) {
                 case CharacterState.Default: {

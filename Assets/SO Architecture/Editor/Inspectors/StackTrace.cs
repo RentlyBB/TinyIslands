@@ -7,7 +7,6 @@ using UnityEngine.Events;
 
 namespace ScriptableObjectArchitecture.Editor {
     public class StackTrace {
-
         private const float DEFAULT_HEIGHT = 400;
 
         private const float HEADER_HEIGHT = 18;
@@ -18,6 +17,8 @@ namespace ScriptableObjectArchitecture.Editor {
         private const float COLLAPSE_WIDTH = 55;
         private const float LINE_HEIGHT = 18;
         private readonly AnimBool _collapseAnimation;
+
+        private readonly IStackTraceObject _target;
         private Rect _contentRect;
         private Vector2 _contentScrollPosition;
         private Rect _listRect;
@@ -29,7 +30,6 @@ namespace ScriptableObjectArchitecture.Editor {
         private Rect _stackTraceRect;
         private float _subWindowValue = 0.6f;
 
-        private readonly IStackTraceObject _target;
         public StackTrace(IStackTraceObject target, bool startCollapsed = false) {
             if (target == null)
                 throw new NullReferenceException();
@@ -48,13 +48,13 @@ namespace ScriptableObjectArchitecture.Editor {
         public void Draw() {
             EditorGUILayout.Space();
 
-            Rect rect = GUILayoutUtility.GetRect(0, GetHeight());
+            var rect = GUILayoutUtility.GetRect(0, GetHeight());
 
             if (Event.current.type == EventType.Repaint) {
                 //This is necessary due to Unity's retarded handling of events - https://answers.unity.com/questions/515197/how-to-use-guilayoututilitygetrect-properly.html
                 _stackTraceRect = rect;
 
-                Rect boxRect = _stackTraceRect;
+                var boxRect = _stackTraceRect;
 
                 boxRect.x--;
                 boxRect.y--;
@@ -72,7 +72,7 @@ namespace ScriptableObjectArchitecture.Editor {
             _listRect = new Rect {
                 y = HEADER_HEIGHT,
                 height = _stackTraceRect.height - HEADER_HEIGHT - _contentRect.height,
-                width = _stackTraceRect.width,
+                width = _stackTraceRect.width
             };
 
             GUILayout.BeginArea(_stackTraceRect);
@@ -90,9 +90,10 @@ namespace ScriptableObjectArchitecture.Editor {
 
             GUILayout.EndArea();
         }
+
         private void DrawSelectedContent() {
-            Rect cursorRect = new Rect(0, _splitHeight - RESIZE_HEIGHT / 2, _stackTraceRect.width, RESIZE_HEIGHT);
-            Event currentEvent = Event.current;
+            var cursorRect = new Rect(0, _splitHeight - RESIZE_HEIGHT / 2, _stackTraceRect.width, RESIZE_HEIGHT);
+            var currentEvent = Event.current;
 
             EditorGUIUtility.AddCursorRect(cursorRect, MouseCursor.ResizeVertical);
 
@@ -109,15 +110,15 @@ namespace ScriptableObjectArchitecture.Editor {
             }
 
             if (_selectedTrace != null) {
-                Rect scrollViewRect = new Rect {
+                var scrollViewRect = new Rect {
                     y = _contentRect.y,
                     height = _contentRect.height,
-                    width = _contentRect.width,
+                    width = _contentRect.width
                 };
 
-                Vector2 textSize = Styles.MessageStyle.CalcSize(new GUIContent(_selectedTrace));
+                var textSize = Styles.MessageStyle.CalcSize(new GUIContent(_selectedTrace));
 
-                Rect position = new Rect(Vector2.zero, textSize);
+                var position = new Rect(Vector2.zero, textSize);
 
                 _contentScrollPosition = GUI.BeginScrollView(scrollViewRect, _contentScrollPosition, position);
 
@@ -126,27 +127,28 @@ namespace ScriptableObjectArchitecture.Editor {
                 GUI.EndScrollView();
             }
         }
+
         private void DrawList() {
-            Rect scrollViewRect = new Rect {
+            var scrollViewRect = new Rect {
                 y = _listRect.y,
                 height = _listRect.height,
-                width = _listRect.width,
+                width = _listRect.width
             };
-            Rect position = new Rect {
+            var position = new Rect {
                 height = _target.StackTraces.Count * LINE_HEIGHT,
-                width = scrollViewRect.width - 20,
+                width = scrollViewRect.width - 20
             };
 
             _listScrollPosition = GUI.BeginScrollView(scrollViewRect, _listScrollPosition, position);
 
-            for (int i = 0; i < _target.StackTraces.Count; i++) {
-                StackTraceEntry currentTrace = _target.StackTraces[i];
-                string currentText = GetFirstLine(currentTrace);
+            for (var i = 0; i < _target.StackTraces.Count; i++) {
+                var currentTrace = _target.StackTraces[i];
+                var currentText = GetFirstLine(currentTrace);
 
-                Rect elementRect = new Rect {
+                var elementRect = new Rect {
                     width = _listRect.width,
                     height = LINE_HEIGHT,
-                    y = i * LINE_HEIGHT,
+                    y = i * LINE_HEIGHT
                 };
 
                 if (Event.current.type == EventType.MouseDown && elementRect.Contains(Event.current.mousePosition)) {
@@ -154,8 +156,8 @@ namespace ScriptableObjectArchitecture.Editor {
 
                     Repaint();
                 } else if (Event.current.type == EventType.Repaint) {
-                    bool isSelected = _selectedTrace == currentTrace;
-                    GUIStyle backgroundStyle = i % 2 == 0 ? Styles.EvenBackground : Styles.OddBackground;
+                    var isSelected = _selectedTrace == currentTrace;
+                    var backgroundStyle = i % 2 == 0 ? Styles.EvenBackground : Styles.OddBackground;
 
                     backgroundStyle.Draw(elementRect, false, false, isSelected, false);
                     Styles.Text.Draw(elementRect, new GUIContent(currentText), 0);
@@ -164,15 +166,14 @@ namespace ScriptableObjectArchitecture.Editor {
 
             GUI.EndScrollView();
         }
+
         private void DrawStackTraceHeader() {
-            Rect rect = new Rect {
+            var rect = new Rect {
                 width = _stackTraceRect.width,
-                height = HEADER_HEIGHT,
+                height = HEADER_HEIGHT
             };
 
-            if (Event.current.type == EventType.Repaint) {
-                Styles.Header.Draw(rect, new GUIContent("Stack Trace"), 0);
-            }
+            if (Event.current.type == EventType.Repaint) Styles.Header.Draw(rect, new GUIContent("Stack Trace"), 0);
 
             rect.x += CLEAR_LEFT_PADDING;
             rect.width = CLEAR_WIDTH;
@@ -187,20 +188,24 @@ namespace ScriptableObjectArchitecture.Editor {
 
             _collapseAnimation.target = !GUI.Toggle(rect, !_collapseAnimation.target, new GUIContent("Collapse"), Styles.HeaderButton);
         }
+
         private float GetHeight() {
             return Mathf.Clamp(Height * _collapseAnimation.faded, HEADER_HEIGHT, float.MaxValue);
         }
+
         private void Repaint() {
             OnRepaint.Invoke();
         }
+
         private string GetFirstLine(string value) {
             return value.Split('\r', '\n').FirstOrDefault();
         }
+
         private void Deselect() {
             _selectedTrace = null;
         }
-        private class Styles {
 
+        private class Styles {
             public static readonly GUIStyle HeaderButton;
             public static readonly GUIStyle Text;
             public static readonly GUIStyle Box;
@@ -208,6 +213,7 @@ namespace ScriptableObjectArchitecture.Editor {
             public static readonly GUIStyle EvenBackground;
             public static readonly GUIStyle OddBackground;
             public static readonly GUIStyle MessageStyle;
+
             static Styles() {
                 Box = new GUIStyle("CN Box");
                 EvenBackground = new GUIStyle("CN EntryBackEven");

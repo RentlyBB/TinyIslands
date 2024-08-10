@@ -11,13 +11,11 @@ namespace KinematicCharacterController.Examples {
 
         private void OnTriggerEnter(Collider other) {
             if (!isBeingTeleportedTo) {
-                ExampleCharacterController cc = other.GetComponent<ExampleCharacterController>();
+                var cc = other.GetComponent<ExampleCharacterController>();
                 if (cc) {
                     cc.Motor.SetPositionAndRotation(TeleportTo.transform.position, TeleportTo.transform.rotation);
 
-                    if (OnCharacterTeleport != null) {
-                        OnCharacterTeleport(cc);
-                    }
+                    if (OnCharacterTeleport != null) OnCharacterTeleport(cc);
                     TeleportTo.isBeingTeleportedTo = true;
                 }
             }

@@ -13,22 +13,26 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
 
         [Header("Stable Movement")]
         public float MaxStableMoveSpeed = 10f;
+
         public float StableMovementSharpness = 15;
         public float OrientationSharpness = 10;
 
         [Header("Air Movement")]
         public float MaxAirMoveSpeed = 10f;
+
         public float AirAccelerationSpeed = 5f;
         public float Drag = 0.1f;
 
         [Header("Jumping")]
         public bool AllowJumpingWhenSliding;
+
         public float JumpSpeed = 10f;
         public float JumpPreGroundingGraceTime;
         public float JumpPostGroundingGraceTime;
 
         [Header("Misc")]
-        public Vector3 Gravity = new Vector3(0, -30f, 0);
+        public Vector3 Gravity = new(0, -30f, 0);
+
         public Transform MeshRoot;
         private bool _jumpConsumed;
         private bool _jumpedThisFrame;
@@ -50,8 +54,7 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
         ///     (Called by KinematicCharacterMotor during its update cycle)
         ///     This is called before the character begins its movement update
         /// </summary>
-        public void BeforeCharacterUpdate(float deltaTime) {
-        }
+        public void BeforeCharacterUpdate(float deltaTime) { }
 
         /// <summary>
         ///     (Called by KinematicCharacterMotor during its update cycle)
@@ -61,7 +64,7 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
         public void UpdateRotation(ref Quaternion currentRotation, float deltaTime) {
             if (_lookInputVector != Vector3.zero && OrientationSharpness > 0f) {
                 // Smoothly interpolate from current to target look direction
-                Vector3 smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
+                var smoothedLookInputDirection = Vector3.Slerp(Motor.CharacterForward, _lookInputVector, 1 - Mathf.Exp(-OrientationSharpness * deltaTime)).normalized;
 
                 // Set the current rotation (which will be used by the KinematicCharacterMotor)
                 currentRotation = Quaternion.LookRotation(smoothedLookInputDirection, Motor.CharacterUp);
@@ -74,14 +77,14 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
         ///     This is the ONLY place where you can set the character's velocity
         /// </summary>
         public void UpdateVelocity(ref Vector3 currentVelocity, float deltaTime) {
-            Vector3 targetMovementVelocity = Vector3.zero;
+            var targetMovementVelocity = Vector3.zero;
             if (Motor.GroundingStatus.IsStableOnGround) {
                 // Reorient velocity on slope
                 currentVelocity = Motor.GetDirectionTangentToSurface(currentVelocity, Motor.GroundingStatus.GroundNormal) * currentVelocity.magnitude;
 
                 // Calculate target velocity
-                Vector3 inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
-                Vector3 reorientedInput = Vector3.Cross(Motor.GroundingStatus.GroundNormal, inputRight).normalized * _moveInputVector.magnitude;
+                var inputRight = Vector3.Cross(_moveInputVector, Motor.CharacterUp);
+                var reorientedInput = Vector3.Cross(Motor.GroundingStatus.GroundNormal, inputRight).normalized * _moveInputVector.magnitude;
                 targetMovementVelocity = reorientedInput * MaxStableMoveSpeed;
 
                 // Smooth movement Velocity
@@ -93,11 +96,11 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
 
                     // Prevent climbing on un-stable slopes with air movement
                     if (Motor.GroundingStatus.FoundAnyGround) {
-                        Vector3 perpenticularObstructionNormal = Vector3.Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal), Motor.CharacterUp).normalized;
+                        var perpenticularObstructionNormal = Vector3.Cross(Vector3.Cross(Motor.CharacterUp, Motor.GroundingStatus.GroundNormal), Motor.CharacterUp).normalized;
                         targetMovementVelocity = Vector3.ProjectOnPlane(targetMovementVelocity, perpenticularObstructionNormal);
                     }
 
-                    Vector3 velocityDiff = Vector3.ProjectOnPlane(targetMovementVelocity - currentVelocity, Gravity);
+                    var velocityDiff = Vector3.ProjectOnPlane(targetMovementVelocity - currentVelocity, Gravity);
                     currentVelocity += velocityDiff * AirAccelerationSpeed * deltaTime;
                 }
 
@@ -111,14 +114,13 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
             // Handle jumping
             _jumpedThisFrame = false;
             _timeSinceJumpRequested += deltaTime;
-            if (_jumpRequested) {
+            if (_jumpRequested)
                 // See if we actually are allowed to jump
-                if (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime)) {
+                if (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) ||
+                                       _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime)) {
                     // Calculate jump direction before ungrounding
-                    Vector3 jumpDirection = Motor.CharacterUp;
-                    if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround) {
-                        jumpDirection = Motor.GroundingStatus.GroundNormal;
-                    }
+                    var jumpDirection = Motor.CharacterUp;
+                    if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround) jumpDirection = Motor.GroundingStatus.GroundNormal;
 
                     // Makes the character skip ground probing/snapping on its next update. 
                     // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
@@ -130,7 +132,6 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
                     _jumpConsumed = true;
                     _jumpedThisFrame = true;
                 }
-            }
         }
 
         /// <summary>
@@ -141,16 +142,12 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
             // Handle jump-related values
             {
                 // Handle jumping pre-ground grace period
-                if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime) {
-                    _jumpRequested = false;
-                }
+                if (_jumpRequested && _timeSinceJumpRequested > JumpPreGroundingGraceTime) _jumpRequested = false;
 
                 // Handle jumping while sliding
                 if (AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) {
                     // If we're on a ground surface, reset jumping values
-                    if (!_jumpedThisFrame) {
-                        _jumpConsumed = false;
-                    }
+                    if (!_jumpedThisFrame) _jumpConsumed = false;
                     _timeSinceLastAbleToJump = 0f;
                 } else {
                     // Keep track of time since we were last able to jump (for grace period)
@@ -163,34 +160,28 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
             return true;
         }
 
-        public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) {
-        }
+        public void OnGroundHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
 
-        public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) {
-        }
+        public void OnMovementHit(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, ref HitStabilityReport hitStabilityReport) { }
 
-        public void PostGroundingUpdate(float deltaTime) {
-        }
+        public void PostGroundingUpdate(float deltaTime) { }
 
-        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation, ref HitStabilityReport hitStabilityReport) {
-        }
+        public void ProcessHitStabilityReport(Collider hitCollider, Vector3 hitNormal, Vector3 hitPoint, Vector3 atCharacterPosition, Quaternion atCharacterRotation,
+            ref HitStabilityReport hitStabilityReport) { }
 
-        public void OnDiscreteCollisionDetected(Collider hitCollider) {
-        }
+        public void OnDiscreteCollisionDetected(Collider hitCollider) { }
 
         /// <summary>
         ///     This is called every frame by MyPlayer in order to tell the character what its inputs are
         /// </summary>
         public void SetInputs(ref PlayerCharacterInputs inputs) {
             // Clamp input
-            Vector3 moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
+            var moveInputVector = Vector3.ClampMagnitude(new Vector3(inputs.MoveAxisRight, 0f, inputs.MoveAxisForward), 1f);
 
             // Calculate camera direction and rotation on the character plane
-            Vector3 cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
-            if (cameraPlanarDirection.sqrMagnitude == 0f) {
-                cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, Motor.CharacterUp).normalized;
-            }
-            Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
+            var cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.forward, Motor.CharacterUp).normalized;
+            if (cameraPlanarDirection.sqrMagnitude == 0f) cameraPlanarDirection = Vector3.ProjectOnPlane(inputs.CameraRotation * Vector3.up, Motor.CharacterUp).normalized;
+            var cameraPlanarRotation = Quaternion.LookRotation(cameraPlanarDirection, Motor.CharacterUp);
 
             // Move and look inputs
             _moveInputVector = cameraPlanarRotation * moveInputVector;
@@ -203,7 +194,6 @@ namespace KinematicCharacterController.Walkthrough.SimpleJumping {
             }
         }
 
-        public void AddVelocity(Vector3 velocity) {
-        }
+        public void AddVelocity(Vector3 velocity) { }
     }
 }

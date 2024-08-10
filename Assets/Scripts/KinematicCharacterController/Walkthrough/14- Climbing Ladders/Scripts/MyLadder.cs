@@ -11,18 +11,10 @@ namespace KinematicCharacterController.Walkthrough.ClimbingLadders {
         public Transform TopReleasePoint;
 
         // Gets the position of the bottom point of the ladder segment
-        public Vector3 BottomAnchorPoint {
-            get {
-                return transform.position + transform.TransformVector(LadderSegmentBottom);
-            }
-        }
+        public Vector3 BottomAnchorPoint => transform.position + transform.TransformVector(LadderSegmentBottom);
 
         // Gets the position of the top point of the ladder segment
-        public Vector3 TopAnchorPoint {
-            get {
-                return transform.position + transform.TransformVector(LadderSegmentBottom) + transform.up * LadderSegmentLength;
-            }
-        }
+        public Vector3 TopAnchorPoint => transform.position + transform.TransformVector(LadderSegmentBottom) + transform.up * LadderSegmentLength;
 
         private void OnDrawGizmos() {
             Gizmos.color = Color.cyan;
@@ -30,9 +22,9 @@ namespace KinematicCharacterController.Walkthrough.ClimbingLadders {
         }
 
         public Vector3 ClosestPointOnLadderSegment(Vector3 fromPoint, out float onSegmentState) {
-            Vector3 segment = TopAnchorPoint - BottomAnchorPoint;
-            Vector3 segmentPoint1ToPoint = fromPoint - BottomAnchorPoint;
-            float pointProjectionLength = Vector3.Dot(segmentPoint1ToPoint, segment.normalized);
+            var segment = TopAnchorPoint - BottomAnchorPoint;
+            var segmentPoint1ToPoint = fromPoint - BottomAnchorPoint;
+            var pointProjectionLength = Vector3.Dot(segmentPoint1ToPoint, segment.normalized);
 
             // When higher than bottom point
             if (pointProjectionLength > 0) {
@@ -41,10 +33,12 @@ namespace KinematicCharacterController.Walkthrough.ClimbingLadders {
                     onSegmentState = 0;
                     return BottomAnchorPoint + segment.normalized * pointProjectionLength;
                 }
+
                 // If we are higher than top point
                 onSegmentState = pointProjectionLength - segment.magnitude;
                 return TopAnchorPoint;
             }
+
             // When lower than bottom point
             onSegmentState = pointProjectionLength;
             return BottomAnchorPoint;

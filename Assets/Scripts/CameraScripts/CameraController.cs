@@ -4,23 +4,29 @@ using UnityEngine;
 
 namespace CameraScripts {
     public class CameraController : MonoBehaviour {
-
         public InputReaderSo inputReader;
 
         [Space]
         [Header("Zoom Settings")]
         public float minScrollZoomSize = 1.0f; // Minimum orthographic size (zoom out limit)
+
         public float maxScrollZoomSize = 50.0f; // Maximum orthographic size (zoom in limit)
         public bool canScrollZooming;
+
         [Space]
         public float zoomSmoothing = 5.0f; // Smoothing factor for zooming
+
         public float zoomSpeed = 25.0f; // Speed of zooming
+
         [Space]
         public float zoomInSize = 10f;
+
         public float zoomOutSize = 50.0f;
+
         [Space]
         [Header("Camera Movement Settings")]
         public float moveSmoothTime = 0.3f; // Time for the smooth 
+
         public float zOffset = -100;
 
         private Camera _camera;
@@ -37,13 +43,11 @@ namespace CameraScripts {
             _camera.orthographicSize = _targetZoomSize;
 
             SetCameraTargetPosition(new Vector3());
-
         }
 
         private void LateUpdate() {
             ZoomingCamera();
             transform.position = Vector3.SmoothDamp(transform.position, _targetPosition, ref _velocity, moveSmoothTime);
-
         }
 
         private void OnEnable() {
@@ -58,13 +62,11 @@ namespace CameraScripts {
 
 
         private void ZoomingCamera() {
-
             if (canScrollZooming) {
-                float zoomInput = Input.GetAxis("Mouse ScrollWheel");
-                if (zoomInput != 0) {
+                var zoomInput = Input.GetAxis("Mouse ScrollWheel");
+                if (zoomInput != 0)
                     // Calculate the target orthographic size based on the zoom input
                     _targetZoomSize = Mathf.Clamp(_targetZoomSize - zoomInput * zoomSpeed, minScrollZoomSize, maxScrollZoomSize);
-                }
             }
 
             // Smoothly interpolate towards the target orthographic size

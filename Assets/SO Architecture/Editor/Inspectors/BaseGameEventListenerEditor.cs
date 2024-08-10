@@ -10,7 +10,7 @@ namespace ScriptableObjectArchitecture.Editor {
         private SerializedProperty _showDebugFields;
 
         private StackTrace _stackTrace;
-        private IStackTraceObject Target { get { return (IStackTraceObject)target; } }
+        private IStackTraceObject Target => (IStackTraceObject)target;
 
         protected virtual void OnEnable() {
             _stackTrace = new StackTrace(Target, true);
@@ -24,17 +24,17 @@ namespace ScriptableObjectArchitecture.Editor {
         }
 
         protected abstract void DrawRaiseButton();
+
         public override void OnInspectorGUI() {
             EditorGUILayout.ObjectField(_event, new GUIContent("Event", "Event which will trigger the response"));
             EditorGUILayout.PropertyField(_response, new GUIContent("Response"));
 
             _showDebugFields.boolValue = EditorGUILayout.Foldout(_showDebugFields.boolValue, new GUIContent("Show Debug Fields"));
-            if (_showDebugFields.boolValue) {
-                DrawDebugging();
-            }
+            if (_showDebugFields.boolValue) DrawDebugging();
 
             serializedObject.ApplyModifiedProperties();
         }
+
         private void DrawDebugging() {
             EditorGUILayout.LabelField("Callback Debugging", EditorStyles.boldLabel);
             using (new EditorGUI.IndentLevelScope()) {
