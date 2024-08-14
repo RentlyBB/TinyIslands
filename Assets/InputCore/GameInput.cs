@@ -53,6 +53,15 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShowUI"",
+                    ""type"": ""Button"",
+                    ""id"": ""22d6a91a-f49d-4025-a404-81e640a77c8c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -154,6 +163,17 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""action"": ""ZoomOut"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9015d94-222b-4d7b-8f90-8d7f7ac6c7d2"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShowUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -188,6 +208,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         m_Gameplay_Movement = m_Gameplay.FindAction("Movement", throwIfNotFound: true);
         m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
         m_Gameplay_ZoomOut = m_Gameplay.FindAction("ZoomOut", throwIfNotFound: true);
+        m_Gameplay_ShowUI = m_Gameplay.FindAction("ShowUI", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -252,6 +273,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Movement;
     private readonly InputAction m_Gameplay_Interact;
     private readonly InputAction m_Gameplay_ZoomOut;
+    private readonly InputAction m_Gameplay_ShowUI;
     public struct GameplayActions
     {
         private @GameInput m_Wrapper;
@@ -259,6 +281,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Gameplay_Movement;
         public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
         public InputAction @ZoomOut => m_Wrapper.m_Gameplay_ZoomOut;
+        public InputAction @ShowUI => m_Wrapper.m_Gameplay_ShowUI;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -277,6 +300,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @ZoomOut.started += instance.OnZoomOut;
             @ZoomOut.performed += instance.OnZoomOut;
             @ZoomOut.canceled += instance.OnZoomOut;
+            @ShowUI.started += instance.OnShowUI;
+            @ShowUI.performed += instance.OnShowUI;
+            @ShowUI.canceled += instance.OnShowUI;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -290,6 +316,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @ZoomOut.started -= instance.OnZoomOut;
             @ZoomOut.performed -= instance.OnZoomOut;
             @ZoomOut.canceled -= instance.OnZoomOut;
+            @ShowUI.started -= instance.OnShowUI;
+            @ShowUI.performed -= instance.OnShowUI;
+            @ShowUI.canceled -= instance.OnShowUI;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -330,5 +359,6 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnZoomOut(InputAction.CallbackContext context);
+        void OnShowUI(InputAction.CallbackContext context);
     }
 }

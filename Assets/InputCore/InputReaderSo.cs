@@ -35,12 +35,22 @@ namespace InputCore {
             else if (context.phase == InputActionPhase.Canceled) ZoomIn?.Invoke();
         }
 
+        public void OnShowUI(InputAction.CallbackContext context) {
+            if (context.phase == InputActionPhase.Performed)
+                ShowUI?.Invoke(true);
+            else if(context.phase == InputActionPhase.Canceled) {
+                ShowUI?.Invoke(false);
+            }
+        }
+
         // Events for each player input
         public event UnityAction<Vector2> Movement = delegate { };
         public event UnityAction Interact = delegate { };
 
         public event UnityAction ZoomOut = delegate { };
         public event UnityAction ZoomIn = delegate { };
+
+        public event UnityAction<bool> ShowUI = delegate { };
 
         public void EnableGameplayInput() {
             GameInput.Gameplay.Enable();
