@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ScriptableObjects;
 using UnityEngine;
+using World.AbstractClasses;
 using World.Enums;
 using World.Interfaces;
 
@@ -9,16 +10,12 @@ namespace Systems {
         [SerializeField]
         public List<DiceEventHandlerSo> diceEvents = new();
 
-        // [SerializeField]
-        // [CanBeNull]
-        // private UnityEvent<DiceFaces> methodToInvoke;
-
         public DiceFaces targetFace;
 
-        private IInteractable _interactable;
+        private Interactable _interactable;
 
         private void Awake() {
-            TryGetComponent<IInteractable>(out _interactable);
+            TryGetComponent<Interactable>(out _interactable);
         }
 
         private void OnEnable() {
@@ -32,11 +29,13 @@ namespace Systems {
 
         private void PowerInteractable(DiceFaces face) {
             // methodToInvoke?.Invoke(face);
+            
+            Debug.LogWarning("Deprecated Method – Do nothing");
 
             if (targetFace == face) {
-                _interactable?.EnableInteraction();
+                //_interactable?.EnableInteraction();
             } else {
-                _interactable?.DisableInteraction();
+               // _interactable?.DisableInteraction();
             }
 
             

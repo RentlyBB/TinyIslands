@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
+using World.AbstractClasses;
 using World.Interfaces;
 
 namespace World {
-    public class Collectible : MonoBehaviour, IInteractable {
+    public class Collectible : Interactable {
     
         // Rotation speed in degrees per second
         public float rotationSpeed = 90f;
@@ -46,16 +47,9 @@ namespace World {
             // Apply the new Y position to the coin
             transform.position = new Vector3(_startPosition.x, newY, _startPosition.z);
         }
-    
-        public void EnableInteraction() {
-            //TODO
-        }
+        
 
-        public void DisableInteraction() {
-            //TODO
-        }
-
-        public void Interact() {
+        public override void Interact() {
             Destroy(this.gameObject);
         }
     }

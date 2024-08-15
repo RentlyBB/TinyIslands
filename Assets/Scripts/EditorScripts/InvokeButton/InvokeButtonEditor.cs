@@ -2,7 +2,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace EditorScripts {
+namespace EditorScripts.InvokeButton {
     [CustomEditor(typeof(MonoBehaviour), true)]
     [CanEditMultipleObjects]
     public class InvokeButtonEditor : Editor {

@@ -1,13 +1,14 @@
 ﻿using EditorScripts;
+using EditorScripts.InvokeButton;
 using KinematicCharacterController;
 using UnityEngine;
 using UnityEngine.Serialization;
+using World.AbstractClasses;
 using World.Enums;
-using World.Interfaces;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
-    public class MoveablePlatformBehaviour : MonoBehaviour, IMoverController, IInteractable {
+    public class MoveablePlatformBehaviour : Interactable, IMoverController  {
         public PhysicsMover mover;
 
         public Vector3 nextPositon;
@@ -18,8 +19,6 @@ namespace World {
         public bool loop;
 
         public Transform wireCubeSize;
-
-        public bool isEnabled = true;
 
         private Vector3 _currentGoalPosition;
 
@@ -66,7 +65,6 @@ namespace World {
             goalRotation = _originalRotation;
         }
 
-
         private void LoopingMovement() {
             if (!loop) return;
 
@@ -76,7 +74,7 @@ namespace World {
         //Root method
         [InvokeButton]
         public void MovePlatform() {
-            if (!isEnabled) return;
+            if (currentState == InteractableStates.Disabled) return;
             SelectNextPosition();
         }
         
@@ -99,21 +97,7 @@ namespace World {
             _nextGoalPosition = elevateTarget;
         }
 
-        public void TestEventChange(DiceFaces diceFace) {
-            Debug.Log(name + " current face is: " + diceFace);
-        }
-
-        public void EnableInteraction() {
-            Debug.Log("Platform Enabled");
-            isEnabled = true;
-        }
-
-        public void DisableInteraction() {
-            Debug.Log("Platform Disabled");
-            isEnabled = false;
-        }
-
-        public void Interact() {
+        public override void Interact() {
             MovePlatform();
         }
     }

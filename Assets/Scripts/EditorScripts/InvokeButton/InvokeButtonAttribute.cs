@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace EditorScripts {
+namespace EditorScripts.InvokeButton {
     [AttributeUsage(AttributeTargets.Method)]
     public class InvokeButtonAttribute : PropertyAttribute {
         public readonly string ButtonName;

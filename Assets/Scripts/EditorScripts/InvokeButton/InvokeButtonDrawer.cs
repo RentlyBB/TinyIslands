@@ -2,7 +2,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace EditorScripts {
+namespace EditorScripts.InvokeButton {
     [CustomPropertyDrawer(typeof(InvokeButtonAttribute))]
     public class InvokeButtonDrawer : PropertyDrawer {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {

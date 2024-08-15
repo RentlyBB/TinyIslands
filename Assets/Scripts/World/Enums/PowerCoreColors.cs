@@ -5,6 +5,7 @@ namespace World.Enums {
         Cyan,
         Green,
         Blue,
-        Pink
+        Pink,
+        Any
     }
 }
