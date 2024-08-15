@@ -38,16 +38,21 @@ namespace World {
 #endif
 
         public void Start() {
-            _currentColor = startingColor - 1;
-            Interact();
+            _currentColor = startingColor;
+            ModifyMaterial();
+            BroadcastEvents();
         }
 
         [InvokeButton]
-        public void ChangeColor() {
+        public void NextColor() {
 
-            var list = PlayerManager.Instance.unlockColors; 
-            
-            var i = list.IndexOf(_currentColor);
+            // Get list of unlocked colors
+            var list = PlayerManager.Instance.unlockColors;
+
+            int i = 0;
+            if (list.Contains(_currentColor)) {
+                i = list.IndexOf(_currentColor);
+            }
 
             if (i >= list.Count - 1) {
                 i = 0;
@@ -56,20 +61,25 @@ namespace World {
             }
 
             _currentColor = list[i];
-            meshRenderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            meshRenderer.sharedMaterial.color = PowerCoreUtils.GetColor(_currentColor);
-            
-            foreach (var powerCoreEventSo in powerCoreEvents) {
+        }
+        
+
+        private void BroadcastEvents() {
+            foreach (PowerCoreEventSo powerCoreEventSo in powerCoreEvents) {
                 powerCoreEventSo?.RaiseEvent(_currentColor);
             }
         }
 
+        [InvokeButton]
+        private void ModifyMaterial() {
+            meshRenderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            meshRenderer.sharedMaterial.color = PowerCoreUtils.GetColor(_currentColor);
+        }
+        
         public override void Interact() {
-            ChangeColor();
-            
-            foreach (var powerCoreEventSo in powerCoreEvents) {
-                powerCoreEventSo?.RaiseEvent(_currentColor);
-            }
+            NextColor();
+            ModifyMaterial();
+            BroadcastEvents();
         }
     }
 }

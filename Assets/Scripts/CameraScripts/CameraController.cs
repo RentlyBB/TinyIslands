@@ -1,3 +1,5 @@
+using System;
+using EditorScripts.InvokeButton;
 using InputCore;
 using PlayerCharacter;
 using UnityEngine;
@@ -37,6 +39,8 @@ namespace CameraScripts {
 
         private Vector3 _velocity = Vector3.zero;
 
+        public Transform testingCamPos;
+
         private void Start() {
             _camera = GetComponent<CharacterCamera>().Camera;
             _targetZoomSize = zoomInSize;
@@ -48,6 +52,12 @@ namespace CameraScripts {
         private void LateUpdate() {
             ZoomingCamera();
             transform.position = Vector3.SmoothDamp(transform.position, _targetPosition, ref _velocity, moveSmoothTime);
+        }
+
+        private void OnValidate() {
+            if (testingCamPos != null) {
+                transform.position =  testingCamPos.position + transform.TransformDirection(new Vector3(0, 0, zOffset));
+            }
         }
 
         private void OnEnable() {

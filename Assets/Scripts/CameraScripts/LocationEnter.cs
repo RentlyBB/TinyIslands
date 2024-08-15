@@ -1,3 +1,4 @@
+using EditorScripts.InvokeButton;
 using ScriptableObjectArchitecture;
 using UnityEngine;
 
@@ -14,6 +15,12 @@ namespace CameraScripts {
             if (other.CompareTag("Player"))
                 //Debug.Log("Entering new area: " + transform.name);
                 onAreaEntered.Raise(cameraTargetPoint.position);
+        }
+
+
+        [InvokeButton]
+        private void CenterCamera() {
+            onAreaEntered.Raise(cameraTargetPoint.position);
         }
     }
 }

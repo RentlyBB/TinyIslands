@@ -13,7 +13,7 @@ namespace World {
 
         public Vector3 nextPositon;
 
-        [Range(0.1f, 1)]
+        [Range(0.001f, 1)]
         public float speed = 0.1f;
 
         public bool loop;

@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb2e43ed700e496a97bba0d3a8b2f724, type: 3}
-  m_Name: PlayerManager
+  m_Script: {fileID: 11500000, guid: 0b3bbb2114a6452f89c67ed38c31dc2a, type: 3}
+  m_Name: PE_level_03_PC_01
   m_EditorClassIdentifier: 
-  unlockColors: 0700000003000000

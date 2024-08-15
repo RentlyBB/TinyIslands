@@ -42,7 +42,7 @@ namespace Systems {
             if (interactionType == InteractionType.PressButton) InvokeInteractableAction();
         }
 
-        [InvokeButton]
+        
         private void InvokeInteractableAction() {
             if (oneTimeActivation) {
                 if (!_wasActivated) {
