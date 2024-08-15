@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
+using ScriptableObjects;
 using UnityEngine;
-using UnityEngine.Events;
 using World.Enums;
 using World.Interfaces;
 
-namespace ScriptableObjects {
+namespace Systems {
     public class DiceEventsListener : MonoBehaviour {
         [SerializeField]
         public List<DiceEventHandlerSo> diceEvents = new();

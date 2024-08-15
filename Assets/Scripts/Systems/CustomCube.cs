@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace World {
+namespace Systems {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class CustomCube : MonoBehaviour {
         private void Start() {

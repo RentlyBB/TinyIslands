@@ -2,7 +2,7 @@ using EditorScripts;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace World {
+namespace Systems {
     public enum InteractionType {
         PressButton,
         OnEnter,

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Splines;
 
-namespace World {
+namespace Systems {
     public class SplineMover : MonoBehaviour {
         [SerializeField]
         private Transform track;
