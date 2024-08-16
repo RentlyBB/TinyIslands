@@ -1,4 +1,5 @@
-﻿using EditorScripts;
+﻿using System;
+using EditorScripts;
 using EditorScripts.InvokeButton;
 using KinematicCharacterController;
 using UnityEngine;
@@ -8,6 +9,7 @@ using World.Enums;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
+    [Obsolete("Not used any more! Use PlatformBehaviour instead.", true)]
     public class MoveablePlatformBehaviour : Interactable, IMoverController  {
         public PhysicsMover mover;
 
