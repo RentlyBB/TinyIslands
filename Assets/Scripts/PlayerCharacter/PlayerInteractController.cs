@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using InputCore;
-using Systems;
 using UnityEngine;
-using World;
+using Activator = Systems.Activator;
 
 namespace PlayerCharacter {
     public class PlayerInteractController : MonoBehaviour {
@@ -49,5 +49,6 @@ namespace PlayerCharacter {
 
             closestActivator?.InteractableAction();
         }
+        
     }
 }

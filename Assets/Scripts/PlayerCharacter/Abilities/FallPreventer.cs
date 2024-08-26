@@ -1,9 +1,14 @@
+using System;
 using System.Collections.Generic;
 using KinematicCharacterController;
 using UnityEngine;
 
 namespace PlayerCharacter.Abilities {
     public class FallPreventer : MonoBehaviour {
+
+        public Animator anim;
+        public float treshold = 3f;
+        
         public Transform fallWallPoints;
         public Transform fallWalls;
         public float fallThreshold = 2f;
@@ -26,6 +31,14 @@ namespace PlayerCharacter.Abilities {
             foreach (Transform wallPoint in fallWallPoints) _wallPoints.Add(wallPoint);
 
             foreach (Transform fallWall in fallWalls) _fallWalls.Add(fallWall);
+        }
+
+        private void Update() {
+            // if(_motor.GetState().BaseVelocity.magnitude <= treshold){
+            //     anim.SetBool("RUN", false);
+            // } else {
+            //     anim.SetBool("RUN", true);
+            // }
         }
 
         private void FixedUpdate() {

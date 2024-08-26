@@ -47,10 +47,20 @@ namespace CameraScripts {
             _camera.orthographicSize = _targetZoomSize;
 
             SetCameraTargetPosition(new Vector3());
+            
+        }
+
+        [InvokeButton]
+        public void ResetCamera() {
+            var temp = testingCamPos;
+            testingCamPos = null;
+            testingCamPos = temp;
+            transform.position =  testingCamPos.position + transform.TransformDirection(new Vector3(0, 0, zOffset));
         }
 
         private void LateUpdate() {
             ZoomingCamera();
+            SetCameraTargetPosition(testingCamPos.position);
             transform.position = Vector3.SmoothDamp(transform.position, _targetPosition, ref _velocity, moveSmoothTime);
         }
 

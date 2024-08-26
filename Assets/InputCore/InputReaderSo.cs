@@ -52,6 +52,8 @@ namespace InputCore {
 
         public event UnityAction<bool> ShowUI = delegate { };
 
+        public event UnityAction<string> SwitchPlayerAnimation = delegate { };
+
         public void EnableGameplayInput() {
             GameInput.Gameplay.Enable();
         }
