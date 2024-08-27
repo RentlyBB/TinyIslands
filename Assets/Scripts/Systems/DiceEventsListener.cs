@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ScriptableObjects;
+using ScriptableObjects.DiceEvents;
 using UnityEngine;
 using World.AbstractClasses;
 using World.Enums;

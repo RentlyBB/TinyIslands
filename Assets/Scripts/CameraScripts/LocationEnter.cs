@@ -1,26 +1,27 @@
 using EditorScripts.InvokeButton;
-using ScriptableObjectArchitecture;
 using UnityEngine;
+using ScriptableObjects.EnterLocationEvents;
 
 namespace CameraScripts {
     public class LocationEnter : MonoBehaviour {
-        [Header("Broadcasting Events")]
-        [SerializeField]
-        private Vector3GameEvent onAreaEntered = default;
 
+        [SerializeField] private EnterLocationEventSo onAreaEntered;
         public Transform cameraTargetPoint;
+        [Range(10f,25f)]
+        public float cameraZoom = 15f;
 
 
         private void OnTriggerEnter(Collider other) {
-            if (other.CompareTag("Player"))
-                //Debug.Log("Entering new area: " + transform.name);
-                onAreaEntered.Raise(cameraTargetPoint.position);
+            if (other.CompareTag("Player")) {
+                onAreaEntered?.RaiseEvent(cameraTargetPoint.position, cameraZoom);
+            }
         }
 
 
         [InvokeButton]
         private void CenterCamera() {
-            onAreaEntered.Raise(cameraTargetPoint.position);
+            onAreaEntered?.RaiseEvent(cameraTargetPoint.position, cameraZoom);
+
         }
     }
 }

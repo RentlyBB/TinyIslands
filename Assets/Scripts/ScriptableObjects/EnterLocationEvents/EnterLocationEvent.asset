@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb2e43ed700e496a97bba0d3a8b2f724, type: 3}
-  m_Name: PlayerManager
+  m_Script: {fileID: 11500000, guid: 1aa0ee52a17c48968fb071966679bcd9, type: 3}
+  m_Name: EnterLocationEvent
   m_EditorClassIdentifier: 
-  unlockColors: 07000000

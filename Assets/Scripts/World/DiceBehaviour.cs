@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EditorScripts;
 using EditorScripts.InvokeButton;
 using ScriptableObjects;
+using ScriptableObjects.DiceEvents;
 using UnityEngine;
 using World.Enums;
 
