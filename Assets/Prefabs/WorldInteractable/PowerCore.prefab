@@ -105,6 +105,7 @@ MonoBehaviour:
   currentState: 0
   powerSupplyColor: 6
   powerCoreEvent: []
+  interactOnPowered: 0
   startingColor: 3
   meshRenderer: {fileID: 1038164289736624180}
   powerCoreEvents:

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb2e43ed700e496a97bba0d3a8b2f724, type: 3}
   m_Name: PlayerManager
   m_EditorClassIdentifier: 
-  unlockColors: 07000000
+  unlockColors: 070000000300000004000000

@@ -1,18 +1,13 @@
 using System;
 using System.Collections.Generic;
-using EditorScripts.HideIf;
 using ScriptableObjects;
 using UnityEngine;
-using UnityEngine.Serialization;
 using World.Enums;
 
 namespace World.AbstractClasses {
-    
     public abstract class Interactable : MonoBehaviour {
-        
         [Header("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––")]
         [Header("Interactable Settings")]
-        
         [Space]
         [Header("Current state of Interactable")]
         public InteractableStates currentState = InteractableStates.Enabled;
@@ -20,11 +15,14 @@ namespace World.AbstractClasses {
         [Space]
         [Header("Color which enable the Interactable object")]
         public PowerCoreColors powerSupplyColor;
-        
+
         [Space]
         [Header("Listening events from Power Cores")]
         [SerializeField]
         public List<PowerCoreEventSo> powerCoreEvent = new List<PowerCoreEventSo>();
+
+        [Space]
+        public bool interactOnPowered = false;
 
         private void OnEnable() {
             foreach (var powerCoreEventSo in powerCoreEvent) powerCoreEventSo.OnEventRaised += EvaluatePowerCore;
@@ -39,17 +37,21 @@ namespace World.AbstractClasses {
         }
 
         public void EvaluatePowerCore(PowerCoreColors color) {
-           if (powerSupplyColor == color || powerSupplyColor == PowerCoreColors.Any) {
-               SwitchState(InteractableStates.Enabled);
-           } else {
-               SwitchState(InteractableStates.Disabled);
-           }
+            if (powerSupplyColor == color || powerSupplyColor == PowerCoreColors.Any) {
+                if (currentState == InteractableStates.Disabled) {
+                    SwitchState(InteractableStates.Enabled);
+                }
+            } else {
+                if (currentState == InteractableStates.Enabled) {
+                    SwitchState(InteractableStates.Disabled);
+                }
+            }
+            
+            Interact();
         }
 
         public virtual void Interact() {
             Debug.Log("Interact is not implemented!");
         }
-        
-        
     }
 }
