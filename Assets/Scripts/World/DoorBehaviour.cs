@@ -1,54 +1,74 @@
+using System.Diagnostics;
 using EditorScripts.InvokeButton;
 using UnityEngine;
+using UnityEngine.Serialization;
 using World.AbstractClasses;
 using World.Enums;
 
+using DoorState = World.Enums.DoorUtils.DoorState;
+
 namespace World {
+    
     [RequireComponent(typeof(BoxCollider))]
     public class DoorBehaviour : Interactable {
         private Animator _animator;
 
         private BoxCollider _boxCollider;
 
-        private bool _isOpen;
+        public DoorState currentDoorState;
 
+       // private bool _isOpen;
 
         private void Start() {
             TryGetComponent<Animator>(out _animator);
             TryGetComponent<BoxCollider>(out _boxCollider);
+
+            if (currentDoorState.Equals(null)) {
+                currentDoorState = DoorState.Closed;
+            }
         }
 
         //Root method
         [InvokeButton]
         public void Toggle() {
-            if (currentState == InteractableStates.Disabled) return;
+            if (interactableState == InteractableStates.Disabled) return;
 
-            _isOpen = !_isOpen;
-            _animator.SetBool("IsOpen", _isOpen);
-            _boxCollider.enabled = !_isOpen;
+            SwitchDoorState();
+            _animator.SetBool("IsOpen", DoorUtils.EvaluateDoorState(currentDoorState));
+            _boxCollider.enabled = !DoorUtils.EvaluateDoorState(currentDoorState);
         }
 
         public void Open() {
-            _isOpen = true;
-            _animator.SetBool("IsOpen", _isOpen);
-            _boxCollider.enabled = !_isOpen;
+            currentDoorState = DoorState.Opened;
+            _animator.SetBool("IsOpen", DoorUtils.EvaluateDoorState(currentDoorState));
+            _boxCollider.enabled = !DoorUtils.EvaluateDoorState(currentDoorState);
         }
 
         public void Close() {
-            _isOpen = false;
-            _animator.SetBool("IsOpen", _isOpen);
+            currentDoorState = DoorState.Closed;
+            _animator?.SetBool("IsOpen", DoorUtils.EvaluateDoorState(currentDoorState));
 
             // Door are closed, thats why box collider has to be ON
             // _isOpen is now false and we need to negate it because we want true for box collider
-            _boxCollider.enabled = !_isOpen;
+            _boxCollider.enabled = !DoorUtils.EvaluateDoorState(currentDoorState);
         }
 
         public override void Interact() {
-            //Toggle();
-            if (currentState == InteractableStates.Disabled) {
+            if (interactableState == InteractableStates.Disabled) {
                 Close();
-            } else if (currentState == InteractableStates.Enabled) {
+            } else if (interactableState == InteractableStates.Enabled) {
                 Open();
+            }
+        }
+
+        private void SwitchDoorState() {
+            switch (currentDoorState) {
+                case DoorState.Closed:
+                    currentDoorState = DoorState.Opened;
+                    break;
+                case DoorState.Opened:
+                    currentDoorState = DoorState.Closed;
+                    break;
             }
         }
     }

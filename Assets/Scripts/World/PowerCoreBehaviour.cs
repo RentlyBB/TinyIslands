@@ -7,7 +7,6 @@ using ScriptableObjects;
 using UnityEngine;
 using World.AbstractClasses;
 using World.Enums;
-using World.Structs;
 
 namespace World {
     public class PowerCoreBehaviour : Interactable {

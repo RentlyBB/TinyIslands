@@ -1858,8 +1858,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6388447934657602476}
   - component: {fileID: 3884177942604254755}
-  - component: {fileID: 7744933200910912566}
   - component: {fileID: 6056934331201329216}
+  - component: {fileID: 7744933200910912566}
+  - component: {fileID: 1445371006928389680}
   m_Layer: 0
   m_Name: Fence
   m_TagString: Untagged
@@ -1914,21 +1915,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &7744933200910912566
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3864765170282516844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fff560f3c7ab2c4c96a2e4be7472178, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentState: 0
-  powerSupplyColor: 3
-  powerCoreEvent: []
 --- !u!65 &6056934331201329216
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1950,6 +1936,36 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.4380975, y: 6.6207643, z: 1}
   m_Center: {x: -0.14351383, y: 4.2705674, z: 0.63}
+--- !u!114 &7744933200910912566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864765170282516844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fff560f3c7ab2c4c96a2e4be7472178, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState: 0
+  interactOnPowered: 0
+--- !u!114 &1445371006928389680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3864765170282516844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 521ac87e2fc94a82b9cfc6bdeae0ad48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerSupplyColor: 3
+  powerCoreEvent:
+  - {fileID: 11400000, guid: 0391cb0444816401883dc651cd0129b8, type: 2}
+  interactOnPowered: 0
 --- !u!1 &3962843412440776060
 GameObject:
   m_ObjectHideFlags: 0

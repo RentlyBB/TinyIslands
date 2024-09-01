@@ -102,9 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1148cb9c905134ee2a47e2ecb0883628, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
-  powerSupplyColor: 6
-  powerCoreEvent: []
+  interactableState: 0
   interactOnPowered: 0
   startingColor: 3
   meshRenderer: {fileID: 1038164289736624180}

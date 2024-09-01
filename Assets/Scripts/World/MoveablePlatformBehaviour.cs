@@ -76,7 +76,7 @@ namespace World {
         //Root method
         [InvokeButton]
         public void MovePlatform() {
-            if (currentState == InteractableStates.Disabled) return;
+            if (interactableState == InteractableStates.Disabled) return;
             SelectNextPosition();
         }
         
