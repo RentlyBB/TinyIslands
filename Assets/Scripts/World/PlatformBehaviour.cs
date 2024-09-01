@@ -13,9 +13,9 @@ namespace World {
         public Transform target; // The target position the platform should move to
         public float speed = 5f; // Desired constant speed in units per second
 
-        public Vector3 _startPosition;
-        public Vector3 _targetPosition;
-        public Vector3 _currentTargetPosition;
+        private Vector3 _startPosition;
+        private Vector3 _targetPosition;
+        private Vector3 _currentTargetPosition;
         private float _journeyLength;
         private float _timeStartedLerping;
         private bool _isMoving = false;
@@ -69,7 +69,7 @@ namespace World {
         
         [InvokeButton]
         public override void Interact() {
-            if(interactableState == InteractableStates.Disabled) return;
+            //if(interactableState == InteractableStates.Disabled) return;
             ToggleTargetPosition();
             StartMovement();
         }

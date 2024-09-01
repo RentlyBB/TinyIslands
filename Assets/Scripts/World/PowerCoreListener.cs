@@ -24,9 +24,6 @@ namespace World {
             TryGetComponent<Interactable>(out _interactable);
         }
 
-        [Space]
-        public bool interactOnPowered = false;
-
         private void OnEnable() {
             foreach (var powerCoreEventSo in powerCoreEvent) powerCoreEventSo.OnEventRaised += EvaluatePowerCore;
         }
