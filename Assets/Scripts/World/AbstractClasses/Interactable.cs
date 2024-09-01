@@ -9,11 +9,11 @@ namespace World.AbstractClasses {
         [Header("Current state of Interactable")]
         public InteractableStates interactableState = InteractableStates.Enabled;
 
+        public InteractableModes interactableMode = InteractableModes.ToggleOnActivation;
+
         [Space]
         public bool interactOnPowered = false;
 
-        private PowerCoreColors _lastPowerCoreColor;
-        
         public void SwitchState(InteractableStates state) {
             interactableState = state;
         }

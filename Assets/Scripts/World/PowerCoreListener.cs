@@ -33,16 +33,16 @@ namespace World {
         }
         private void EvaluatePowerCore(PowerCoreColors color) {
             if (powerSupplyColor == color || powerSupplyColor == PowerCoreColors.Any) {
-                if (_interactable.interactableState == InteractableStates.Disabled) {
+                if (_interactable?.interactableState == InteractableStates.Disabled) {
                     _interactable.SwitchState(InteractableStates.Enabled);
                 }
             } else {
-                if (_interactable.interactableState == InteractableStates.Enabled) {
+                if (_interactable?.interactableState == InteractableStates.Enabled) {
                     _interactable.SwitchState(InteractableStates.Disabled);
                 }
             }
 
-            if (_interactable.interactOnPowered) {
+            if (_interactable?.interactOnPowered == true) {
                 _interactable.Interact();
             }
         }

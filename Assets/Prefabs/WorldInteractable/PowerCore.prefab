@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactableState: 0
+  interactableMode: 1
   interactOnPowered: 0
   startingColor: 3
   meshRenderer: {fileID: 1038164289736624180}

@@ -7,6 +7,12 @@ using World.Enums;
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
     public class PlatformBehaviour : Interactable, IMoverController {
+        
+        // InteractMode?
+        // OneTimeActivation
+        // Toogle On Activation
+        // Toogle On Disable
+        // Toggle OnActivationAndDisable
 
         public PhysicsMover mover;
 
@@ -69,7 +75,7 @@ namespace World {
         
         [InvokeButton]
         public override void Interact() {
-            //if(interactableState == InteractableStates.Disabled) return;
+            if(interactableState == InteractableStates.Disabled) return;
             ToggleTargetPosition();
             StartMovement();
         }
