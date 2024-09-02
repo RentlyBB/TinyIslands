@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using EditorScripts;
 using EditorScripts.InvokeButton;
+using QFSW.QC;
 using ScriptableObjects;
 using UnityEngine;
 using World.AbstractClasses;
@@ -75,6 +76,7 @@ namespace World {
             meshRenderer.sharedMaterial.color = PowerCoreUtils.GetColor(_currentColor);
         }
         
+        [Command]
         public override void Interact() {
             NextColor();
             ModifyMaterial();
