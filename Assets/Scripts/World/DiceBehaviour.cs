@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using EditorScripts;
 using EditorScripts.InvokeButton;
-using ScriptableObjects;
-using ScriptableObjects.DiceEvents;
 using UnityEngine;
 using World.Enums;
 
@@ -18,11 +14,6 @@ namespace World {
         public float moveLerpSpeed = 0.5f;
 
         public bool rotationCompleted = true;
-
-        [Space]
-        [Header("DiceEventsList")]
-        [SerializeField]
-        public List<DiceEventHandlerSo> broadcastingDiceEvents;
 
         [HideInInspector]
         public bool locked;
@@ -93,7 +84,6 @@ namespace World {
 
             rotationCompleted = false;
             _targetRotation = _faceRotation[index];
-            PingInteractablesWithColor();
         }
 
         public void SetTargetPosition(Vector3 targetPosition) {
@@ -140,13 +130,6 @@ namespace World {
             if (lockAnim) return;
 
             _animator.enabled = true;
-        }
-        
-        [InvokeButton]
-        public void PingInteractablesWithColor() {
-            foreach (var diceEvent in broadcastingDiceEvents) {
-                diceEvent?.RaiseEvent(currentFace);
-            }
         }
     }
 }

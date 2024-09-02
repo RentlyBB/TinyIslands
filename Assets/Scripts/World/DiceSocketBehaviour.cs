@@ -17,7 +17,7 @@ namespace World {
 
         private DiceBehaviour _diceBehaviour;
 
-        private bool _isSolved;
+        public bool _isSolved;
 
         private void Start() {
             dice.TryGetComponent(out _diceBehaviour);
@@ -44,16 +44,15 @@ namespace World {
 
         public void WrongSolution() {
             _diceBehaviour.Shake();
-                        ;
         }
 
         public void ResolvePuzzle() {
-            if (!_isSolved) {
-                _diceBehaviour.Shake();
-            } else {
+            if (_isSolved) {
                 _diceBehaviour.SetTargetPosition(diceSocketPosition.position);
                 _diceBehaviour.locked = true;
                 onSolve?.Invoke();
+            } else if(!_isSolved && !autoCheckPuzzle){ 
+                _diceBehaviour.Shake();
             }
         }
 
