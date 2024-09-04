@@ -74,8 +74,8 @@ namespace World {
         }
         
         [InvokeButton]
-        public override void Interact() {
-            if(interactableState == InteractableStates.Disabled) return;
+        protected override void Interact() {
+            if(currentInteractableState == InteractableStates.Disabled) return;
             ToggleTargetPosition();
             StartMovement();
         }

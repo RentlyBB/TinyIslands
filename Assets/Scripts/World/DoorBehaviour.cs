@@ -46,64 +46,26 @@ namespace World {
             _boxCollider.enabled = !DoorUtils.EvaluateDoorState(currentDoorState);
         }
 
-        public override void Interact() {
-            //TODO: Toto jsem zacal prepisovat tak aby byly rozdelene inputy od ruznych entit ale nedodelal jsem to
-            
-        }
-
-        public override void InteactableInteract() {
-            //Other interaction
-            if (interactableMode == InteractableModes.DirectInteraction) {
-                Toggle();
-            }else if (interactableMode == InteractableModes.DirectStateInteraction) {
-                if (interactableState == InteractableStates.Enabled) {
-                    Toggle();
-                }
-            }
-        }
-
-        public override void PowerCoreInteract() {
-            // Have to check if state is change, all next behaviour depending on current state
-            if(InteractableStateChanged == false) return;
-            
-            //PowerCored state interaction
-            switch (interactableMode) {
-                case InteractableModes.OneTimeActivation:
-                    OneTimeActivation();
-                    break;
-                case InteractableModes.ToggleOnEnabled:
-                    ToggeOnActivation();
-                    break;
-                case InteractableModes.ToggleOnDisabled:
-                    ToggleOnDisable();
-                    break;
-                case InteractableModes.ToogleOnEnabledAndDisabled:
-                    ToggleOnActivationAndDiable();
-                    break;
-            }
-            InteractableStateChanged = false;
-        }
-
-        private void OneTimeActivation() {
-            Debug.LogWarning("Interactable mode: OneTimeActivation is not implemented;");
+        protected override void Interact() {
+            Toggle();
         }
 
         private void ToggleOnActivationAndDiable() {
-            if (interactableState == InteractableStates.Disabled) {
+            if (currentInteractableState == InteractableStates.Disabled) {
                 Toggle();
-            } else if (interactableState == InteractableStates.Enabled) {
+            } else if (currentInteractableState == InteractableStates.Enabled) {
                 Toggle();
             }
         }
 
         private void ToggeOnActivation() {
-            if (interactableState == InteractableStates.Enabled) {
+            if (currentInteractableState == InteractableStates.Enabled) {
                 Toggle();
             }
         }
 
         private void ToggleOnDisable() {
-            if (interactableState == InteractableStates.Disabled) {
+            if (currentInteractableState == InteractableStates.Disabled) {
                 Toggle();
             }
         }

@@ -38,9 +38,7 @@ namespace World {
         public void Start() {
             _currentColor = startingColor;
             ModifyMaterial();
-            if (startingColor != PowerCoreColors.None) {
-                BroadcastEvents();
-            }
+            BroadcastEvents();
         }
 
         [InvokeButton]
@@ -63,7 +61,6 @@ namespace World {
             _currentColor = list[i];
         }
         
-
         private void BroadcastEvents() {
             foreach (PowerCoreEventSo powerCoreEventSo in powerCoreEvents) {
                 powerCoreEventSo?.RaiseEvent(_currentColor);
@@ -77,7 +74,7 @@ namespace World {
         }
         
         [Command]
-        public override void Interact() {
+        protected override void Interact() {
             NextColor();
             ModifyMaterial();
             BroadcastEvents();

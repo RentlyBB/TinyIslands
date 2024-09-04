@@ -76,7 +76,7 @@ namespace World {
         //Root method
         [InvokeButton]
         public void MovePlatform() {
-            if (interactableState == InteractableStates.Disabled) return;
+            if (currentInteractableState == InteractableStates.Disabled) return;
             SelectNextPosition();
         }
         
@@ -99,7 +99,7 @@ namespace World {
             _nextGoalPosition = elevateTarget;
         }
 
-        public override void Interact() {
+        protected override void Interact() {
             MovePlatform();
         }
     }

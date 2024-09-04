@@ -6,7 +6,6 @@ using World.AbstractClasses;
 using World.Enums;
 
 namespace World {
-    
     [RequireComponent(typeof(Interactable))]
     public class PowerCoreListener : MonoBehaviour {
         [Space]
@@ -19,7 +18,7 @@ namespace World {
         public List<PowerCoreEventSo> powerCoreEvent = new List<PowerCoreEventSo>();
 
         private Interactable _interactable;
-        
+
         private void Awake() {
             TryGetComponent<Interactable>(out _interactable);
         }
@@ -31,20 +30,21 @@ namespace World {
         private void OnDisable() {
             foreach (var powerCoreEventSo in powerCoreEvent) powerCoreEventSo.OnEventRaised -= EvaluatePowerCore;
         }
-        
+
         private void EvaluatePowerCore(PowerCoreColors color) {
-            if(powerSupplyColor == PowerCoreColors.None) return;
-            
+            if (powerSupplyColor == PowerCoreColors.None) return;
+
             if (powerSupplyColor == color || powerSupplyColor == PowerCoreColors.Any) {
-                if (_interactable?.interactableState == InteractableStates.Disabled) {
-                    _interactable.SwitchState(InteractableStates.Enabled);
-                }
+                _interactable.SwitchState(InteractableStates.Enabled);
             } else {
-                if (_interactable?.interactableState == InteractableStates.Enabled) {
-                    _interactable.SwitchState(InteractableStates.Disabled);
-                }
+                _interactable.SwitchState(InteractableStates.Disabled);
             }
-            _interactable?.Interact(InteractionInputType.PowerCoreInput.ToString());
+
+            if (_interactable.interactableMode == InteractableModes.InteractOnDisabled ||
+                _interactable.interactableMode == InteractableModes.InteractOnEnabled ||
+                _interactable.interactableMode == InteractableModes.InteractOnEnabledAndDisabled) {
+                _interactable?.ValidateInteraction();
+            }
         }
     }
 }
