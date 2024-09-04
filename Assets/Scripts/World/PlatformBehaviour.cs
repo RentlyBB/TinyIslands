@@ -1,4 +1,5 @@
-﻿using EditorScripts.InvokeButton;
+﻿using System;
+using EditorScripts.InvokeButton;
 using KinematicCharacterController;
 using UnityEngine;
 using World.AbstractClasses;
@@ -8,17 +9,12 @@ namespace World {
     [RequireComponent(typeof(PhysicsMover))]
     public class PlatformBehaviour : Interactable, IMoverController {
         
-        // InteractMode?
-        // OneTimeActivation
-        // Toogle On Activation
-        // Toogle On Disable
-        // Toggle OnActivationAndDisable
-
-        public PhysicsMover mover;
+        private PhysicsMover _mover;
 
         public Transform target; // The target position the platform should move to
         public float speed = 5f; // Desired constant speed in units per second
-
+        public bool startOnCurrentPosition = true;
+        
         private Vector3 _startPosition;
         private Vector3 _targetPosition;
         private Vector3 _currentTargetPosition;
@@ -28,14 +24,22 @@ namespace World {
 
         private Vector3 _goalPosition;
 
+        private void Awake() {
+            TryGetComponent<PhysicsMover>(out _mover);
+        }
+
         private void Start() {
-            mover.MoverController = this;
+            _mover.MoverController = this;
 
             _startPosition = transform.position; // Save the initial position
             _targetPosition = target.position;
             _currentTargetPosition = _startPosition; // Start with the assigned target position
 
             _goalPosition = transform.position;
+
+            if (!startOnCurrentPosition) {
+                Interact();
+            }
         }
 
         private void Update() {
@@ -74,15 +78,15 @@ namespace World {
         }
         
         [InvokeButton]
-        protected override void Interact() {
-            if(currentInteractableState == InteractableStates.Disabled) return;
+        public override void Interact() {
+            // if(currentInteractableState == InteractableStates.Disabled) return;
             ToggleTargetPosition();
             StartMovement();
         }
 
         public void UpdateMovement(out Vector3 goalPosition, out Quaternion goalRotation, float deltaTime) {
             goalPosition = _goalPosition;
-            goalRotation = mover.Rigidbody.rotation;
+            goalRotation = _mover.Rigidbody.rotation;
         }
         
         // Easing function for smooth start and end (Ease In Out Quadratic)

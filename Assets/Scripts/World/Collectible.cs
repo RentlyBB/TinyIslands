@@ -49,7 +49,7 @@ namespace World {
         }
         
 
-        protected override void Interact() {
+        public override void Interact() {
             Destroy(this.gameObject);
         }
     }

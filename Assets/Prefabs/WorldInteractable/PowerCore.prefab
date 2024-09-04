@@ -106,8 +106,7 @@ MonoBehaviour:
   interactableMode: 1
   startingColor: 3
   meshRenderer: {fileID: 1038164289736624180}
-  powerCoreEvents:
-  - {fileID: 11400000, guid: 0391cb0444816401883dc651cd0129b8, type: 2}
+  powerCoreEvents: []
 --- !u!114 &8640739516459345640
 MonoBehaviour:
   m_ObjectHideFlags: 0

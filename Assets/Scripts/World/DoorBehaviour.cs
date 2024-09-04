@@ -1,3 +1,4 @@
+using System;
 using EditorScripts.InvokeButton;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -20,6 +21,14 @@ namespace World {
 
             if (currentDoorState.Equals(null)) {
                 currentDoorState = DoorState.Closed;
+            }
+        }
+
+        private void Start() {
+            if (currentDoorState == DoorState.Opened) {
+                Open();
+            } else {
+                Close();
             }
         }
 
@@ -46,7 +55,7 @@ namespace World {
             _boxCollider.enabled = !DoorUtils.EvaluateDoorState(currentDoorState);
         }
 
-        protected override void Interact() {
+        public override void Interact() {
             Toggle();
         }
 

@@ -1976,7 +1976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionType: 0
-  oneTimeActivation: 1
+  oneTimeActivation: 0
   onInteractAction:
     m_PersistentCalls:
       m_Calls:

@@ -62,9 +62,14 @@ namespace World {
         }
         
         private void BroadcastEvents() {
-            foreach (PowerCoreEventSo powerCoreEventSo in powerCoreEvents) {
-                powerCoreEventSo?.RaiseEvent(_currentColor);
+            // foreach (PowerCoreEventSo powerCoreEventSo in powerCoreEvents) {
+            //     powerCoreEventSo?.RaiseEvent(_currentColor);
+            // }
+
+            for (int i = 0; i < powerCoreEvents.Count; i++) {
+                powerCoreEvents[i]?.RaiseEvent(_currentColor);
             }
+            
         }
 
         [InvokeButton]
@@ -74,7 +79,7 @@ namespace World {
         }
         
         [Command]
-        protected override void Interact() {
+        public override void Interact() {
             NextColor();
             ModifyMaterial();
             BroadcastEvents();

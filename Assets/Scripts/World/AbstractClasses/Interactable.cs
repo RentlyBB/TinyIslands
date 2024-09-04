@@ -21,7 +21,7 @@ namespace World.AbstractClasses {
             }
         }
 
-        protected virtual void Interact() {
+        public virtual void Interact() {
             Debug.Log("Interact method is not implemented yet!");
         }
 
