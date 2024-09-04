@@ -20,7 +20,7 @@ namespace World {
 
         private Interactable _interactable;
         
-        private void Start() {
+        private void Awake() {
             TryGetComponent<Interactable>(out _interactable);
         }
 
@@ -31,7 +31,10 @@ namespace World {
         private void OnDisable() {
             foreach (var powerCoreEventSo in powerCoreEvent) powerCoreEventSo.OnEventRaised -= EvaluatePowerCore;
         }
+        
         private void EvaluatePowerCore(PowerCoreColors color) {
+            if(powerSupplyColor == PowerCoreColors.None) return;
+            
             if (powerSupplyColor == color || powerSupplyColor == PowerCoreColors.Any) {
                 if (_interactable?.interactableState == InteractableStates.Disabled) {
                     _interactable.SwitchState(InteractableStates.Enabled);
@@ -41,10 +44,7 @@ namespace World {
                     _interactable.SwitchState(InteractableStates.Disabled);
                 }
             }
-
-            if (_interactable?.interactOnPowered == true) {
-                _interactable.Interact();
-            }
+            _interactable?.Interact(InteractionInputType.PowerCoreInput);
         }
     }
 }

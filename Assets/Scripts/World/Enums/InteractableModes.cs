@@ -1,8 +1,10 @@
 namespace World.Enums {
     public enum InteractableModes {
+        DirectInteraction,
+        DirectStateInteraction,
         OneTimeActivation,
-        ToggleOnActivation,
-        ToggleOnDisable,
-        ToogleOnActivationAndDisable,
+        ToggleOnEnabled,
+        ToggleOnDisabled,
+        ToogleOnEnabledAndDisabled,
     }
 }

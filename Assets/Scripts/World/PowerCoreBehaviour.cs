@@ -29,18 +29,18 @@ namespace World {
         private PowerCoreColors _currentColor;
 
 #if UNITY_EDITOR
-
         public void OnValidate() {
             meshRenderer.sharedMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
             meshRenderer.sharedMaterial.color = PowerCoreUtils.GetColor(startingColor);
         }
-        
 #endif
 
         public void Start() {
             _currentColor = startingColor;
             ModifyMaterial();
-            BroadcastEvents();
+            if (startingColor != PowerCoreColors.None) {
+                BroadcastEvents();
+            }
         }
 
         [InvokeButton]

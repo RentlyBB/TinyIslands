@@ -14,14 +14,13 @@ namespace World {
 
         public DoorState currentDoorState;
 
-        private void Start() {
+        private void Awake() {
             TryGetComponent<Animator>(out _animator);
             TryGetComponent<BoxCollider>(out _boxCollider);
 
             if (currentDoorState.Equals(null)) {
                 currentDoorState = DoorState.Closed;
             }
-
         }
 
         //Root method
@@ -48,20 +47,41 @@ namespace World {
         }
 
         public override void Interact() {
+            //TODO: Toto jsem zacal prepisovat tak aby byly rozdelene inputy od ruznych entit ale nedodelal jsem to
+            
+        }
+
+        public override void InteactableInteract() {
+            //Other interaction
+            if (interactableMode == InteractableModes.DirectInteraction) {
+                Toggle();
+            }else if (interactableMode == InteractableModes.DirectStateInteraction) {
+                if (interactableState == InteractableStates.Enabled) {
+                    Toggle();
+                }
+            }
+        }
+
+        public override void PowerCoreInteract() {
+            // Have to check if state is change, all next behaviour depending on current state
+            if(InteractableStateChanged == false) return;
+            
+            //PowerCored state interaction
             switch (interactableMode) {
                 case InteractableModes.OneTimeActivation:
                     OneTimeActivation();
                     break;
-                case InteractableModes.ToggleOnActivation:
+                case InteractableModes.ToggleOnEnabled:
                     ToggeOnActivation();
                     break;
-                case InteractableModes.ToggleOnDisable:
+                case InteractableModes.ToggleOnDisabled:
                     ToggleOnDisable();
                     break;
-                case InteractableModes.ToogleOnActivationAndDisable:
+                case InteractableModes.ToogleOnEnabledAndDisabled:
                     ToggleOnActivationAndDiable();
                     break;
             }
+            InteractableStateChanged = false;
         }
 
         private void OneTimeActivation() {
@@ -70,9 +90,9 @@ namespace World {
 
         private void ToggleOnActivationAndDiable() {
             if (interactableState == InteractableStates.Disabled) {
-                Close();
+                Toggle();
             } else if (interactableState == InteractableStates.Enabled) {
-                Open();
+                Toggle();
             }
         }
 
