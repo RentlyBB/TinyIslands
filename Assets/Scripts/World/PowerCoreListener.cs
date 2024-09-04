@@ -44,7 +44,7 @@ namespace World {
                     _interactable.SwitchState(InteractableStates.Disabled);
                 }
             }
-            _interactable?.Interact(InteractionInputType.PowerCoreInput);
+            _interactable?.Interact(InteractionInputType.PowerCoreInput.ToString());
         }
     }
 }

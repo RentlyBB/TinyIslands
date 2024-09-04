@@ -5,8 +5,7 @@ namespace World.Enums {
     
     [Serializable]
     public enum InteractionInputType {
-        PlayerInput,
-        PowerCoreInput,
-        InteractableInput
+        PowerCoreInput, // 0
+        InteractableInput // 1
     }
 }

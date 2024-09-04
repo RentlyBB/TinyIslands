@@ -22,32 +22,28 @@ namespace World.AbstractClasses {
         public virtual void Interact() {
             Debug.Log("Interact method is not implemented yet!");
         }
-        
-        public void Interact(InteractionInputType interactionInputType ) {
-            switch (interactionInputType) {
-                case InteractionInputType.PlayerInput:
-                    PlayerInteract();
-                    break;
-                case InteractionInputType.PowerCoreInput:
-                    PowerCoreInteract();
-                    break;
-                case InteractionInputType.InteractableInput:
-                    InteactableInteract();
-                    break;
+
+        public void Interact(string interactionType) {
+            if (System.Enum.TryParse(interactionType, out InteractionInputType inputType)) {
+                switch (inputType) {
+                    case InteractionInputType.PowerCoreInput:
+                        PowerCoreInteract();
+                        break;
+                    case InteractionInputType.InteractableInput:
+                        InteactableInteract();
+                        break;
+                }
+            } else {
+                Debug.LogWarning("Invalid interaction type provided.");
             }
         }
 
-        public virtual void PlayerInteract() {
-            Debug.Log("Player Interact method is not implemented yet!");
-        }
-        
         public virtual void PowerCoreInteract() {
             Debug.Log("PowerCore Interact method is not implemented yet!");
         }
-        
+
         public virtual void InteactableInteract() {
             Debug.Log("Interactable Interact method is not implemented yet!");
         }
-
     }
 }
