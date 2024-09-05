@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using EditorScripts.InvokeButton;
 using KinematicCharacterController;
 using UnityEngine;
@@ -7,22 +8,29 @@ using World.Enums;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
-    public class PlatformBehaviour : Interactable, IMoverController {
+    public class OneWayPlatformBehaviour : Interactable, IMoverController {
         
         private PhysicsMover _mover;
 
         public Transform target; // The target position the platform should move to
+
         public float speed = 5f; // Desired constant speed in units per second
-        public bool startOnCurrentPosition = true;
         
-        private Vector3 _startPosition;
-        private Vector3 _targetPosition;
+        public bool startOnCurrentPosition = true; // At the start stay or move on the next position
+        
+        private Vector3 _startPosition; // Starting point
+        private Vector3 _targetPosition; // Ending point
+       
+        
+        
         private Vector3 _currentTargetPosition;
         private float _journeyLength;
         private float _timeStartedLerping;
         private bool _isMoving = false;
 
         private Vector3 _goalPosition;
+
+        private Vector3 _velocity = Vector3.zero;
 
         private void Awake() {
             TryGetComponent<PhysicsMover>(out _mover);
@@ -33,6 +41,7 @@ namespace World {
 
             _startPosition = transform.position; // Save the initial position
             _targetPosition = target.position;
+            
             _currentTargetPosition = _startPosition; // Start with the assigned target position
 
             _goalPosition = transform.position;
@@ -42,11 +51,11 @@ namespace World {
             }
         }
 
-        private void Update() {
+        private void FixedUpdate() {
             Movement();
         }
 
-        private void Movement() {
+        private void Movement2() {
             if (_isMoving) {
                 float distanceCovered = (Time.time - _timeStartedLerping) * speed;
                 float fractionOfJourney = distanceCovered / _journeyLength;
@@ -56,6 +65,7 @@ namespace World {
 
                 // Move the platform towards the target at a constant speed with easing
                 _goalPosition = Vector3.Lerp(_startPosition, _currentTargetPosition, easedFraction);
+                
 
                 // Check if the platform has reached the target position
                 if (fractionOfJourney >= 1f) {
@@ -63,6 +73,13 @@ namespace World {
                     _isMoving = false;
                 }
             }
+        }
+        
+        private void Movement() {
+           
+                // Move the platform towards the target at a constant speed with easing
+                _goalPosition = Vector3.SmoothDamp(transform.position, _currentTargetPosition, ref _velocity, speed * Time.fixedDeltaTime);
+               
         }
 
         private void StartMovement() {
@@ -79,7 +96,6 @@ namespace World {
         
         [InvokeButton]
         public override void Interact() {
-            // if(currentInteractableState == InteractableStates.Disabled) return;
             ToggleTargetPosition();
             StartMovement();
         }
