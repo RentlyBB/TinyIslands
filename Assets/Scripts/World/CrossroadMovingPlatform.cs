@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using EditorScripts.InvokeButton;
 using KinematicCharacterController;
 using QFSW.QC;
@@ -20,7 +21,9 @@ namespace World {
         public Transform bluePoint;
         public Transform pinkPoint;
 
+        [Space]
         public PowerCoreColors startingPoint;
+        public bool noPowerCoreLooping = false; 
 
         private PhysicsMover _mover;
 
