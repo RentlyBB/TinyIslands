@@ -12,15 +12,14 @@ namespace World {
 
         private PhysicsMover _mover;
 
-        private Vector3 startPosition;
-        private Vector3 targetPosition;
+        private Vector3 _startPosition;
+        private Vector3 _targetPosition;
         private Vector3 _goalPosition;
-        private bool movingToB = true;
-        private float journeyLength;
-        private float startTime;
+        private bool _movingToB;
+        private float _journeyLength;
+        private float _startTime;
         
-        [SerializeField]
-        private bool _canMove = true;
+        private bool _canMove = false;
 
         private void Awake() {
             TryGetComponent<PhysicsMover>(out _mover);
@@ -30,11 +29,13 @@ namespace World {
             _mover.MoverController = this;
 
             _goalPosition = pointA.position;
-            startPosition = pointA.position;
-            targetPosition = pointB.position;
-            journeyLength = Vector3.Distance(startPosition, targetPosition);
-            startTime = Time.time;
+            _startPosition = pointA.position;
+            _targetPosition = pointB.position;
+            _journeyLength = Vector3.Distance(_startPosition, _targetPosition);
 
+            _canMove = false;
+            _movingToB = false;
+            _startTime = Time.time;
 
             pointA.SetParent(null);
             pointB.SetParent(null);
@@ -63,14 +64,14 @@ namespace World {
 
         private void MovePlatformSmoothly() {
             // Calculate the fraction of the journey completed
-            float distCovered = (Time.time - startTime) * speed;
-            float fractionOfJourney = distCovered / journeyLength;
+            float distCovered = (Time.time - _startTime) * speed;
+            float fractionOfJourney = distCovered / _journeyLength;
 
             // Smooth step for easing movement
             float smoothStep = Mathf.SmoothStep(0, 1, fractionOfJourney);
 
             // Move the platform
-            _goalPosition = Vector3.Lerp(startPosition, targetPosition, smoothStep);
+            _goalPosition = Vector3.Lerp(_startPosition, _targetPosition, smoothStep);
 
             // Check if the platform has reached the target position
             if (fractionOfJourney >= 1f) {
@@ -85,40 +86,40 @@ namespace World {
         private void ChangeDirectionMidJourney() {
             if (_canMove) {
                 // Immediately swap direction, preserving the current position as the new start point
-                startPosition = transform.position;
+                _startPosition = transform.position;
 
                 // Switch the target position
-                if (movingToB) {
-                    targetPosition = pointA.position;
+                if (_movingToB) {
+                    _targetPosition = pointA.position;
                 } else {
-                    targetPosition = pointB.position;
+                    _targetPosition = pointB.position;
                 }
 
-                movingToB = !movingToB;
+                _movingToB = !_movingToB;
 
                 // Recalculate the journey length and reset the timer
-                journeyLength = Vector3.Distance(startPosition, targetPosition);
-                startTime = Time.time;
+                _journeyLength = Vector3.Distance(_startPosition, _targetPosition);
+                _startTime = Time.time;
             }
         }
 
         private void StartMovement() {
             // Toggle the direction, and recalculate the journey
-            if (movingToB) {
+            if (_movingToB) {
                 // Switch to move towards pointA
-                startPosition = pointB.position;
-                targetPosition = pointA.position;
+                _startPosition = pointB.position;
+                _targetPosition = pointA.position;
             } else {
                 // Switch to move towards pointB
-                startPosition = pointA.position;
-                targetPosition = pointB.position;
+                _startPosition = pointA.position;
+                _targetPosition = pointB.position;
             }
 
-            movingToB = !movingToB;
+            _movingToB = !_movingToB;
 
             // Reset the journey properties
-            journeyLength = Vector3.Distance(startPosition, targetPosition);
-            startTime = Time.time;
+            _journeyLength = Vector3.Distance(_startPosition, _targetPosition);
+            _startTime = Time.time;
 
             // Start moving the platform
             _canMove = true;
