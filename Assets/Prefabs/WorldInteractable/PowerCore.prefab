@@ -104,9 +104,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentInteractableState: 0
   interactableMode: 1
+  activatedBy: 7
   startingColor: 3
   meshRenderer: {fileID: 1038164289736624180}
   powerCoreEvents: []
+  usingColors: 
 --- !u!114 &8640739516459345640
 MonoBehaviour:
   m_ObjectHideFlags: 0

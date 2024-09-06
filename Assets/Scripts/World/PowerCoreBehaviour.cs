@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using EditorScripts;
 using EditorScripts.InvokeButton;
 using QFSW.QC;
 using ScriptableObjects;
@@ -25,6 +24,9 @@ namespace World {
         [Header("PowerCoreEventsList")]
         [SerializeField]
         public List<PowerCoreEventSo> powerCoreEvents;
+
+        [SerializeField]
+        private List<PowerCoreColors> usingColors;
         
         private PowerCoreColors _currentColor;
 
@@ -45,31 +47,26 @@ namespace World {
         public void NextColor() {
 
             // Get list of unlocked colors
-            var list = PlayerManager.Instance.unlockColors;
+            //var list = PlayerManager.Instance.unlockColors;
 
             int i = 0;
-            if (list.Contains(_currentColor)) {
-                i = list.IndexOf(_currentColor);
+            if (usingColors.Contains(_currentColor)) {
+                i = usingColors.IndexOf(_currentColor);
             }
 
-            if (i >= list.Count - 1) {
+            if (i >= usingColors.Count - 1) {
                 i = 0;
             } else {
                 i += 1;
             }
 
-            _currentColor = list[i];
+            _currentColor = usingColors[i];
         }
         
         private void BroadcastEvents() {
-            // foreach (PowerCoreEventSo powerCoreEventSo in powerCoreEvents) {
-            //     powerCoreEventSo?.RaiseEvent(_currentColor);
-            // }
-
             for (int i = 0; i < powerCoreEvents.Count; i++) {
                 powerCoreEvents[i]?.RaiseEvent(_currentColor);
             }
-            
         }
 
         [InvokeButton]

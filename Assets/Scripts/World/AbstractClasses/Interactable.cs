@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using World.Enums;
 
 namespace World.AbstractClasses {
@@ -11,6 +12,9 @@ namespace World.AbstractClasses {
         public InteractableStates currentInteractableState = InteractableStates.Enabled;
 
         public InteractableModes interactableMode = InteractableModes.InteractOnEnabled;
+
+        [HideInInspector]
+        public PowerCoreColors activatedBy = PowerCoreColors.None;
 
         protected bool InteractableStateChanged = false;
 

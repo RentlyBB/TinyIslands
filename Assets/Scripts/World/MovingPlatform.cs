@@ -9,6 +9,7 @@ namespace World {
         public Transform pointA;
         public Transform pointB;
         public float speed = 2f;
+        public bool startOnA = true;
 
         private PhysicsMover _mover;
 
@@ -18,7 +19,7 @@ namespace World {
         private bool _movingToB;
         private float _journeyLength;
         private float _startTime;
-        
+
         private bool _canMove = false;
 
         private void Awake() {
@@ -28,13 +29,22 @@ namespace World {
         void Start() {
             _mover.MoverController = this;
 
-            _goalPosition = pointA.position;
-            _startPosition = pointA.position;
-            _targetPosition = pointB.position;
-            _journeyLength = Vector3.Distance(_startPosition, _targetPosition);
+            if (startOnA) {
+                _goalPosition = pointA.position;
+                _movingToB = false;
+                _startPosition = pointA.position;
+                _targetPosition = pointB.position;
+            } else {
+                _goalPosition = pointB.position;
+                _movingToB = true;
+                _startPosition = pointB.position;
+                _targetPosition = pointA.position;
+            }
 
             _canMove = false;
-            _movingToB = false;
+
+            _journeyLength = Vector3.Distance(_startPosition, _targetPosition);
+
             _startTime = Time.time;
 
             pointA.SetParent(null);

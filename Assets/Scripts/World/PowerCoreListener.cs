@@ -36,6 +36,7 @@ namespace World {
 
             if (powerSupplyColor == color || powerSupplyColor == PowerCoreColors.Any) {
                 _interactable.SwitchState(InteractableStates.Enabled);
+                _interactable.activatedBy = color;
             } else {
                 _interactable.SwitchState(InteractableStates.Disabled);
             }

@@ -8,6 +8,7 @@ using World.Enums;
 
 namespace World {
     [RequireComponent(typeof(PhysicsMover))]
+    [Obsolete("Use MovingPlatformInstead")]
     public class OneWayPlatformBehaviour : Interactable, IMoverController {
         
         private PhysicsMover _mover;
