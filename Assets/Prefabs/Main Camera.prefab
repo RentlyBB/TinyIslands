@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8458123524006792598}
   - component: {fileID: 7314357613622776560}
   - component: {fileID: 7838895317023585886}
-  - component: {fileID: 1972233669088203885}
+  - component: {fileID: 6375566145678579275}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -72,7 +72,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 23
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -190,14 +190,14 @@ MonoBehaviour:
   minScrollZoomSize: 1
   maxScrollZoomSize: 50
   canScrollZooming: 0
-  zoomSmoothing: 5
-  zoomSpeed: 25
-  zoomInSize: 15
-  zoomOutSize: 50
-  moveSmoothTime: 0.3
+  zoomSmoothing: 1
+  zoomSpeed: 75
+  defaultZoomInSize: 15
+  defaultZoomOutSize: 50
+  moveSmoothTime: 1
   zOffset: -100
   testingCamPos: {fileID: 0}
---- !u!114 &1972233669088203885
+--- !u!114 &6375566145678579275
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,20 +206,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 7612781244138764013}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac2fc5a78b7e63945bfa39128a8eefc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cfeee541fbb4fd1a5a48cc6ab60a8ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showDebugFields: 1
-  _enableGizmoDebugging: 1
-  _debugColor: {r: 0, g: 1, b: 1, a: 1}
-  _previouslyRegisteredEvent: {fileID: 0}
-  _event: {fileID: 11400000, guid: 606f0ba551dfe0d4498d4b380e3bbd9e, type: 2}
-  _response:
+  enterLocationEvent: {fileID: 11400000, guid: 5fcb467d20d759e41a4f235f40e76db9, type: 2}
+  onLocationEntered:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7838895317023585886}
-        m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
-        m_MethodName: SetCameraTargetPosition
+        m_TargetAssemblyTypeName: CameraScripts.CameraController, Assembly-CSharp
+        m_MethodName: SetCameraTargetPositionAndCameraZoom
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -229,4 +225,3 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _debugValue: {x: 0, y: 0, z: 0}

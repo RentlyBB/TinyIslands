@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1517749401374750476}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraTarget
   m_TagString: Untagged
   m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1518736982641278011}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.71, y: 0, z: 5.35}
+  m_LocalPosition: {x: 20.03, y: 0, z: -1.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42,10 +42,10 @@ GameObject:
   - component: {fileID: 2210509725232570573}
   - component: {fileID: 3704167883575986782}
   - component: {fileID: 8960931790817674866}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LocationTrigger
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -57,7 +57,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7061187353121594446}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.75, z: -9.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -84,8 +84,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 29.90389, y: 17.517096, z: 34.598923}
-  m_Center: {x: 0.20625782, y: 3.758544, z: 7.143013}
+  m_Size: {x: 20.397018, y: 17.517096, z: 58.495636}
+  m_Center: {x: 3.821434, y: 0, z: -1.0134583}
 --- !u!114 &8960931790817674866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,5 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00a01619f2c616a468fb46c6f030a34a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onAreaEntered: {fileID: 11400000, guid: 606f0ba551dfe0d4498d4b380e3bbd9e, type: 2}
+  onAreaEntered: {fileID: 11400000, guid: 5fcb467d20d759e41a4f235f40e76db9, type: 2}
   cameraTargetPoint: {fileID: 1517749401374750476}
+  cameraZoom: 23
