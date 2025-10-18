@@ -1226,7 +1226,7 @@ namespace KinematicCharacterController {
                         var hitBodyIsDynamic = !bodyHit.Rigidbody.isKinematic;
                         var hitBodyMass = bodyHit.Rigidbody.mass;
                         var hitBodyMassAtPoint = bodyHit.Rigidbody.mass; // todo
-                        var hitBodyVelocity = bodyHit.Rigidbody.velocity;
+                        var hitBodyVelocity = bodyHit.Rigidbody.linearVelocity;
                         if (hitBodyIsCharacter) {
                             hitBodyMass = hitCharacterMotor.SimulatedCharacterMass;
                             hitBodyMassAtPoint = hitCharacterMotor.SimulatedCharacterMass; // todo
@@ -1561,7 +1561,7 @@ namespace KinematicCharacterController {
         /// </summary>
         public void GetVelocityFromRigidbodyMovement(Rigidbody interactiveRigidbody, Vector3 atPoint, float deltaTime, out Vector3 linearVelocity, out Vector3 angularVelocity) {
             if (deltaTime > 0f) {
-                linearVelocity = interactiveRigidbody.velocity;
+                linearVelocity = interactiveRigidbody.linearVelocity;
                 angularVelocity = interactiveRigidbody.angularVelocity;
                 if (interactiveRigidbody.isKinematic) {
                     var physicsMover = interactiveRigidbody.GetComponent<PhysicsMover>();
@@ -1911,7 +1911,7 @@ namespace KinematicCharacterController {
         [SerializeField]
         [Tooltip("Physics material of the Character Capsule (Does not affect character movement. Only affects things colliding with it)")]
 #pragma warning disable 0649
-        private PhysicMaterial CapsulePhysicsMaterial;
+        private PhysicsMaterial CapsulePhysicsMaterial;
 #pragma warning restore 0649
 
 

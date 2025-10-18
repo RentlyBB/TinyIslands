@@ -23,7 +23,7 @@ namespace HoveringMovement {
             if (Physics.Raycast(transform.position, Vector3.down, out hit)) {
                 var currentHeight = hit.distance;
                 var heightError = hoverHeight - currentHeight;
-                var upwardSpeed = rb.velocity.y;
+                var upwardSpeed = rb.linearVelocity.y;
                 var lift = heightError * hoverForce - upwardSpeed * hoverDamping;
 
                 rb.AddForce(Vector3.up * lift, ForceMode.Acceleration);
